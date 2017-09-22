@@ -183,7 +183,9 @@ function createScene() {
 
 	//scene.add(new THREE.AxisHelper(15));
 
-	var orange1 = new orange(0, 0, 0, 10);
+	var car1 = new car(0,0,0,5);
+
+	//var orange1 = new orange(0, 0, 0, 10);
 
 	/*
 	createPlayerShip(0, 0, 40);

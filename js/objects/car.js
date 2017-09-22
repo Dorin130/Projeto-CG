@@ -1,0 +1,113 @@
+class car {
+	constructor(PosX, PosY, PosZ, scale) {
+		this.car = new THREE.Object3D();
+
+		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*3);
+		var material = new THREE.MeshBasicMaterial( { color: 0xaa0000, wireframe:false} );
+		var box = new THREE.Mesh( geometry, material );
+
+
+		this.car.add(box);
+		this.car.add(new dome(scale*.5, scale*.5, scale*0, scale*1.5).getObject())
+		this.car.add(new axisAndWheel(scale*1.5, -scale*0.3, 0, scale).getObject());
+		this.car.add(new axisAndWheel(-scale*1.5, -scale*0.3, 0, scale).getObject());
+
+		scene.add(this.car);
+	}
+
+	setPosition(PosX, PosY, PosZ) {
+		this.car.position.set(PosX, PosY, PosZ)
+	}
+
+	setRotation(RotX, RotY, RotZ) {
+		this.car.rotation.set(RotX, RotY, RotZ);
+	}
+
+	getObject() {
+		return this.car;
+	}
+}
+
+class axisAndWheel {
+	constructor(PosX, PosY, PosZ, scale) {
+		this.wheels = new THREE.Object3D();
+		var geometry = new THREE.CylinderGeometry( scale*0.1, scale*0.1, scale*3.4, 20);
+		var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: false} );
+		var cylinder = new THREE.Mesh( geometry, material );
+
+		this.setRotation(Math.PI*(1/2), 0, 0);
+		this.setPosition(PosX, PosY, PosZ);
+		this.wheels.add(cylinder);
+		this.wheels.add(new Wheel(0, 1.7*scale, 0, scale).getObject());
+		this.wheels.add(new Wheel(0, -1.7*scale, 0, scale).getObject());
+		scene.add(this.wheels);
+	}
+
+	setPosition(PosX, PosY, PosZ) {
+		this.wheels.position.set(PosX, PosY, PosZ)
+	}
+
+	setRotation(RotX, RotY, RotZ) {
+		this.wheels.rotation.set(RotX, RotY, RotZ);
+	}
+
+	getObject() {
+		return this.wheels;
+	}
+}
+
+class Wheel {
+	constructor(PosX, PosY, PosZ, scale) {
+		this.wheel = new THREE.Object3D();
+
+		var geometry = new THREE.TorusGeometry( scale*.4, scale * .15, 8, 20 );
+		var material = new THREE.MeshBasicMaterial( { color: 0xffff00 , wireframe:true } );
+		var torus = new THREE.Mesh( geometry, material );
+
+		this.setRotation(Math.PI*(1/2), 0, 0);
+		this.setPosition(PosX, PosY, PosZ);
+		this.wheel.add(torus);
+
+		scene.add(this.wheel);
+	}
+
+	setPosition(PosX, PosY, PosZ) {
+		this.wheel.position.set(PosX, PosY, PosZ)
+	}
+
+	setRotation(RotX, RotY, RotZ) {
+		this.wheel.rotation.set(RotX, RotY, RotZ);
+	}
+
+	getObject() {
+		return this.wheel;
+	}
+}
+
+class dome {
+	constructor(PosX, PosY, PosZ, scale) {
+		this.dome = new THREE.Object3D();
+
+		var geometry = new THREE.SphereGeometry( scale, 32, 32 );
+		var material = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false} );
+		var sphere = new THREE.Mesh( geometry, material );
+
+		this.setRotation(Math.PI*(1/2), 0, 0);
+		this.setPosition(PosX, PosY, PosZ);
+		this.dome.add(sphere);
+
+		scene.add(this.dome);
+	}
+
+	setPosition(PosX, PosY, PosZ) {
+		this.dome.position.set(PosX, PosY, PosZ)
+	}
+
+	setRotation(RotX, RotY, RotZ) {
+		this.dome.rotation.set(RotX, RotY, RotZ);
+	}
+
+	getObject() {
+		return this.dome;
+	}
+}

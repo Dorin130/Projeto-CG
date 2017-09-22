@@ -11,14 +11,14 @@ class orangeLeaf {
 		leafShape.bezierCurveTo( x, y, x+5, y+8, x, y + 10 );
 		leafShape.bezierCurveTo( x-5, y+8, x, y, x, y );
 		
-		var geometry = new THREE.ShapeGeometry( leafShape );
+		var geometry = new THREE.ShapeGeometry( leafShape, 4);
 		var material = new THREE.MeshBasicMaterial( { color: 0x236e2b} );
 		material.side = THREE.DoubleSide;
 		var leafMesh = new THREE.Mesh( geometry, material ) ;
 		leafMesh.position.set(0, -10, 0);
 		this.leaf.add(leafMesh);
 
-		var geometry = new THREE.ConeGeometry( 0.2, 10, 32 );
+		var geometry = new THREE.ConeGeometry( 0.2, 10, 3);
 		var material = new THREE.MeshBasicMaterial( {color: 0x144a1a} );
 		var cone = new THREE.Mesh( geometry, material );
 		cone.rotation.x = Math.PI;
@@ -52,7 +52,7 @@ class orangeLeafStem {
 		this.stem.add(leaf1.getObject());
 		this.stem.add(leaf2.getObject());
 
-		var geometry = new THREE.ConeGeometry( 0.4, 3, 32 );
+		var geometry = new THREE.ConeGeometry( 0.4, 3, 4 );
 		var material = new THREE.MeshBasicMaterial( {color: 0x144a1a} );
 		var cone = new THREE.Mesh( geometry, material );
 		cone.position.set(0, 0.5, 0);
@@ -79,13 +79,13 @@ class orange {
 	constructor(PosX, PosY, PosZ, sphereRadius) {
 		this.orange = new THREE.Object3D();
 
-		var geometry = new THREE.SphereGeometry( sphereRadius, 32, 32 );
+		var geometry = new THREE.SphereGeometry( sphereRadius, 12, 12 );
 		//var material = new THREE.MeshBasicMaterial( {color: 0xbe822d} );
 		var texture = new THREE.TextureLoader().load( "textures/orange-skin.jpg" );
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( 4, 4 );
-		var material = new THREE.MeshBasicMaterial( { color: 0xbe822d, map: texture } );
+		var material = new THREE.MeshBasicMaterial( { color: 0xbe822d, map: texture} );
 		var sphere = new THREE.Mesh( geometry, material );
 
 		this.orange.add(sphere);
