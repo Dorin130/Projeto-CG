@@ -29,7 +29,7 @@ function init() {
 	var customCam2 = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
 	//customCam2.focusOn(updateList[0].getObject());
 	//customCam2.follow(updateList[0].getObject());
-	customCam2.setTransform(20, 0, Math.PI/8, Math.PI/2, Math.PI/4, 0);
+	customCam2.setTransform(30, 0, Math.PI/8, Math.PI/3, Math.PI/4);
 	
 	customCam = customCam2;
 
