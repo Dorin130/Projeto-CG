@@ -7,7 +7,13 @@ class moonInvader {
 		
 		var sphere = new THREE.Mesh( geometry, material );
 		this.moon.add(sphere);
-		this.ring = new ringOfCones(this.moon, 4, 10, 18, Math.PI/4, Math.PI/2, Math.PI/4);
+		geometry = new THREE.ConeGeometry(2, 5, 32);
+		material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+		var number = 4;
+		this.ring = new ringOfMeshes(geometry, material, number, 10, 18, Math.PI/4, Math.PI/2, Math.PI/4);
+
+		this.moon.add(this.ring.getObject());
+		console.log(this.ring.getObject());
 
 		scene.add(this.moon);
 		this.moon.position.set(PosX, PosY, PosZ);
@@ -33,59 +39,53 @@ class moonInvader {
 		return this.moon;
 	}
 
-	getCone(i) {
-		return this.ring.getCone(i);
+	getMesh(i) {
+		return this.ring.getMesh(i);
 	}
 }
 
-class ringOfCones {
-	constructor(object, number, minRadius, maxRadius, theta, radialFreq, rotateFreq) {
-		
-		this.number = number;
-		this.object = object;
-		this.cones = [];
-		var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-		//var geometry = new THREE.SphereGeometry(2, 36, 36);
-		var geometry = new THREE.ConeGeometry(2, 5, 32);
-
-		for(var i=0; i<number; i++) { this.cones.push( new THREE.Mesh( geometry, material ) ); }
+class ringOfMeshes {
+	constructor(geometry, material, number, minRadius, maxRadius, theta, radialFreq, rotateFreq, isStatic) {
+		this.ring = new THREE.Object3D();
+		this.meshes = [];
+		this.number = 0;
+		this.geometry = geometry;
+		this.material = material;
+		this.isStatic = (isStatic != undefined)? isStatic : false;
 
 		this.set(number, minRadius, maxRadius, theta, radialFreq, rotateFreq);
-
-		for(var i=0; i<number; i++) { object.add(this.cones[i]); }
+		scene.add(this.ring);
 	}
 
 	update(delta_time) {
-		this.theta += delta_time*this.rotateFreq;//*2*Math.PI;
-		this.radiusTheta += delta_time*this.radialFreq;
-		var radius = this.radiusAverage + this.radiusDelta*Math.sin(this.radiusTheta);
-		for(var i=0; i<this.number; i++) {
-			var specificTheta = this.theta+i*(2*Math.PI/this.number);
-			this.cones[i].position.set(radius*Math.cos(specificTheta), radius*Math.sin(specificTheta), 0);
-			this.cones[i].rotation.z += delta_time*this.rotateFreq;
+		if(!this.isStatic)	{
+			this.theta += delta_time*this.rotateFreq;//*2*Math.PI;
+			this.radiusTheta += delta_time*this.radialFreq;
+			var radius = this.radiusAverage + this.radiusDelta*Math.sin(this.radiusTheta);
+			for(var i=0; i<this.number; i++) {
+				var specificTheta = this.theta+i*(2*Math.PI/this.number);
+				this.meshes[i].position.set(radius*Math.cos(specificTheta), radius*Math.sin(specificTheta), 0);
+				this.meshes[i].rotation.z += delta_time*this.rotateFreq;
+			}
 		}
 	}
 
 	set(number, minRadius, maxRadius, theta, radialFreq, rotateFreq) {
-		
-		var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-		var geometry = new THREE.ConeGeometry(2, 5, 32);
 
 		if(this.number < number) {
 			for(var i=this.number; i < number; i++) {
-				var newCone = new THREE.Mesh( geometry, material )
-				this.cones.push( newCone );
-				this.object.add( newCone );
-				//scene.add( newCone );//check if necessary
+				var newMesh = new THREE.Mesh( this.geometry, this.material )
+				this.meshes.push( newMesh );
+				this.ring.add( newMesh );
 			}
 		} else if (this.number > number) {
 			for(var i=number; i < this.number; i++) { 
-				var extraCone = this.cones.pop();
-				scene.remove(extraCone);
-				extraCone.geometry.dispose();
-				extraCone.material.dispose();
-				extraCone.parent.remove(extraCone);
-				extraCone = undefined;
+				var extraMesh = this.meshes.pop();
+				scene.remove(extraMesh);
+				extraMesh.geometry.dispose();
+				extraMesh.material.dispose();
+				extraMesh.parent.remove(extraMesh);
+				extraMesh = undefined;
 			}
 		}
 
@@ -97,26 +97,26 @@ class ringOfCones {
 		this.radialFreq = radialFreq;
 		this.rotateFreq = rotateFreq;
 
-		//var geometry = new THREE.SphereGeometry(2, 36, 36);
 		var interval = 2*Math.PI/number;
 
-		//this.cones[0].material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-		//this.cones[this.number-1].material = new THREE.MeshBasicMaterial( {color: 0x0000ff} );
-
 		for(var i=0; i<this.number; i++) {
-			this.cones[i].position.set(minRadius*Math.cos(theta), minRadius*Math.sin(theta), 0);
-			this.cones[i].rotation.z = theta-(1/2)*Math.PI;
+			this.meshes[i].position.set(minRadius*Math.cos(theta), minRadius*Math.sin(theta), 0);
+			this.meshes[i].rotation.z = theta-(1/2)*Math.PI;
 			theta += interval;
 		}
 	}
 
 	remove() {
 		this.set(0, 0, 0, 0, 0, 0);
-		this.cones = undefined;
+		this.meshes = undefined;
 	}
 
-	getCone(i) {
-		return this.cones[i];
+	getMesh(i) {
+		return this.meshes[i];
+	}
+
+	getObject() {
+		return this.ring;
 	}
 }
 /* end of Moon Invader */
