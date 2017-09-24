@@ -14,6 +14,12 @@ var totalTime = 0;
 /* Event Listeners */
 window.addEventListener( 'resize', onWindowResize, false );
 
+window.addEventListener( 'mousewheel', function(e) {
+	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+	if(delta == 1) customCam.scrollUp();
+	else customCam.scrollDown();
+}, false );
+
 /* INIT */
 function init() {
 	renderer = new THREE.WebGLRenderer({antialias: true});
@@ -32,6 +38,7 @@ function init() {
 	customCam2.setTransform(30, 0, Math.PI/8, Math.PI/3, Math.PI/4);
 	
 	customCam = customCam2;
+	customCam.manualControl();
 
 	render(customCam.getCamera());
 	animate();
@@ -40,7 +47,7 @@ function init() {
 /* Event Listener Functions */
 function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
-    customCam.updateWindowResize();
+    customCam.prepareWindowResize();
 }
 
 /* Animation main function and update/render cycle */
@@ -111,3 +118,4 @@ function createScene() {
 function render(cam) {
 	renderer.render(scene, cam);
 }
+

@@ -13,6 +13,9 @@ class customCamera {
 		this.transPhi = 0;
 		this.transTheta = 0;
 		this.wrapAroundPhi = false;
+		this.windowResize = false;
+		this.controled = false;
+		this.upScroll = 0;
 	}
 
 	getCamera() {
@@ -36,9 +39,30 @@ class customCamera {
 		}
 	}
 
+	prepareWindowResize() {
+		this.windowResize = true;
+	}
+
+	manualControl() {
+		this.controled = true;
+		/* add manual control */
+	}
+
+	scrollUp() {
+		this.upScroll++;
+	}
+
+	scrollDown() {
+		this.upScroll--;
+	}
+
+	//internal functions
+
 	update(delta_time) {
+		if(this.windowResize) this.updateWindowResize();
 		this.updateCameraPosition(delta_time);
 		this.updateCameraOrientation();
+		if(this.controled) this.checkControlerEvents();
 	}
 
 	updateCameraPosition(delta_time) {
@@ -95,5 +119,10 @@ class customCamera {
 		}
 
 	    this.camera.updateProjectionMatrix();
+	}
+
+	checkControlerEvents() {
+		this.transRadius = Math.max(0, this.transRadius-this.upScroll*2);
+		this.upScroll = 0;
 	}
 }
