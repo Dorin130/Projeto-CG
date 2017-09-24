@@ -14,11 +14,14 @@ var totalTime = 0;
 /* Event Listeners */
 window.addEventListener( 'resize', onWindowResize, false );
 
-window.addEventListener( 'mousewheel', function(e) {
+window.addEventListener( 'mousewheel', mouseWheelHandler, false );
+window.addEventListener( 'DOMMouseScroll', mouseWheelHandler, false);
+
+function mouseWheelHandler(e) {
 	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 	if(delta == 1) customCam.scrollUp();
 	else customCam.scrollDown();
-}, false );
+}
 
 /* INIT */
 function init() {
