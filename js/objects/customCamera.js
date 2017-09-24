@@ -16,6 +16,7 @@ class customCamera {
 		this.windowResize = false;
 		this.controled = false;
 		this.upScroll = 0;
+		this.scrollSmoothness = 1;
 	}
 
 	getCamera() {
@@ -49,11 +50,11 @@ class customCamera {
 	}
 
 	scrollUp() {
-		this.upScroll++;
+		this.upScroll += this.scrollSmoothness;
 	}
 
 	scrollDown() {
-		this.upScroll--;
+		this.upScroll -= this.scrollSmoothness;
 	}
 
 	//internal functions
@@ -122,7 +123,36 @@ class customCamera {
 	}
 
 	checkControlerEvents() {
-		this.transRadius = Math.max(0, this.transRadius-this.upScroll*2);
-		this.upScroll = 0;
+		if(this.transRadius!=0) {
+			this.scrollCheck(true);
+		}
+	}
+
+	scrollCheck(relative) {
+		if(!relative) {
+			var scrollSpeed = 1; // multiplicatve factor
+			if(this.upScroll > 0) {
+				this.upScroll = Math.max(0, this.upScroll-0.2);
+				this.transRadius = Math.max(0.1, this.transRadius-0.2*scrollSpeed);
+			} else if (this.upScroll < 0) {
+				this.upScroll = Math.min(0, this.upScroll+0.2);
+				this.transRadius = Math.max(0.1, this.transRadius+0.2*scrollSpeed);
+			}
+		} else {
+			var smoothFactor = 30; // distance at which 1 physical scroll = 1 unit of radius
+			if(this.upScroll > 0) {
+				console.log(this.scrollSmoothness);
+				this.upScroll = Math.max(0, this.upScroll-0.5*this.scrollSmoothness);
+				this.transRadius = Math.max(0.1, this.transRadius-0.5*this.scrollSmoothness);
+			} else if (this.upScroll < 0) {
+				console.log(this.scrollSmoothness);
+				this.upScroll = Math.min(0, this.upScroll+0.5*this.scrollSmoothness);
+				this.transRadius = Math.max(0.1, this.transRadius+0.5*this.scrollSmoothness);
+			}
+			this.scrollSmoothness = this.transRadius/smoothFactor;
+		}
 	}
 }
+
+/*
+*/
