@@ -23,6 +23,20 @@ function mouseWheelHandler(e) {
 	else customCam.scrollDown();
 }
 
+window.addEventListener( 'keydown', onKeyDown, false);
+
+function onKeyDown(e) {
+	switch(e.key) {
+		case "a":
+		case "A":
+			scene.traverse(function (node) {
+				if (node instanceof THREE.Mesh)
+					node.material.wireframe = !node.material.wireframe;
+			});
+			break;
+	}
+}
+
 /* INIT */
 function init() {
 	renderer = new THREE.WebGLRenderer({antialias: true});
