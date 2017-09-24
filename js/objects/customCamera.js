@@ -16,7 +16,7 @@ class customCamera {
 		this.windowResize = false;
 		this.controled = false;
 		this.upScroll = 0;
-		this.scrollSmoothness = 1;
+		this.scrollSpeed = 5;
 	}
 
 	getCamera() {
@@ -50,11 +50,11 @@ class customCamera {
 	}
 
 	scrollUp() {
-		this.upScroll += this.scrollSmoothness;
+		this.upScroll += this.scrollSpeed;
 	}
 
 	scrollDown() {
-		this.upScroll -= this.scrollSmoothness;
+		this.upScroll -= this.scrollSpeed;
 	}
 
 	//internal functions
@@ -63,7 +63,7 @@ class customCamera {
 		if(this.windowResize) this.updateWindowResize();
 		this.updateCameraPosition(delta_time);
 		this.updateCameraOrientation();
-		if(this.controled) this.checkControlerEvents();
+		if(this.controled) this.checkControlerEvents(delta_time);
 	}
 
 	updateCameraPosition(delta_time) {
@@ -122,37 +122,38 @@ class customCamera {
 	    this.camera.updateProjectionMatrix();
 	}
 
-	checkControlerEvents() {
+	checkControlerEvents(delta_time) {
 		if(this.transRadius!=0) {
-			this.scrollCheck(true);
+			this.scrollCheck(delta_time);
 		}
 	}
 
-	scrollCheck(relative) {
+	scrollCheck(delta_time, relative) {
 		if(!relative) {
-			var scrollSpeed = 1; // multiplicatve factor
-			if(this.upScroll > 0) {
-				this.upScroll = Math.max(0, this.upScroll-0.2);
-				this.transRadius = Math.max(0.1, this.transRadius-0.2*scrollSpeed);
-			} else if (this.upScroll < 0) {
-				this.upScroll = Math.min(0, this.upScroll+0.2);
-				this.transRadius = Math.max(0.1, this.transRadius+0.2*scrollSpeed);
+			var change_time = 0.1; // multiplicative factor
+			if(this.upScroll > 0.2) {
+				this.transRadius = Math.max(0.1, this.transRadius-this.upScroll*delta_time/change_time);
+				this.upScroll = Math.max(0, this.upScroll-this.upScroll*delta_time/change_time);
+			} else if (this.upScroll < -0.2) {
+				this.transRadius = Math.max(0.1, this.transRadius-this.upScroll*delta_time/change_time);
+				this.upScroll = Math.min(0, this.upScroll-this.upScroll*delta_time/change_time);
+			} else if (this.upScroll != 0) {
+				this.transRadius = Math.max(0.1, this.transRadius-this.upScroll);
+				this.upScroll = 0;
 			}
 		} else {
-			var smoothFactor = 30; // distance at which 1 physical scroll = 1 unit of radius
+			//deprecated but funny
+			var smoothFactor = 15; // distance at which 1 physical scroll = 1 unit of radius
 			if(this.upScroll > 0) {
-				console.log(this.scrollSmoothness);
-				this.upScroll = Math.max(0, this.upScroll-0.5*this.scrollSmoothness);
-				this.transRadius = Math.max(0.1, this.transRadius-0.5*this.scrollSmoothness);
+				console.log(this.scrollSpeed);
+				this.upScroll = Math.max(0, this.upScroll-this.scrollSpeed);
+				this.transRadius = Math.max(0.1, this.transRadius-this.scrollSpeed);
 			} else if (this.upScroll < 0) {
-				console.log(this.scrollSmoothness);
-				this.upScroll = Math.min(0, this.upScroll+0.5*this.scrollSmoothness);
-				this.transRadius = Math.max(0.1, this.transRadius+0.5*this.scrollSmoothness);
+				console.log(this.scrollSpeed);
+				this.upScroll = Math.min(0, this.upScroll+this.scrollSpeed);
+				this.transRadius = Math.max(0.1, this.transRadius+this.scrollSpeed);
 			}
-			this.scrollSmoothness = this.transRadius/smoothFactor;
+			this.scrollSpeed = this.transRadius/smoothFactor;
 		}
 	}
 }
-
-/*
-*/
