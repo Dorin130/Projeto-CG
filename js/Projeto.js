@@ -15,7 +15,7 @@ var totalTime = 0;
 window.addEventListener( 'resize', onWindowResize, false );
 
 window.addEventListener( 'mousewheel', mouseWheelHandler, false );
-window.addEventListener( 'DOMMouseScroll', MouseWheelHandler, false);
+window.addEventListener( 'DOMMouseScroll', mouseWheelHandler, false);
 
 function mouseWheelHandler(e) {
 	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
