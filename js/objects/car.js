@@ -124,7 +124,7 @@ class dome {
 	constructor(PosX, PosY, PosZ, scale) {
 		this.dome = new THREE.Object3D();
 
-		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*2.6, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
+		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*2.6, 3, 1, false, Math.PI/2+0.5, Math.PI-1);
 		//var geometry = new THREE.SphereGeometry( scale, 4, 4, 0, 6.3, 0, 1.6);
 		var material = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false} );
 		var cyl1 = new THREE.Mesh( geometry, material );
@@ -139,7 +139,7 @@ class dome {
 		this.setRotation(Math.PI/2, 0, 0);
 		this.setPosition(PosX, PosY-4, PosZ);
 		this.dome.add(cyl1);
-		this.dome.add(cyl2);
+		//this.dome.add(cyl2);
 
 		//scene.add(this.dome);
 	}
