@@ -2,7 +2,7 @@ class car {
 	constructor(PosX, PosY, PosZ, scale) {
 		this.car = new THREE.Object3D();
 
-		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*3);
+		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*2);
 		var material = new THREE.MeshBasicMaterial( { color: 0xaa0000, wireframe:false} );
 		var box = new THREE.Mesh( geometry, material );
 
@@ -31,15 +31,15 @@ class car {
 class axleAndWheel {
 	constructor(PosX, PosY, PosZ, scale) {
 		this.wheels = new THREE.Object3D();
-		var geometry = new THREE.CylinderGeometry( scale*0.1, scale*0.1, scale*3.4, 20);
+		var geometry = new THREE.CylinderGeometry( scale*0.1, scale*0.1, scale*2.8, 10);
 		var material = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe: false} );
 		var cylinder = new THREE.Mesh( geometry, material );
 
 		this.setRotation(Math.PI*(1/2), 0, 0);
 		this.setPosition(PosX, PosY, PosZ);
 		this.wheels.add(cylinder);
-		this.wheels.add(new Wheel(0, 1.7*scale, 0, scale).getObject());
-		this.wheels.add(new Wheel(0, -1.7*scale, 0, scale).getObject());
+		this.wheels.add(new Wheel(0, 1.4*scale, 0, scale).getObject());
+		this.wheels.add(new Wheel(0, -1.4*scale, 0, scale).getObject());
 		//scene.add(this.wheels);
 	}
 
@@ -90,7 +90,7 @@ class WheelHub {
 	constructor(PosX, PosY, PosZ, scale) {
 		this.wheelHub = new THREE.Object3D();
 
-		var geometry = new THREE.SphereGeometry( scale*0.1, 16, 16 );
+		var geometry = new THREE.SphereGeometry( scale*0.1, 8, 8 );
 		var material = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe:false} );
 		var sphere = new THREE.Mesh( geometry, material );
 
@@ -98,7 +98,7 @@ class WheelHub {
 		this.setPosition(PosX, PosY, PosZ);
 		this.wheelHub.add(sphere);
 
-		var geometry = new THREE.CylinderGeometry( scale*0.02, scale*0.02, scale*0.2, 20);
+		var geometry = new THREE.CylinderGeometry( scale*0.02, scale*0.02, scale*0.2, 3);
 		var material = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe: false} );
 
 		var hubPlate = new ringOfMeshes(geometry, material, 5, scale*0.2, 0, 0, 0, true);
@@ -124,12 +124,12 @@ class dome {
 	constructor(PosX, PosY, PosZ, scale) {
 		this.dome = new THREE.Object3D();
 
-		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*2.6, 3, 1, false, Math.PI/2+0.5, Math.PI-1);
+		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.6, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
 		//var geometry = new THREE.SphereGeometry( scale, 4, 4, 0, 6.3, 0, 1.6);
 		var material = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false} );
 		var cyl1 = new THREE.Mesh( geometry, material );
 
-		geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*2.6+0.1, 16, 1, true, Math.PI/2+0.5, Math.PI-1.5);
+		geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.7+0.1, 16, 1, true, Math.PI/2+0.5, Math.PI-1.5);
 		//var geometry = new THREE.SphereGeometry( scale, 4, 4, 0, 6.3, 0, 1.6);
 		material = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe:false} );
 		material.side = THREE.DoubleSide;
