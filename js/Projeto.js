@@ -109,16 +109,20 @@ function createScene() {
 	scene.add(new THREE.AxisHelper(15));
 
 	//CREATION OF A ROAD EXAMPLE
-  	var roadExample = new road(0,0,0, 50);
+  	var roadExample = new road(0,0,0);
 
     roadExample.roadBegin(Math.PI/2);
     //roadExample.segment();
-  	roadExample.straightRoad(5);
-    //roadExample.segment();
+  	//roadExample.straightRoad(5);
+  	//roadExample.segment();
+  	roadExample.roadCurve(Math.PI/2, 100);
+    
     //roadExample.roadCurve();
   	roadExample.roadEnd();
-
-
+  	/*var straightrd = new straightRoad(0,0,0, 0, 2);
+  	var segment = new roadSegment(0,0,500);
+  	scene.add(straightrd.getObject());
+  	scene.add(segment.getObject());*/
 
 	//var orange1 = new orange(0, 0, 0, 10);
 	//var wHub = new WheelHub(30,0,0,5);
