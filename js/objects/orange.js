@@ -11,7 +11,7 @@ class orangeLeaf {
 		leafShape.bezierCurveTo( x, y, x+5, y+8, x, y + 10 );
 		leafShape.bezierCurveTo( x-5, y+8, x, y, x, y );
 		
-		var geometry = new THREE.ShapeGeometry( leafShape, 4);
+		var geometry = new THREE.ShapeGeometry( leafShape, 10);
 		var material = new THREE.MeshBasicMaterial( { color: 0x236e2b} );
 		material.side = THREE.DoubleSide;
 		var leafMesh = new THREE.Mesh( geometry, material ) ;
@@ -52,7 +52,7 @@ class orangeLeafStem {
 		this.stem.add(leaf1.getObject());
 		this.stem.add(leaf2.getObject());
 
-		var geometry = new THREE.ConeGeometry( 0.4, 3, 4 );
+		var geometry = new THREE.ConeGeometry( 0.4, 3, 6 );
 		var material = new THREE.MeshBasicMaterial( {color: 0x144a1a} );
 		var cone = new THREE.Mesh( geometry, material );
 		cone.position.set(0, 0.5, 0);

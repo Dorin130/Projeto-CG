@@ -4,10 +4,10 @@ var RoadSpaceBetweenSegmentsDEFAULT = 7;
 var RoadSegmentWidthDEFAULT = 15;
 var TorusRadiusDEFAULT = 3;
 var TorusTubeRadiusDEFAULT = 1;
-var ColorDEFAULT = 0xffff00;
+var ColorDEFAULT = 0xaaaaaa;
 
-var RadialSegmentsDEFAULT = 16;
-var TubularSegmentsDEFAULT = 18;
+var RadialSegmentsDEFAULT = 8;
+var TubularSegmentsDEFAULT = 12;
 
 
 function wrapToPI(Angle) {
@@ -31,9 +31,10 @@ class roadSegment {
 		this.roadSegment = new THREE.Object3D();
 
 		var geometry = new THREE.TorusGeometry( TorusRadius, TorusTubeRadius, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT );
-		var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-		var leftTorus = new THREE.Mesh( geometry, material );
-		var rightTorus = new THREE.Mesh( geometry, material );
+		var material1 = new THREE.MeshBasicMaterial( { color: Color, wireframe: false} );
+		var material2 = new THREE.MeshBasicMaterial( { color: Color, wireframe: false} );
+		var leftTorus = new THREE.Mesh( geometry, material1 );
+		var rightTorus = new THREE.Mesh( geometry, material2 );
 
 		leftTorus.position.set(- RoadSegmentWidth, 0, 0);
 		leftTorus.rotation.x = Math.PI/2;
@@ -131,12 +132,13 @@ class roadCircle {
 
 
 		var geometry = new THREE.TorusGeometry( TorusRadius, TorusTubeRadius, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT );
-		var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+		var material = new THREE.MeshBasicMaterial( { color: Color } );
 		var leftTorus = new THREE.Mesh( geometry, material );
 		var angle = 0;
 
 		for(var i=0; i<nrSegmentsNeeded; i++) {
-			var mesh = new THREE.Mesh( geometry, material );
+			//var material = new THREE.MeshBasicMaterial( { color: Color } );
+			var mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Color } ) );
 			angle = i*anglePerSegment;
 			mesh.position.set(Radius*Math.sin(angle), 0, Radius*Math.cos(angle))
 			mesh.rotation.x = Math.PI/2;

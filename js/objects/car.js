@@ -42,7 +42,6 @@ class axleAndWheel {
 		this.wheels.add(cylinder);
 		this.wheels.add(new Wheel(0, 1.4*scale, 0, scale).getObject());
 		this.wheels.add(new Wheel(0, -1.4*scale, 0, scale).getObject());
-		//scene.add(this.wheels);
 	}
 
 	setPosition(PosX, PosY, PosZ) {
@@ -72,7 +71,6 @@ class Wheel {
 
 		this.wheel.add(new WheelHub(0, 0, 0, scale).getObject());
 
-		//scene.add(this.wheel);
 	}
 
 	setPosition(PosX, PosY, PosZ) {
@@ -103,7 +101,7 @@ class WheelHub {
 		var geometry = new THREE.CylinderGeometry( scale*0.02, scale*0.02, scale*0.2, 3);
 		var material = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe: false} );
 
-		var hubPlate = new ringOfMeshes(geometry, material, 5, scale*0.2, 0, 0, 0, true);
+		var hubPlate = new ringOfMeshes(geometry, material, 20, scale*0.2, 0, 0, 0, true);
 		hubPlate.getObject().rotation.x = Math.PI/2;
 		this.wheelHub.add(hubPlate.getObject());
 		scene.add(this.wheelHub);
@@ -130,20 +128,20 @@ class dome {
 		//var geometry = new THREE.SphereGeometry( scale, 4, 4, 0, 6.3, 0, 1.6);
 		var material = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false} );
 		var cyl1 = new THREE.Mesh( geometry, material );
+		cyl1.position.set(0, 0, scale*0.75)
 
-		geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.7+0.1, 16, 1, true, Math.PI/2+0.5, Math.PI-1.5);
+
+
+		geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.7+0.1, 3, 1, true, Math.PI/2+0.5, Math.PI-1.5);
 		//var geometry = new THREE.SphereGeometry( scale, 4, 4, 0, 6.3, 0, 1.6);
 		material = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe:false} );
 		material.side = THREE.DoubleSide;
 		var cyl2 = new THREE.Mesh( geometry, material );
-		cyl2.position.set(0, 0, -0.05)
 
 		this.setRotation(Math.PI/2, 0, 0);
-		this.setPosition(PosX, PosY-4, PosZ);
+		this.setPosition(PosX, PosY, PosZ);
 		this.dome.add(cyl1);
 		//this.dome.add(cyl2);
-
-		//scene.add(this.dome);
 	}
 
 	setPosition(PosX, PosY, PosZ) {

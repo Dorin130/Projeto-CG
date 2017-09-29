@@ -110,13 +110,16 @@ function createScene() {
 
 	//CREATION OF A ROAD EXAMPLE
   	var roadExample = new road(0,0,0);
-    	roadExample.roadBegin(Math.PI/3);
-	roadExample.straightRoad(6);
-  	roadExample.roadCurve(Math.PI/2, 100);
-  	roadExample.roadEnd();
+    	roadExample.roadBegin(0);
+	//roadExample.straightRoad(1);
+	roadExample.roadCurve(Math.PI,10);
+  	//roadExample.roadCurve(Math.PI/2, 100);
+  	//roadExample.roadEnd();
 
 
-	//var orange1 = new orange(0, 0, 0, 10);
+  	var car1 = new car(0,0,0,10)
+  	//var butter1 = new butter(0,0,0);
+	// orange1 = new orange(0, 0, 0, 10);
 	//var wHub = new WheelHub(30,0,0,5);
 	
 	//createPlayerShip(0, 0, 40);
