@@ -107,7 +107,7 @@ function createScene() {
 	scene = new THREE.Scene();
 
 	//scene.add(new THREE.AxisHelper(15));
-        //var car1 = new car(0,0,0,5);
+       var car1 = new car(0,30,0,5);
 	  var butter1 = new butter(0,0,0);
 	//var orange1 = new orange(0, 0, 0, 10);
 	//var wHub = new WheelHub(30,0,0,5);

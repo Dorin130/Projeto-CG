@@ -12,6 +12,8 @@ class car {
 		this.car.add(new axleAndWheel(scale*1.5, -scale*0.3, 0, scale).getObject());
 		this.car.add(new axleAndWheel(-scale*1.5, -scale*0.3, 0, scale).getObject());
 
+		this.setPosition(PosX, PosY, PosZ);
+
 		scene.add(this.car);
 	}
 
