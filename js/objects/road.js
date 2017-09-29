@@ -9,6 +9,15 @@ var ColorDEFAULT = 0xffff00;
 var RadialSegmentsDEFAULT = 16;
 var TubularSegmentsDEFAULT = 18;
 
+
+function wrapToPI(Angle) {
+	if(!(0 < Angle < 2*Math.PI)) {
+		var aux = Angle/(2*Math.PI);
+		return Angle - Math.floor(aux)*2*Math.PI;
+	}
+	return Angle;
+}
+
 class roadSegment {
 	//RoadSegmentWidth, TorusRadius, TorusTubeRadius and Color are optional
 	constructor(PosX, PosY, PosZ, RoadSegmentWidth, TorusRadius, TorusTubeRadius, Color) {
@@ -94,7 +103,6 @@ class straightRoad {
 	//returns the position of the last road segment inserted in the straight road
 	getPosition() {
 		var children = this.straightRoad.children;
-		console.log(children);
 		return children[this.nrSegments].position;
 	}
 
@@ -105,8 +113,8 @@ class straightRoad {
 }
 
 
-class curvedRoad {
-constructor(PosX, PosY, PosZ, Radius, Angle, RoadSpaceBetweenSegments, RoadSegmentWidth, TorusRadius, TorusTubeRadius, Color) {
+class roadCircle {
+	constructor(PosX, PosY, PosZ, Radius, Angle, RoadSpaceBetweenSegments, RoadSegmentWidth, TorusRadius, TorusTubeRadius, Color) {
 		//STYLE VARIABLE
 		this.RoadSpaceBetweenSegments = RoadSpaceBetweenSegments || RoadSpaceBetweenSegmentsDEFAULT;
 		this.RoadSegmentWidth = RoadSegmentWidth || RoadSegmentWidthDEFAULT;
@@ -115,13 +123,12 @@ constructor(PosX, PosY, PosZ, Radius, Angle, RoadSpaceBetweenSegments, RoadSegme
 		this.Color = Color || ColorDEFAULT;
 		this.Radius = Radius;
 
-		this.curvedRoad = new THREE.Object3D();
+		this.roadCircle = new THREE.Object3D();
 
 		var anglePerSegment = (2*this.TorusRadius + this.RoadSpaceBetweenSegments)/Radius;
 		var perimeter = Radius*Angle;
 		var nrSegmentsNeeded = Math.round(perimeter / (2*TorusRadius + RoadSpaceBetweenSegments));
 
-		console.log(anglePerSegment);
 
 		var geometry = new THREE.TorusGeometry( TorusRadius, TorusTubeRadius, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT );
 		var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
@@ -133,8 +140,56 @@ constructor(PosX, PosY, PosZ, Radius, Angle, RoadSpaceBetweenSegments, RoadSegme
 			angle = i*anglePerSegment;
 			mesh.position.set(Radius*Math.sin(angle), 0, Radius*Math.cos(angle))
 			mesh.rotation.x = Math.PI/2;
-			this.curvedRoad.add(mesh);
+			this.roadCircle.add(mesh);
 		}
+	}
+	setPosition(PosX, PosY, PosZ) {
+		this.roadCircle.position.set(PosX, PosY, PosZ)
+	}
+
+	setRotation(RotX, RotY, RotZ) {
+		this.roadCircle.rotation.set(RotX, RotY, RotZ);
+	}
+
+	getObject() {
+		return this.roadCircle;
+	}
+
+}
+class curvedRoad {
+	constructor(PosX, PosY, PosZ, Radius, Angle, RoadSpaceBetweenSegments, RoadSegmentWidth, TorusRadius, TorusTubeRadius, Color) {
+		//STYLE VARIABLE
+		this.RoadSpaceBetweenSegments = RoadSpaceBetweenSegments || RoadSpaceBetweenSegmentsDEFAULT;
+		this.RoadSegmentWidth = RoadSegmentWidth || RoadSegmentWidthDEFAULT;
+		this.TorusRadius = TorusRadius || TorusRadiusDEFAULT;
+		this.TorusTubeRadius = TorusTubeRadius || TorusTubeRadiusDEFAULT // 3:1 ratio between the radius and the tube.
+		this.Color = Color || ColorDEFAULT;
+		this.Radius = Radius;
+
+		this.curvedRoad = new THREE.Object3D();
+
+		var curvedRd1 = new roadCircle(this.PosX,
+										this.PosY,
+										this.PosZ,
+										Radius,
+										Angle,
+										this.RoadSpaceBetweenSegments,
+										this.RoadSegmentWidth,
+									    this.TorusRadius,
+									  	this.TorusTubeRadius,
+									  	this.Color);
+		var curvedRd2 = new roadCircle(this.PosX,
+										this.PosY,
+										this.PosZ,
+										Radius + 2*this.RoadSegmentWidth,
+										Angle,
+										this.RoadSpaceBetweenSegments,
+										this.RoadSegmentWidth,
+									    this.TorusRadius,
+									  	this.TorusTubeRadius,
+									  	this.Color);
+		this.curvedRoad.add(curvedRd1.getObject());
+		this.curvedRoad.add(curvedRd2.getObject());
 	}
 	setPosition(PosX, PosY, PosZ) {
 		this.curvedRoad.position.set(PosX, PosY, PosZ)
@@ -147,9 +202,7 @@ constructor(PosX, PosY, PosZ, Radius, Angle, RoadSpaceBetweenSegments, RoadSegme
 	getObject() {
 		return this.curvedRoad;
 	}
-
 }
-
 
 //USE THIS CLASS FOR ROAD CREATION, IGNORE THE OTHERS
 class road {
@@ -221,17 +274,17 @@ class road {
 										  	this.Color);
 				this.roadSegments[this.nrRoadSegments++] = road;
 				position = road.getPosition();
-				console.log(position);
 				this.PosZ += nrSegments*(2*this.TorusRadius + this.RoadSpaceBetweenSegments)*Math.cos(this.Direction);
 				this.PosX += nrSegments*(2*this.TorusRadius + this.RoadSpaceBetweenSegments)*Math.sin(this.Direction);
 
 			}			
 		}
+		console.log(this.Direction);
 	}
 
 	roadCurve(Angle, Radius) {
 		if(this.RoadBuilding) {
-			var curvedRd1 = new curvedRoad(this.PosX,
+			var curvedRd = new curvedRoad(this.PosX,
 											this.PosY,
 											this.PosZ,
 											Radius,
@@ -241,7 +294,13 @@ class road {
 										    this.TorusRadius,
 										  	this.TorusTubeRadius,
 										  	this.Color);
-			this.roadSegments[this.nrRoadSegments++] = curvedRd;											
+			curvedRd.setRotation(0, this.Direction + 3*Math.PI/2, 0);
+			curvedRd.setPosition(this.PosX + (Radius+this.RoadSegmentWidth)*Math.cos(this.Direction), this.PosY, this.PosZ+(Radius+this.RoadSegmentWidth)*Math.sin(this.Direction));
+			this.Direction += Angle;
+			this.Direction = wrapToPI(this.Direction);
+			this.PosZ += (Radius+this.RoadSegmentWidth)*Math.cos(this.Direction);
+			this.PosX += (Radius+this.RoadSegmentWidth)*Math.sin(this.Direction);
+			this.roadSegments[this.nrRoadSegments++] = curvedRd;									
 		}
 		else  {
 			console.log("Error in roadEnd: You need to start building a road first");
@@ -261,3 +320,5 @@ class road {
 
 	}
 }
+
+

@@ -110,7 +110,8 @@ function createScene() {
 
 	//CREATION OF A ROAD EXAMPLE
   	var roadExample = new road(0,0,0);
-    roadExample.roadBegin(Math.PI/2);
+    	roadExample.roadBegin(Math.PI/3);
+	roadExample.straightRoad(6);
   	roadExample.roadCurve(Math.PI/2, 100);
   	roadExample.roadEnd();
 
