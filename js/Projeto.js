@@ -106,9 +106,15 @@ function createPerspectiveCamera(x, y, z) {
 function createScene() {
 	scene = new THREE.Scene();
 
-	//scene.add(new THREE.AxisHelper(15));
-       var car1 = new car(0,30,0,5);
-	  var butter1 = new butter(0,0,0);
+	scene.add(new THREE.AxisHelper(15));
+
+	//CREATION OF A ROAD EXAMPLE
+  	var roadExample = new road(0,0,0);
+    roadExample.roadBegin(Math.PI/2);
+  	roadExample.roadCurve(Math.PI/2, 100);
+  	roadExample.roadEnd();
+
+
 	//var orange1 = new orange(0, 0, 0, 10);
 	//var wHub = new WheelHub(30,0,0,5);
 	
