@@ -4,6 +4,8 @@
 /* Global variables */
 var scene, renderer, customCam;
 
+var playerCar;
+
 var geometry, material, mesh;
 
 var updateList = []; /* contains every object to be updated in the update cycle except customCamera*/
@@ -26,15 +28,24 @@ function mouseWheelHandler(e) {
 window.addEventListener( 'keydown', onKeyDown, false);
 
 function onKeyDown(e) {
-	switch(e.key) {
+	switch(e.keyCode) {
 		case "a":
-		case "A":
+		break;
+		case 65: //a
 			scene.traverse(function (node) {
 				if (node instanceof THREE.Mesh)
 					node.material.wireframe = !node.material.wireframe;
 			});
 			break;
 	}
+	if(e.keyCode == 37) 
+		playerCar.move("left");
+	if(e.keyCode == 38)
+		playerCar.move("up");
+	if(e.keyCode == 39)
+		playerCar.move("right");
+	if(e.keyCode == 40)	
+		playerCar.move("down");	
 }
 
 /* INIT */
@@ -79,9 +90,10 @@ function animate() {
 	}
 
 	customCam.update(delta_t);
-
-	//render
+	playerCar.update(delta_t);
+	//car1.update(delta_t);	//render
 	render(customCam.getCamera());
+
 }
 
 /* Camera related functions */
@@ -110,14 +122,20 @@ function createScene() {
 
 	//CREATION OF A ROAD EXAMPLE
   	var roadExample = new road(0,0,0);
-    	roadExample.roadBegin(0);
-	//roadExample.straightRoad(1);
-	roadExample.roadCurve(Math.PI,10);
-  	//roadExample.roadCurve(Math.PI/2, 100);
-  	//roadExample.roadEnd();
+    roadExample.roadBegin();
+    roadExample.straightRoad(15);
+	roadExample.roadCurve(Math.PI/6, 200);
+	roadExample.straightRoad(30);
+	roadExample.roadCurve(Math.PI, 200);
+	roadExample.straightRoad(60);
+	roadExample.roadCurve(Math.PI-Math.PI/6, 95);
+	roadExample.straightRoad(30);
+	
+  	roadExample.roadEnd();
 
 
-  	var car1 = new car(0,0,0,10)
+  	playerCar = new car(0,0,0,5)
+
   	//var butter1 = new butter(0,0,0);
 	// orange1 = new orange(0, 0, 0, 10);
 	//var wHub = new WheelHub(30,0,0,5);

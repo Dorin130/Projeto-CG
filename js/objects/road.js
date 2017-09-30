@@ -1,7 +1,7 @@
 'use strict'
 
 var RoadSpaceBetweenSegmentsDEFAULT = 7;
-var RoadSegmentWidthDEFAULT = 15;
+var RoadSegmentWidthDEFAULT = 30;
 var TorusRadiusDEFAULT = 3;
 var TorusTubeRadiusDEFAULT = 1;
 var ColorDEFAULT = 0xaaaaaa;
@@ -11,11 +11,15 @@ var TubularSegmentsDEFAULT = 12;
 
 
 function wrapToPI(Angle) {
-	if(!(0 < Angle < 2*Math.PI)) {
-		var aux = Angle/(2*Math.PI);
-		return Angle - Math.floor(aux)*2*Math.PI;
+	if(Angle > 0 && Angle < 2*Math.PI) {
+			return Angle;
 	}
-	return Angle;
+	else {
+		var aux = Angle/(2*Math.PI);
+		var result = (Angle - Math.floor(aux)*2*Math.PI)
+		return result;
+	}
+
 }
 
 class roadSegment {
@@ -91,8 +95,9 @@ class straightRoad {
 			this.straightRoad.add(segment.getObject());
 			z += 2*TorusRadius + RoadSpaceBetweenSegments;
 		}
-		this.straightRoad.position.set(PosX, PosY, PosZ);
 		this.straightRoad.rotation.y = Direction;
+		this.straightRoad.position.set(PosX, PosY, PosZ);
+		
 	}
 	setPosition(PosX, PosY, PosZ) {
 		this.straightRoad.position.set(PosX, PosY, PosZ)
@@ -144,6 +149,7 @@ class roadCircle {
 			mesh.rotation.x = Math.PI/2;
 			this.roadCircle.add(mesh);
 		}
+		this.roadCircle.position.set(PosX, PosY, PosZ);
 	}
 	setPosition(PosX, PosY, PosZ) {
 		this.roadCircle.position.set(PosX, PosY, PosZ)
@@ -170,9 +176,9 @@ class curvedRoad {
 
 		this.curvedRoad = new THREE.Object3D();
 
-		var curvedRd1 = new roadCircle(this.PosX,
-										this.PosY,
-										this.PosZ,
+		var curvedRd1 = new roadCircle(PosX,
+										PosY,
+										PosZ,
 										Radius,
 										Angle,
 										this.RoadSpaceBetweenSegments,
@@ -180,9 +186,9 @@ class curvedRoad {
 									    this.TorusRadius,
 									  	this.TorusTubeRadius,
 									  	this.Color);
-		var curvedRd2 = new roadCircle(this.PosX,
-										this.PosY,
-										this.PosZ,
+		var curvedRd2 = new roadCircle(PosX,
+										PosY,
+										PosZ,
 										Radius + 2*this.RoadSegmentWidth,
 										Angle,
 										this.RoadSpaceBetweenSegments,
@@ -233,6 +239,8 @@ class road {
 	roadBegin(Direction, PosX, PosY, PosZ) {
 		this.RoadBuilding = true;
 		this.Direction = Direction || this.Direction;
+		this.Direction = wrapToPI(this.Direction);
+		console.log(this.Direction);
 		this.PosX = PosX || this.PosX;
 		this.PosY = PosY || this.PosY;
 		this.PosZ = PosZ || this.PosZ;
@@ -281,14 +289,14 @@ class road {
 
 			}			
 		}
-		console.log(this.Direction);
 	}
 
-	roadCurve(Angle, Radius) {
+	roadCurve(Angle, Radius, TurnDirection) {
+		var TurnDirection = TurnDirection || 1; //Not implemented yet
 		if(this.RoadBuilding) {
-			var curvedRd = new curvedRoad(this.PosX,
-											this.PosY,
-											this.PosZ,
+			var curvedRd = new curvedRoad(0,
+											0,
+											0,
 											Radius,
 											Angle,
 											this.RoadSpaceBetweenSegments,
@@ -296,12 +304,18 @@ class road {
 										    this.TorusRadius,
 										  	this.TorusTubeRadius,
 										  	this.Color);
+
 			curvedRd.setRotation(0, this.Direction + 3*Math.PI/2, 0);
-			curvedRd.setPosition(this.PosX + (Radius+this.RoadSegmentWidth)*Math.cos(this.Direction), this.PosY, this.PosZ+(Radius+this.RoadSegmentWidth)*Math.sin(this.Direction));
-			this.Direction += Angle;
-			this.Direction = wrapToPI(this.Direction);
-			this.PosZ += (Radius+this.RoadSegmentWidth)*Math.cos(this.Direction);
-			this.PosX += (Radius+this.RoadSegmentWidth)*Math.sin(this.Direction);
+			curvedRd.setPosition(this.PosX - (Radius + this.RoadSegmentWidth)*Math.sin(this.Direction + 3*Math.PI/2), this.PosY, this.PosZ- (Radius + this.RoadSegmentWidth)*Math.cos(this.Direction + 3*Math.PI/2) );
+
+			this.PosZ = this.PosZ  + (Radius + this.RoadSegmentWidth)*Math.cos(this.Direction + 3*Math.PI/2 + Angle) - (Radius + this.RoadSegmentWidth)*Math.cos(this.Direction + 3*Math.PI/2);
+			this.PosX =	this.PosX +  (Radius + this.RoadSegmentWidth)*Math.sin(this.Direction + 3*Math.PI/2 + Angle) -(Radius + this.RoadSegmentWidth)*Math.sin(this.Direction + 3*Math.PI/2);
+			
+			
+			this.Direction += Angle ;
+			this.Direction = wrapToPI(this.Direction);	
+
+			
 			this.roadSegments[this.nrRoadSegments++] = curvedRd;									
 		}
 		else  {
