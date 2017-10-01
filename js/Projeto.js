@@ -26,7 +26,6 @@ window.addEventListener( 'keydown', onKeyDown, false );
 window.addEventListener( 'keyup', onKeyUp, false );
 
 
-
 /* Event Listener Functions */
 function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -82,9 +81,13 @@ function init() {
 
 	createScene();
 
+/* createPerspectiveCamera(0, 0, 0) */
 	customCam = new customCamera(createOrtographicCamera(300, 0, 40, 0), scene.position);
 	//customCam.focusOn(playerCar.getObject());
 	//customCam.follow(playerCar.getObject());
+
+	
+
 	customCam.setTransform(30, 0, 0, 0, 0);
 
 	render(customCam.getCamera());
