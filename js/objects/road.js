@@ -9,7 +9,6 @@ var ColorDEFAULT = 0xaaaaaa;
 var RadialSegmentsDEFAULT = 8;
 var TubularSegmentsDEFAULT = 12;
 
-
 function wrapToPI(Angle) {
 	if(Angle > 0 && Angle < 2*Math.PI) {
 			return Angle;

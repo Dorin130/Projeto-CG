@@ -1,8 +1,14 @@
+var angleStep = 2
+
 class car {
 	constructor(PosX, PosY, PosZ, scale) {
 		this.car = new THREE.Object3D();
-
+		this.turn = 0;
+		this.carAxis = new THREE.Vector3(0, 1, 0);
+		this.direction = new THREE.Vector3(-1,0,0);
 		this.speed = 0;
+		this.direction.applyAxisAngle(this.carAxis, 0);
+		this.timeout = false;
 		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*2);
 		var material = new THREE.MeshBasicMaterial( { color: 0xaa0000, wireframe:false} );
 		var box = new THREE.Mesh( geometry, material );
@@ -30,20 +36,33 @@ class car {
 		return this.car;
 	}
 	move(direction) {
-		var speed = 100;
-		if(direction == "up" && this.speed < speed)
+		var speed = 50;
+		if(direction == "up" && this.speed < speed) {
 			this.speed += speed;
-		if(direction == "down" && this.speed> -speed)
+			this.turn = 0;
+		}
+		if(direction == "down" && this.speed> -speed) {
 			this.speed -= speed;
-		//if(direction == "stop")
-			
-			
-		
+			this.turn = 0;
+		}
+		if(direction == "left" ) {
+			this.turn = 1;
+		}
+		if(direction == "right") {
+			this.turn = -1;
+
+		}
+
 	}
 	update(delta_t) {
 		var x = this.car.position.x;
 		var z = this.car.position.z;
-		this.car.position.set(x - this.speed*delta_t, 0, z);
+
+		this.car.rotateOnAxis(this.carAxis, this.turn*angleStep*delta_t);
+		this.direction.applyAxisAngle(this.carAxis, this.turn*angleStep*delta_t);
+
+		this.car.position.set(x + this.direction.x*this.speed*delta_t, 0, z + this.direction.z*this.speed*delta_t);
+		
 	}
 }
 
