@@ -8,22 +8,58 @@ var playerCar;
 
 var geometry, material, mesh;
 
-var updateList = []; /* contains every object to be updated in the update cycle except customCamera*/
+var updateList = []; /* contains every object to be updated in the update cycle except customCamera */
 
 var clock = new THREE.Clock();
 var totalTime = 0;
 
 /* Event Listeners */
+//camera resize
 window.addEventListener( 'resize', onWindowResize, false );
 
+//camera zoom
 window.addEventListener( 'mousewheel', mouseWheelHandler, false );
-window.addEventListener( 'DOMMouseScroll', mouseWheelHandler, false);
+window.addEventListener( 'DOMMouseScroll', mouseWheelHandler, false );
+
+//car control
+window.addEventListener( 'keydown', onKeyDown, false );
+
+/* INIT */
+function init() {
+	renderer = new THREE.WebGLRenderer({antialias: true});
+
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+	document.body.appendChild(renderer.domElement);
+
+	var focus = createScene();
+
+	var customCam2 = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
+	
+	//var customCam2 = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
+	customCam2.focusOn(playerCar.getObject());
+	customCam2.follow(playerCar.getObject());
+	customCam2.setTransform(30, 0, 0, 0, 0);
+	
+	customCam = customCam2;
+	customCam.manualControl();
+
+	render(customCam.getCamera());
+	animate();
+}
+
+/* Event Listener Functions */
+function onWindowResize() {
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    customCam.prepareWindowResize();
+}
 
 function mouseWheelHandler(e) {
 	var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 	if(delta == 1) customCam.scrollUp();
 	else customCam.scrollDown();
 }
+
 
 window.addEventListener( 'keydown', onKeyDown, false);
 window.addEventListener('keyup', onKeyUp, false);
@@ -55,6 +91,7 @@ function onKeyDown(e) {
 	if(e.keyCode == 40)	
 		playerCar.move("down");	
 }
+
 
 /* INIT */
 function init() {
@@ -146,6 +183,7 @@ function createScene() {
 
 
   	playerCar = new car(0,0,0,5)
+  	playerCar.setRotation(Math.PI/2, 0, 0)
 
   	//var butter1 = new butter(0,0,0);
 	// orange1 = new orange(0, 0, 0, 10);

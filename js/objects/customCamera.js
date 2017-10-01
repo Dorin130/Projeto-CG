@@ -14,9 +14,12 @@ class customCamera {
 		this.transTheta = 0;
 		this.wrapAroundPhi = false;
 		this.windowResize = false;
+
+		//Manual control
 		this.controled = false;
-		this.upScroll = 0;
 		this.scrollSpeed = 5;
+			//Inputs
+		this.upScroll = 0;
 	}
 
 	getCamera() {

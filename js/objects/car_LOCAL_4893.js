@@ -9,7 +9,6 @@ class car {
 		this.speed = 0;
 		this.direction.applyAxisAngle(this.carAxis, 0);
 		this.timeout = false;
-
 		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*2);
 		var material = new THREE.MeshBasicMaterial( { color: 0xaa0000, wireframe:false} );
 		var box = new THREE.Mesh( geometry, material );
@@ -58,9 +57,8 @@ class car {
 		var x = this.car.position.x;
 		var z = this.car.position.z;
 
-		this.car.rotation.y += this.turn*angleStep*delta_t;
 		//this.car.rotateOnAxis(this.carAxis, this.turn*angleStep*delta_t);
-
+		this.car.rotation.y += this.turn*angleStep*delta_t;
 		this.direction.applyAxisAngle(this.carAxis, this.turn*angleStep*delta_t);
 
 		this.car.position.set(x + this.direction.x*this.speed*delta_t, 0, z + this.direction.z*this.speed*delta_t);
