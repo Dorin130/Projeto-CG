@@ -67,7 +67,9 @@ function onKeyDown(e) {
 	if(e.keyCode == 39)
 		playerCar.input("right");
 	if(e.keyCode == 40)	
-		playerCar.input("down");	
+		playerCar.input("down");
+
+	e.preventDefault(); //avoid page scrolling in firefox
 }
 
 
