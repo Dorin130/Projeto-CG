@@ -4,7 +4,7 @@
 /* Global variables */
 var scene, renderer, customCam;
 
-var playerCar;
+var playerCar, gameRoad;
 
 var geometry, material, mesh;
 
@@ -25,29 +25,7 @@ window.addEventListener( 'DOMMouseScroll', mouseWheelHandler, false );
 window.addEventListener( 'keydown', onKeyDown, false );
 window.addEventListener( 'keyup', onKeyUp, false );
 
-/* INIT */
-function init() {
-	renderer = new THREE.WebGLRenderer({antialias: true});
 
-	renderer.setSize(window.innerWidth, window.innerHeight);
-
-	document.body.appendChild(renderer.domElement);
-
-	var focus = createScene();
-
-	var customCam2 = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
-	
-	//var customCam2 = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
-	customCam2.focusOn(playerCar.getObject());
-	customCam2.follow(playerCar.getObject());
-	customCam2.setTransform(30, 0, 0, 0, 0);
-	
-	customCam = customCam2;
-	customCam.manualControl();
-
-	render(customCam.getCamera());
-	animate();
-}
 
 /* Event Listener Functions */
 function onWindowResize() {
@@ -104,9 +82,9 @@ function init() {
 
 	createScene();
 
-	customCam = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
-	customCam.focusOn(playerCar.getObject());
-	customCam.follow(playerCar.getObject());
+	customCam = new customCamera(createOrtographicCamera(300, 0, 40, 0), scene.position);
+	//customCam.focusOn(playerCar.getObject());
+	//customCam.follow(playerCar.getObject());
 	customCam.setTransform(30, 0, 0, 0, 0);
 
 	render(customCam.getCamera());
@@ -162,20 +140,19 @@ function createScene() {
 	scene.add(new THREE.AxisHelper(15));
 
 	//CREATION OF A ROAD EXAMPLE
-  	var roadExample = new road(0,0,0);
-    roadExample.roadBegin();
-    roadExample.straightRoad(15);
-	roadExample.roadCurve(Math.PI/6, 200);
-	roadExample.straightRoad(30);
-	roadExample.roadCurve(Math.PI, 200);
-	roadExample.straightRoad(60);
-	roadExample.roadCurve(Math.PI-Math.PI/6, 95);
-	roadExample.straightRoad(30);
-	
-  	roadExample.roadEnd();
+  	gameRoad = new road(0, 0, 0, 7, 30, 3, 1);
+    gameRoad.roadBegin();
+	gameRoad.roadCurve(2*Math.PI, 70);
+  	gameRoad.setPosition(-100,0,0);
+  	gameRoad.roadEnd();
 
 
-  	playerCar = new car(0,0,0,5)
+  	playerCar = new car(0,0,0,5);
+  	var gameTable = new table(0,-20,0, 400, 20, 400);
+  	scene.add(gameTable.getObject());
+
+  	var orange1 = new orange(0,0,0);
+  	orange1.setRotation(0,0,Math.PI);
   	//playerCar.setRotation(Math.PI/2, 0, 0)
 
   	//var butter1 = new butter(0,0,0);

@@ -132,7 +132,6 @@ class car {
 		var x = this.car.position.x;
 		var z = this.car.position.z;
 		this.car.position.set(x + this.direction.x*this.speed*delta_time, 0, z + this.direction.z*this.speed*delta_time);
-		console.log(this.speed);
 	}
 }
 

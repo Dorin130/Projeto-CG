@@ -13,7 +13,7 @@ class butterSlice {
 		var geometry = new THREE.BoxGeometry( Width/4, Height, Depth);
 		var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: false} );
 		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set(PosX + Width/2 + (Height/2 + Width/8)*Math.sin(angle) , PosY, PosZ ); //ask me irl 
+		mesh.position.set(PosX + Width/2 + (Height/2 + Width/8)*Math.sin(angle) , PosY, PosZ ); 
 		mesh.rotation.z = angle;
 		this.slice.add(mesh);
 
