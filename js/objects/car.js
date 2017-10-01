@@ -37,13 +37,13 @@ class car {
 		return this.car;
 	}
 	move(direction) {
-		var speed = 50;
+		var speed = 100;
 		if(direction == "up" && this.speed < speed) {
-			this.speed += speed;
+			this.speed += 1;
 			this.turn = 0;
 		}
 		if(direction == "down" && this.speed> -speed) {
-			this.speed -= speed;
+			this.speed -= 1;
 			this.turn = 0;
 		}
 		if(direction == "left" ) {
