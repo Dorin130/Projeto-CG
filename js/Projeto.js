@@ -26,6 +26,14 @@ function mouseWheelHandler(e) {
 }
 
 window.addEventListener( 'keydown', onKeyDown, false);
+window.addEventListener('keyup', onKeyUp, false);
+
+function onKeyUp(e) {
+	if(e.keyCode == 37) 
+		playerCar.move("release");
+	if(e.keyCode == 39)
+		playerCar.move("release");
+}
 
 function onKeyDown(e) {
 	switch(e.keyCode) {
@@ -60,9 +68,12 @@ function init() {
 
 	//customCam = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
 	
-	var customCam2 = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
+
+	var customCam2 = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
 	//customCam2.focusOn(updateList[0].getObject());
 	//customCam2.follow(updateList[0].getObject());
+	customCam2.focusOn(playerCar.getObject());
+	customCam2.follow(playerCar.getObject());
 	customCam2.setTransform(30, 0, Math.PI/8, Math.PI/3, Math.PI/4);
 	
 	customCam = customCam2;
