@@ -37,38 +37,33 @@ class car {
 		return this.car;
 	}
 	move(direction) {
-		var speed = 100;
+		var speed = 50;
 		if(direction == "up" && this.speed < speed) {
-			this.speed += 1;
+			this.speed += speed;
 			this.turn = 0;
 		}
 		if(direction == "down" && this.speed> -speed) {
-			this.speed -= 1;
+			this.speed -= speed;
 			this.turn = 0;
 		}
 		if(direction == "left" ) {
 			this.turn = 1;
 		}
-
 		if(direction == "right") {
 			this.turn = -1;
+
 		}
 
-		if(direction == "release") {
-			this.turn = 0;
-		}
 	}
-
 	update(delta_t) {
 		var x = this.car.position.x;
 		var z = this.car.position.z;
-
 		this.car.rotation.y += this.turn*angleStep*delta_t;
 		//this.car.rotateOnAxis(this.carAxis, this.turn*angleStep*delta_t);
-
 		this.direction.applyAxisAngle(this.carAxis, this.turn*angleStep*delta_t);
 
 		this.car.position.set(x + this.direction.x*this.speed*delta_t, 0, z + this.direction.z*this.speed*delta_t);
+		
 	}
 }
 

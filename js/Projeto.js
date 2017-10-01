@@ -60,6 +60,17 @@ function mouseWheelHandler(e) {
 	else customCam.scrollDown();
 }
 
+
+window.addEventListener( 'keydown', onKeyDown, false);
+window.addEventListener('keyup', onKeyUp, false);
+
+function onKeyUp(e) {
+	if(e.keyCode == 37) 
+		playerCar.move("release");
+	if(e.keyCode == 39)
+		playerCar.move("release");
+}
+
 function onKeyDown(e) {
 	switch(e.keyCode) {
 		case "a":
@@ -79,6 +90,40 @@ function onKeyDown(e) {
 		playerCar.move("right");
 	if(e.keyCode == 40)	
 		playerCar.move("down");	
+}
+
+
+/* INIT */
+function init() {
+	renderer = new THREE.WebGLRenderer({antialias: true});
+
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+	document.body.appendChild(renderer.domElement);
+
+	var focus = createScene();
+
+	//customCam = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
+	
+
+	var customCam2 = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
+	//customCam2.focusOn(updateList[0].getObject());
+	//customCam2.follow(updateList[0].getObject());
+	customCam2.focusOn(playerCar.getObject());
+	customCam2.follow(playerCar.getObject());
+	customCam2.setTransform(30, 0, Math.PI/8, Math.PI/3, Math.PI/4);
+	
+	customCam = customCam2;
+	customCam.manualControl();
+
+	render(customCam.getCamera());
+	animate();
+}
+
+/* Event Listener Functions */
+function onWindowResize() {
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    customCam.prepareWindowResize();
 }
 
 /* Animation main function and update/render cycle */

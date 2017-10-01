@@ -1,4 +1,4 @@
-var angleStep = 2
+var angleStep = 4
 
 class car {
 	constructor(PosX, PosY, PosZ, scale) {
@@ -37,28 +37,23 @@ class car {
 		return this.car;
 	}
 	move(direction) {
-		var speed = 100;
-		if(direction == "up" && this.speed < speed) {
-			this.speed += 1;
-			this.turn = 0;
-		}
-		if(direction == "down" && this.speed> -speed) {
-			this.speed -= 1;
-			this.turn = 0;
-		}
-		if(direction == "left" ) {
+		var speed = 50;
+		if(direction == "up" && this.speed < speed) 
+			this.speed += speed;
+		if(direction == "down" && this.speed> -speed) 
+			this.speed -= speed;
+		
+		if(direction == "left" ) 
 			this.turn = 1;
-		}
-
-		if(direction == "right") {
+		
+		if(direction == "right") 
 			this.turn = -1;
-		}
 
-		if(direction == "release") {
+		if(direction == "release") 
 			this.turn = 0;
-		}
-	}
+		
 
+	}
 	update(delta_t) {
 		var x = this.car.position.x;
 		var z = this.car.position.z;
