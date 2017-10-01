@@ -1,21 +1,24 @@
-var angleStep = 2
-
 class car {
 	constructor(PosX, PosY, PosZ, scale) {
-		this.car = new THREE.Object3D();
-		this.turn = 0;
-		this.carAxis = new THREE.Vector3(0, 1, 0);
+		//Movement Defaults (Simple version)
 		this.direction = new THREE.Vector3(-1,0,0);
+		this.keyInputs = []; //up, down, left, right
+		this.keyInputs["up"] = this.keyInputs["down"] = this.keyInputs["left"] = this.keyInputs["right"] = false;
+		this.turnDirection = 0; //positive means left
+		this.turnSpeed = 2;
+		this.acceleration = 0;
 		this.speed = 0;
-		this.direction.applyAxisAngle(this.carAxis, 0);
-		this.timeout = false;
+		this.maxSpeed = 250;
+		this.minSpeed = -100;
+		this.maxAttrition = 15;
 
+		//Creation
+		this.car = new THREE.Object3D();
 		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*2);
 		var material = new THREE.MeshBasicMaterial( { color: 0xaa0000, wireframe:false} );
 		var box = new THREE.Mesh( geometry, material );
-
-
 		this.car.add(box);
+		
 		this.car.add(new dome(scale*.5, scale*.5, scale*0, scale).getObject())
 		this.car.add(new axleAndWheel(scale*1.5, -scale*0.3, 0, scale).getObject());
 		this.car.add(new axleAndWheel(-scale*1.5, -scale*0.3, 0, scale).getObject());
@@ -36,39 +39,100 @@ class car {
 	getObject() {
 		return this.car;
 	}
-	move(direction) {
-		var speed = 100;
-		if(direction == "up" && this.speed < speed) {
-			this.speed += 1;
-			this.turn = 0;
-		}
-		if(direction == "down" && this.speed> -speed) {
-			this.speed -= 1;
-			this.turn = 0;
-		}
-		if(direction == "left" ) {
-			this.turn = 1;
-		}
 
-		if(direction == "right") {
-			this.turn = -1;
-		}
-
-		if(direction == "release") {
-			this.turn = 0;
+	input(action) {
+		//Up Arrow Key
+		switch(action) {
+			case "up":
+				this.keyInputs["up"] = true;
+				break;
+			case "down":
+				this.keyInputs["down"] = true;
+				break;
+			case "left":
+				this.keyInputs["left"] = true;
+				break;
+			case "right":
+				this.keyInputs["right"] = true;
+				break;
+			case "upRelease":
+				this.keyInputs["up"] = false;
+				break;
+			case "downRelease":
+				this.keyInputs["down"] = false;
+				break;
+			case "leftRelease":
+				this.keyInputs["left"] = false;
+				break;
+			case "rightRelease":
+				this.keyInputs["right"] = false;
+				break;
+			default:
+				console.log("Input key error: car: no interaction for action '" + action + "'");
+				break;
 		}
 	}
 
-	update(delta_t) {
+	update(delta_time) {
+		this.simpleInputInterpret();
+		this.simplePositionUpdate(delta_time);
+	}
+
+	simpleInputInterpret(delta_time) {
+		var carAcceleration = 0; //attempted acceleration from motor and breaks
+		if(this.keyInputs["up"] && !this.keyInputs["down"]) {
+			if(this.speed < 0)
+				carAcceleration = +150; //moving backwards --> using breaks
+			else
+				carAcceleration = +50; //moving forward --> using engine
+		} else if(this.keyInputs["down"] && !this.keyInputs["up"]) {
+			if(this.speed > 0)
+				carAcceleration = -150; //moving forward --> using breaks
+			else
+				carAcceleration = -30; //moving backwards --> using engine
+		} else { //car axle attrition applies
+			carAcceleration = this.getAttrition();
+		}
+
+		var turn = 0; //positive means left
+		if(this.keyInputs["left"] && !this.keyInputs["right"]) {
+			turn = 1;
+		} else if(this.keyInputs["right"] && !this.keyInputs["left"]) {
+			turn = -1;
+		} else { //both keys or no keys --> keep current direction
+			turn = 0;
+		}
+
+		this.acceleration = carAcceleration;
+		this.turnDirection = turn;
+	}
+
+	getAttrition() {
+		if(this.speed == 0)
+			return 0;
+		else if(this.speed > 0)
+			return -this.maxAttrition;
+		else
+			return +this.maxAttrition;
+	}
+
+	simplePositionUpdate(delta_time) {
+		var speedStopThreshold = 3;
+		this.speed += this.acceleration*delta_time;
+		this.speed = Math.max(this.minSpeed, Math.min(this.maxSpeed, this.speed)); //Setting speed within bounds
+		
+		if(Math.abs(this.speed) < speedStopThreshold && Math.abs(this.acceleration) <= this.maxAttrition) this.speed = 0;
+
+		this.car.rotation.y += this.turnDirection*this.turnSpeed*delta_time;
+		//this.car.rotateOnAxis(this.car.up, this.turn*this.turnSpeed*delta_time);
+
+		this.direction.applyAxisAngle(this.car.up, this.turnDirection*this.turnSpeed*delta_time);
+		//var direction = this.carFront.applyAxisAngle(this.car.up, this.car.rotation.y); //conceptually prettier but less simple
+
 		var x = this.car.position.x;
 		var z = this.car.position.z;
-
-		this.car.rotation.y += this.turn*angleStep*delta_t;
-		//this.car.rotateOnAxis(this.carAxis, this.turn*angleStep*delta_t);
-
-		this.direction.applyAxisAngle(this.carAxis, this.turn*angleStep*delta_t);
-
-		this.car.position.set(x + this.direction.x*this.speed*delta_t, 0, z + this.direction.z*this.speed*delta_t);
+		this.car.position.set(x + this.direction.x*this.speed*delta_time, 0, z + this.direction.z*this.speed*delta_time);
+		console.log(this.speed);
 	}
 }
 
@@ -146,7 +210,6 @@ class WheelHub {
 		var hubPlate = new ringOfMeshes(geometry, material, 20, scale*0.2, 0, 0, 0, true);
 		hubPlate.getObject().rotation.x = Math.PI/2;
 		this.wheelHub.add(hubPlate.getObject());
-		scene.add(this.wheelHub);
 	}
 
 	setPosition(PosX, PosY, PosZ) {

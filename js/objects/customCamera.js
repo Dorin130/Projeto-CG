@@ -131,32 +131,34 @@ class customCamera {
 		}
 	}
 
-	scrollCheck(delta_time, relative) {
-		if(!relative) {
-			var change_time = 0.1; // multiplicative factor
-			if(this.upScroll > 0.2) {
-				this.transRadius = Math.max(0.1, this.transRadius-this.upScroll*delta_time/change_time);
-				this.upScroll = Math.max(0, this.upScroll-this.upScroll*delta_time/change_time);
-			} else if (this.upScroll < -0.2) {
-				this.transRadius = Math.max(0.1, this.transRadius-this.upScroll*delta_time/change_time);
-				this.upScroll = Math.min(0, this.upScroll-this.upScroll*delta_time/change_time);
-			} else if (this.upScroll != 0) {
-				this.transRadius = Math.max(0.1, this.transRadius-this.upScroll);
-				this.upScroll = 0;
-			}
-		} else {
-			//deprecated but funny
-			var smoothFactor = 15; // distance at which 1 physical scroll = 1 unit of radius
-			if(this.upScroll > 0) {
-				console.log(this.scrollSpeed);
-				this.upScroll = Math.max(0, this.upScroll-this.scrollSpeed);
-				this.transRadius = Math.max(0.1, this.transRadius-this.scrollSpeed);
-			} else if (this.upScroll < 0) {
-				console.log(this.scrollSpeed);
-				this.upScroll = Math.min(0, this.upScroll+this.scrollSpeed);
-				this.transRadius = Math.max(0.1, this.transRadius+this.scrollSpeed);
-			}
-			this.scrollSpeed = this.transRadius/smoothFactor;
+	scrollCheck(delta_time) {
+		var change_time = 0.1; // multiplicative factor
+		if(this.upScroll > 0.2) {
+			this.transRadius = Math.max(0.1, this.transRadius-this.upScroll*delta_time/change_time);
+			this.upScroll = Math.max(0, this.upScroll-this.upScroll*delta_time/change_time);
+		} else if (this.upScroll < -0.2) {
+			this.transRadius = Math.max(0.1, this.transRadius-this.upScroll*delta_time/change_time);
+			this.upScroll = Math.min(0, this.upScroll-this.upScroll*delta_time/change_time);
+		} else if (this.upScroll != 0) {
+			this.transRadius = Math.max(0.1, this.transRadius-this.upScroll);
+			this.upScroll = 0;
 		}
 	}
 }
+
+
+
+/*
+		//deprecated but funny
+		var smoothFactor = 15; // distance at which 1 physical scroll = 1 unit of radius
+		if(this.upScroll > 0) {
+			console.log(this.scrollSpeed);
+			this.upScroll = Math.max(0, this.upScroll-this.scrollSpeed);
+			this.transRadius = Math.max(0.1, this.transRadius-this.scrollSpeed);
+		} else if (this.upScroll < 0) {
+			console.log(this.scrollSpeed);
+			this.upScroll = Math.min(0, this.upScroll+this.scrollSpeed);
+			this.transRadius = Math.max(0.1, this.transRadius+this.scrollSpeed);
+		}
+		this.scrollSpeed = this.transRadius/smoothFactor;
+*/

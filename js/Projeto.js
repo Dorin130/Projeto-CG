@@ -23,6 +23,7 @@ window.addEventListener( 'DOMMouseScroll', mouseWheelHandler, false );
 
 //car control
 window.addEventListener( 'keydown', onKeyDown, false );
+window.addEventListener( 'keyup', onKeyUp, false );
 
 /* INIT */
 function init() {
@@ -60,15 +61,15 @@ function mouseWheelHandler(e) {
 	else customCam.scrollDown();
 }
 
-
-window.addEventListener( 'keydown', onKeyDown, false);
-window.addEventListener('keyup', onKeyUp, false);
-
 function onKeyUp(e) {
 	if(e.keyCode == 37) 
-		playerCar.move("release");
+		playerCar.input("leftRelease");
+	if(e.keyCode == 38)
+		playerCar.input("upRelease");
 	if(e.keyCode == 39)
-		playerCar.move("release");
+		playerCar.input("rightRelease");
+	if(e.keyCode == 40)	
+		playerCar.input("downRelease");	
 }
 
 function onKeyDown(e) {
@@ -83,13 +84,13 @@ function onKeyDown(e) {
 			break;
 	}
 	if(e.keyCode == 37) 
-		playerCar.move("left");
+		playerCar.input("left");
 	if(e.keyCode == 38)
-		playerCar.move("up");
+		playerCar.input("up");
 	if(e.keyCode == 39)
-		playerCar.move("right");
+		playerCar.input("right");
 	if(e.keyCode == 40)	
-		playerCar.move("down");	
+		playerCar.input("down");	
 }
 
 
@@ -101,20 +102,12 @@ function init() {
 
 	document.body.appendChild(renderer.domElement);
 
-	var focus = createScene();
+	createScene();
 
-	//customCam = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
-	
-
-	var customCam2 = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
-	//customCam2.focusOn(updateList[0].getObject());
-	//customCam2.follow(updateList[0].getObject());
-	customCam2.focusOn(playerCar.getObject());
-	customCam2.follow(playerCar.getObject());
-	customCam2.setTransform(30, 0, Math.PI/8, Math.PI/3, Math.PI/4);
-	
-	customCam = customCam2;
-	customCam.manualControl();
+	customCam = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
+	customCam.focusOn(playerCar.getObject());
+	customCam.follow(playerCar.getObject());
+	customCam.setTransform(30, 0, 0, 0, 0);
 
 	render(customCam.getCamera());
 	animate();
@@ -183,7 +176,7 @@ function createScene() {
 
 
   	playerCar = new car(0,0,0,5)
-  	playerCar.setRotation(Math.PI/2, 0, 0)
+  	//playerCar.setRotation(Math.PI/2, 0, 0)
 
   	//var butter1 = new butter(0,0,0);
 	// orange1 = new orange(0, 0, 0, 10);
