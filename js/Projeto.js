@@ -4,7 +4,7 @@
 /* Global variables */
 var scene, renderer, customCam;
 
-var playerCar, gameRoad;
+var playerCar;
 
 var geometry, material, mesh;
 
@@ -83,6 +83,7 @@ function init() {
 
 /* createPerspectiveCamera(0, 0, 0) */
 	customCam = new customCamera(createOrtographicCamera(300, 0, 40, 0), scene.position);
+	//customCam = new customCamera(createPerspectiveCamera(400, 40, 0), scene.position);
 	//customCam.focusOn(playerCar.getObject());
 	//customCam.follow(playerCar.getObject());
 
@@ -143,19 +144,28 @@ function createScene() {
 	scene.add(new THREE.AxisHelper(15));
 
 	//CREATION OF A ROAD EXAMPLE
-  	gameRoad = new road(0, 0, 0, 7, 30, 3, 1);
+  	var gameRoad = new road(0, 0, 0, 7, 30, 3, 1);
     gameRoad.roadBegin();
 	gameRoad.roadCurve(2*Math.PI, 70);
   	gameRoad.setPosition(-100,0,0);
   	gameRoad.roadEnd();
 
 
-  	playerCar = new car(0,0,0,5);
-  	var gameTable = new table(0,-20,0, 400, 20, 400);
-  	scene.add(gameTable.getObject());
+  	playerCar = new car(100,0,0,5);
+  	playerCar.setRotation(0,3*Math.PI/2,0);
 
-  	var orange1 = new orange(0,0,0);
-  	orange1.setRotation(0,0,Math.PI);
+  	var gameTable = new table(0,-10,0, 400, 20, 400);
+
+  	var orange1 = new orange(-80, 10, -30,10);
+  	var orange2 = new orange(60, 10, 80,10);
+  	var orange3 = new orange(50, 10, -100,10);
+
+  	var butter1 = new butter(-50,20,20);
+
+  	var butterCube1 = new fallenButter(-90,20,-40,15,20,20);
+  	butterCube1.setRotation(0,Math.PI/4,0);
+
+  	var butterCube2 = new fallenButter(100,20,-40,15,20,20);
   	//playerCar.setRotation(Math.PI/2, 0, 0)
 
   	//var butter1 = new butter(0,0,0);

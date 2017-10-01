@@ -13,7 +13,7 @@ class table {
 		mesh.position.set(PosX , PosY, PosZ ); 
 
 		this.table.add(mesh);
-
+		scene.add(this.table);
 	}
 
 	setPosition(PosX, PosY, PosZ) {
