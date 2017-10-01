@@ -25,30 +25,6 @@ window.addEventListener( 'DOMMouseScroll', mouseWheelHandler, false );
 window.addEventListener( 'keydown', onKeyDown, false );
 window.addEventListener( 'keyup', onKeyUp, false );
 
-/* INIT */
-function init() {
-	renderer = new THREE.WebGLRenderer({antialias: true});
-
-	renderer.setSize(window.innerWidth, window.innerHeight);
-
-	document.body.appendChild(renderer.domElement);
-
-	var focus = createScene();
-
-	var customCam2 = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
-	
-	//var customCam2 = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
-	customCam2.focusOn(playerCar.getObject());
-	customCam2.follow(playerCar.getObject());
-	customCam2.setTransform(30, 0, 0, 0, 0);
-	
-	customCam = customCam2;
-	customCam.manualControl();
-
-	render(customCam.getCamera());
-	animate();
-}
-
 /* Event Listener Functions */
 function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -104,6 +80,7 @@ function init() {
 
 	createScene();
 
+	/* createPerspectiveCamera(0, 0, 0) */
 	customCam = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
 	customCam.focusOn(playerCar.getObject());
 	customCam.follow(playerCar.getObject());
