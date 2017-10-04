@@ -7,6 +7,7 @@ class customCamera {
 		this.lookAtAddedVector = new THREE.Vector3(0, 0, 0);
 		this.lookAtObj = undefined;
 		this.followObject = undefined;
+		this.rotateWithObject = undefined;
 		this.thetaRotateFreq = 0;
 		this.phiRotateFreq = 0;
 		this.transRadius = 0;
@@ -26,10 +27,13 @@ class customCamera {
 		return this.camera;
 	}
 
-	follow(obj) {
+	follow(obj, rotateWith) {
 		this.followObject = obj;
 		this.followObject.updateMatrixWorld();
 		this.objectStart = obj.position.clone();
+		if(rotateWith) {
+			this.rotateWithObject = obj;
+		}
 	}
 
 	focusOn(obj, addedVector) {
@@ -76,19 +80,31 @@ class customCamera {
 			pos.add(this.followObject.getWorldPosition().clone().sub(this.objectStart));
 		}
 		this.camera.position.set(pos.getComponent(0), pos.getComponent(1), pos.getComponent(2));
-
+		
 		this.updateTransform(delta_time);
 	}
 
 	updateTransform(delta_time) {
-		this.transPhi += (this.phiRotateFreq * delta_time);
-		this.transTheta += this.thetaRotateFreq * delta_time;
+		var theta, phi;
+		if(this.rotateWithObject == undefined) {
+			this.transPhi += (this.phiRotateFreq * delta_time);
+			phi = this.transPhi;
+			this.transTheta += this.thetaRotateFreq * delta_time;
+			theta = this.transTheta;
+		} else {
+			if(this.rotateWithObject.getWorldRotation().x/2 == 0)
+				theta = -this.rotateWithObject.getWorldRotation().y
+			else 
+				theta = this.rotateWithObject.getWorldRotation().y-Math.PI;
+			phi = this.transPhi;
+		}
 		if(this.wrapAroundPhi) {
 			this.transPhi %= Math.PI;
 		}
-		var transVec = new THREE.Vector3(Math.cos(this.transTheta)*Math.sin(this.transPhi%Math.PI), Math.cos(this.transPhi), 
-										 Math.sin(this.transTheta)*Math.sin(this.transPhi%Math.PI))
+		var transVec = new THREE.Vector3(Math.cos(theta)*Math.sin(phi%Math.PI), Math.cos(phi), 
+										 Math.sin(theta)*Math.sin(phi%Math.PI))
 		transVec.multiplyScalar(this.transRadius);
+
 		this.camera.position.add(transVec);
 		//console.log(transVec);
 	}

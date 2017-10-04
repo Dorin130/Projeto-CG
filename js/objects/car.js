@@ -33,6 +33,7 @@ class car {
 	}
 
 	setRotation(RotX, RotY, RotZ) {
+		this.direction.applyAxisAngle(this.car.up, RotY)
 		this.car.rotation.set(RotX, RotY, RotZ);
 	}
 
@@ -116,6 +117,10 @@ class car {
 			return +this.maxAttrition;
 	}
 
+	getTurnSpeed() {
+		return this.turnSpeed - Math.abs(this.speed/this.maxSpeed);
+	}
+
 	simplePositionUpdate(delta_time) {
 		var speedStopThreshold = 3;
 		this.speed += this.acceleration*delta_time;
@@ -123,16 +128,16 @@ class car {
 		
 		if(Math.abs(this.speed) < speedStopThreshold && Math.abs(this.acceleration) <= this.maxAttrition) this.speed = 0;
 
-		this.car.rotation.y += this.turnDirection*this.turnSpeed*delta_time;
-		//this.car.rotateOnAxis(this.car.up, this.turn*this.turnSpeed*delta_time);
+		this.car.rotation.y += this.turnDirection*this.getTurnSpeed()*delta_time;
+		//this.car.rotateOnAxis(this.car.up, this.turn*this.getTurnSpeed()*delta_time);
 
-		this.direction.applyAxisAngle(this.car.up, this.turnDirection*this.turnSpeed*delta_time);
+		this.direction.applyAxisAngle(this.car.up, this.turnDirection*this.getTurnSpeed()*delta_time);
 		//var direction = this.carFront.applyAxisAngle(this.car.up, this.car.rotation.y); //conceptually prettier but less simple
 
 		var x = this.car.position.x;
 		var z = this.car.position.z;
 		this.car.position.set(x + this.direction.x*this.speed*delta_time, 0, z + this.direction.z*this.speed*delta_time);
-		console.log(this.speed);
+		//console.log(this.speed);
 	}
 }
 

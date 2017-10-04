@@ -80,11 +80,12 @@ function init() {
 
 	createScene();
 
-	/* createPerspectiveCamera(0, 0, 0) */
-	customCam = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
+	customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
+	//customCam = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
 	customCam.focusOn(playerCar.getObject());
-	customCam.follow(playerCar.getObject());
-	customCam.setTransform(30, 0, 0, 0, 0);
+	customCam.follow(playerCar.getObject(), true);
+	//customCam.setTransform(30, 0, 0, 0, 0);
+	customCam.setTransform(30, 0, Math.PI/8, Math.PI/3, Math.PI/4);
 
 	render(customCam.getCamera());
 	animate();
@@ -107,8 +108,8 @@ function animate() {
 		if(updateList[i].update != undefined) { updateList[i].update(delta_t); }
 	}
 
-	customCam.update(delta_t);
 	playerCar.update(delta_t);
+	customCam.update(delta_t);
 	//car1.update(delta_t);	//render
 	render(customCam.getCamera());
 
@@ -153,7 +154,7 @@ function createScene() {
 
 
   	playerCar = new car(0,0,0,5)
-  	//playerCar.setRotation(Math.PI/2, 0, 0)
+  	playerCar.setRotation(0, Math.PI/2, 0)
 
   	//var butter1 = new butter(0,0,0);
 	// orange1 = new orange(0, 0, 0, 10);
