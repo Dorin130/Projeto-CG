@@ -25,6 +25,7 @@ window.addEventListener( 'DOMMouseScroll', mouseWheelHandler, false );
 window.addEventListener( 'keydown', onKeyDown, false );
 window.addEventListener( 'keyup', onKeyUp, false );
 
+
 /* Event Listener Functions */
 function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -66,7 +67,9 @@ function onKeyDown(e) {
 	if(e.keyCode == 39)
 		playerCar.input("right");
 	if(e.keyCode == 40)	
-		playerCar.input("down");	
+		playerCar.input("down");
+
+	e.preventDefault(); //avoid page scrolling in firefox
 }
 
 
@@ -85,7 +88,7 @@ function init() {
 	customCam.focusOn(playerCar.getObject());
 	customCam.follow(playerCar.getObject(), true);
 	//customCam.setTransform(30, 0, 0, 0, 0);
-	customCam.setTransform(30, 0, Math.PI/8, Math.PI/3, Math.PI/4);
+	customCam.setTransform(30, 0, 0, Math.PI/3, 0);
 
 	render(customCam.getCamera());
 	animate();
@@ -140,21 +143,31 @@ function createScene() {
 	scene.add(new THREE.AxisHelper(15));
 
 	//CREATION OF A ROAD EXAMPLE
-  	var roadExample = new road(0,0,0);
-    roadExample.roadBegin();
-    roadExample.straightRoad(15);
-	roadExample.roadCurve(Math.PI/6, 200);
-	roadExample.straightRoad(30);
-	roadExample.roadCurve(Math.PI, 200);
-	roadExample.straightRoad(60);
-	roadExample.roadCurve(Math.PI-Math.PI/6, 95);
-	roadExample.straightRoad(30);
-	
-  	roadExample.roadEnd();
+  	var gameRoad = new road(0, 0, 0, 7, 30, 3, 1);
+    gameRoad.roadBegin();
+	gameRoad.roadCurve(2*Math.PI, 70);
+  	gameRoad.setPosition(-100,0,0);
+  	gameRoad.roadEnd();
 
+
+  	playerCar = new car(100,0,0,5);
+  	playerCar.setRotation(0,3*Math.PI/2,0);
+
+  	var gameTable = new table(0,-10,0, 400, 20, 400);
+
+  	var orange1 = new orange(-80, 10, -30,10);
+  	var orange2 = new orange(60, 10, 80,10);
+  	var orange3 = new orange(50, 10, -100,10);
+
+  	var butter1 = new butter(-50,20,20);
+
+  	var butterCube1 = new fallenButter(-90,20,-40,15,20,20);
+  	butterCube1.setRotation(0,Math.PI/4,0);
 
   	playerCar = new car(0,0,0,5)
   	playerCar.setRotation(0, Math.PI/2, 0)
+  	var butterCube2 = new fallenButter(100,20,-40,15,20,20);
+  	//playerCar.setRotation(Math.PI/2, 0, 0)
 
   	//var butter1 = new butter(0,0,0);
 	// orange1 = new orange(0, 0, 0, 10);

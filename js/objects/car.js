@@ -33,8 +33,8 @@ class car {
 	}
 
 	setRotation(RotX, RotY, RotZ) {
-		this.direction.applyAxisAngle(this.car.up, RotY)
 		this.car.rotation.set(RotX, RotY, RotZ);
+		this.direction.applyAxisAngle(this.car.up, RotY); //assuming you'll never rotate around the other axis
 	}
 
 	getObject() {

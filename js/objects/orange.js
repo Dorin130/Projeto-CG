@@ -90,7 +90,7 @@ class orange {
 
 		this.orange.add(sphere);
 		this.orange.add(new orangeLeafStem(0, sphereRadius, 0).getObject());
-
+		this.orange.position.set(PosX, PosY, PosZ);
 		scene.add(this.orange);
 	}
 

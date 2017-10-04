@@ -13,7 +13,7 @@ class butterSlice {
 		var geometry = new THREE.BoxGeometry( Width/4, Height, Depth);
 		var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: false} );
 		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set(PosX + Width/2 + (Height/2 + Width/8)*Math.sin(angle) , PosY, PosZ ); //ask me irl 
+		mesh.position.set(PosX + Width/2 + (Height/2 + Width/8)*Math.sin(angle) , PosY, PosZ ); 
 		mesh.rotation.z = angle;
 		this.slice.add(mesh);
 
@@ -31,7 +31,36 @@ class butterSlice {
 		return this.slice;
 	}
 }
+class fallenButter {
+	constructor(PosX, PosY, PosZ, Width, Height, Depth) {
+		var Width = Width || 30;
+		var Height = Height || 20;
+		var Depth = Depth || 20;
+		var Color = 0xffbf00;
 
+		this.fallenButter = new THREE.Object3D();
+
+		var geometry = new THREE.BoxGeometry( Width, Height, Depth);
+		var material = new THREE.MeshBasicMaterial( {color: Color, wireframe: false} );
+		var mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set(PosX , PosY, PosZ );
+		this.fallenButter.add(mesh);
+		scene.add(this.fallenButter);
+
+	}
+
+	setPosition(PosX, PosY, PosZ) {
+		this.fallenButter.position.set(PosX, PosY, PosZ)
+	}
+
+	setRotation(RotX, RotY, RotZ) {
+		this.fallenButter.rotation.set(RotX, RotY, RotZ);
+	}
+
+	getObject() {
+		return this.fallenButter;
+	}
+}
 class butterCube {
 		/*Width, Height and Depth are optional*/
 	constructor(PosX, PosY, PosZ, Width, Height, Depth) {
@@ -47,7 +76,7 @@ class butterCube {
 		var geometry = new THREE.BoxGeometry( Width/4, Height, Depth);
 		var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: false} );
 		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set(PosX + Width/2 + (Height/2 + Width/8)*Math.sin(angle) , PosY, PosZ ); // ask me again
+		mesh.position.set(PosX + Width/2 + (Height/2 + Width/8)*Math.sin(angle) , PosY, PosZ ); 
 		mesh.rotation.z = angle;
 		this.slice.add(mesh);
 
@@ -149,18 +178,17 @@ class butter {
 		geometry = new THREE.BoxGeometry( Width/4, Height/2, Depth/2);
 		material = new THREE.MeshBasicMaterial( {color: 0xffef00, wireframe: false} );
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set(PosX - Width/4 , PosY + Height/2 + Width/8, PosZ - Width/8);
+		mesh.position.set( - Width/4 ,  Height/2 + Width/8, - Width/8);
 		mesh.rotation.z = Math.PI/2;
 		mesh.rotation.y = Math.PI/6;
 		this.butterCube.add(mesh);
 
+		this.butter.add(this.butterCube);
+		this.butter.add(this.slice);
+		this.butter.add(this.butterPlate);
 
-		
-
-		scene.add( this.butter);
-		scene.add(this.slice);
-		scene.add(this.butterCube);
-		scene.add(this.butterPlate)
+		this.butter.position.set(PosX, PosY, PosZ);
+		scene.add(this.butter);
 	}
 
 	setPosition(PosX, PosY, PosZ) {

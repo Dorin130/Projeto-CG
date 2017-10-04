@@ -222,6 +222,7 @@ class road {
 		this.TorusTubeRadius = TorusTubeRadius || TorusTubeRadiusDEFAULT // 3:1 ratio between the radius and the tube.
 		this.Color = Color || ColorDEFAULT;
 
+		this.road = new THREE.Object3D();
 		//POSITION VARIABLES
 		this.PosX = PosX;
 		this.PosY = PosY;
@@ -229,7 +230,6 @@ class road {
 		this.Direction = 0; //rotation around y axis
 
 		//CLASS SPECIFIC VARIABLES
-		this.roadSegments = []; //list to store the road;
 		this.nrRoadSegments = 0; //number of road segments
 		this.RoadBuilding = false; //atribute that controls wheter youre building a road or not
 	}
@@ -257,7 +257,7 @@ class road {
 										    this.TorusRadius,
 										  	this.TorusTubeRadius,
 										  	this.Color);
-			this.roadSegments[this.nrRoadSegments++] = segment;
+			this.road.add(segment.getObject());
 			this.PosZ += (2*this.TorusRadius + this.RoadSpaceBetweenSegments)*Math.cos(this.Direction);
 			this.PosX += (2*this.TorusRadius + this.RoadSpaceBetweenSegments)*Math.sin(this.Direction);
 			segment.getObject().rotation.y = this.Direction;
@@ -281,7 +281,7 @@ class road {
 										    this.TorusRadius,
 										  	this.TorusTubeRadius,
 										  	this.Color);
-				this.roadSegments[this.nrRoadSegments++] = road;
+				this.road.add(road.getObject());
 				position = road.getPosition();
 				this.PosZ += nrSegments*(2*this.TorusRadius + this.RoadSpaceBetweenSegments)*Math.cos(this.Direction);
 				this.PosX += nrSegments*(2*this.TorusRadius + this.RoadSpaceBetweenSegments)*Math.sin(this.Direction);
@@ -312,10 +312,9 @@ class road {
 			
 			
 			this.Direction += Angle ;
-			this.Direction = wrapToPI(this.Direction);	
-
-			
-			this.roadSegments[this.nrRoadSegments++] = curvedRd;									
+			this.Direction = wrapToPI(this.Direction);		
+			this.road.add(curvedRd.getObject());
+								
 		}
 		else  {
 			console.log("Error in roadEnd: You need to start building a road first");
@@ -325,14 +324,20 @@ class road {
 
 	roadEnd() {
 		if(this.RoadBuilding) {
-			for(var i=0; i < this.nrRoadSegments; i++) {
-				scene.add(this.roadSegments[i].getObject());
-			}
+
+
+				scene.add(this.road);
+
+			
 		}
 		else  {
 			console.log("Error in roadEnd: You need to start building a road first");
 		}
 
+	}
+	setPosition(PosX, PosY, PosZ) {
+		this.road.position.set(PosX, PosY, PosZ)
+				console.log(this.road)
 	}
 }
 
