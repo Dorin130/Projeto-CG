@@ -83,14 +83,14 @@ class car {
 		var carAcceleration = 0; //attempted acceleration from motor and breaks
 		if(this.keyInputs["up"] && !this.keyInputs["down"]) {
 			if(this.speed < 0)
-				carAcceleration = +150; //moving backwards --> using breaks
+				carAcceleration = +200; //moving backwards --> using breaks
 			else
-				carAcceleration = +50; //moving forward --> using engine
+				carAcceleration = +75; //moving forward --> using engine
 		} else if(this.keyInputs["down"] && !this.keyInputs["up"]) {
 			if(this.speed > 0)
-				carAcceleration = -150; //moving forward --> using breaks
+				carAcceleration = -200; //moving forward --> using breaks
 			else
-				carAcceleration = -30; //moving backwards --> using engine
+				carAcceleration = -45; //moving backwards --> using engine
 		} else { //car axle attrition applies
 			carAcceleration = this.getAttrition();
 		}

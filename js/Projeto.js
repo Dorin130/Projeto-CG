@@ -92,7 +92,7 @@ function init() {
 	createScene();
 
 	customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
-	//customCam = new customCamera(createOrtographicCamera(470, 0, 40, 0), scene.position);
+	//customCam = new customCamera(createOrtographicCamera(500, 0, 40, 0), scene.position);
 	customCam.focusOn(playerCar.getObject());
 	customCam.follow(playerCar.getObject(), true);
 	//customCam.setTransform(30, 0, 0, 0, 0);
