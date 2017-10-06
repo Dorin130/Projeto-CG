@@ -142,15 +142,20 @@ class customCamera {
 	updateWindowResize() {
 		if(this.camera.isOrthographicCamera) {
 			var asp = (window.innerWidth / window.innerHeight);
-			if (this.minWindowSize != undefined && asp < this.minWindowSize[0]/this.minWindowSize[1]) {
-				var view = this.camera.top-this.camera.bottom;
-				this.camera.left = (view*asp / - 2);
-				this.camera.right = (view*asp / 2);
+			if(16/9 < asp) {
+				var height = this.minWindowSize[1] || this.camera.top-this.camera.bottom;
+				this.camera.top = height/2
+				this.camera.bottom = height/-2
+				this.camera.left = (height*asp / - 2);
+				this.camera.right = (height*asp / 2);
 			} else {
-				var view = this.camera.right-this.camera.right;
-				this.camera.top = (view/asp / 2);
-				this.camera.bottom = (view/asp / -2);
+				var width = this.minWindowSize[0] || this.camera.right-this.camera.left;
+				this.camera.left = width/-2
+				this.camera.right = width/2
+				this.camera.top = (width * (1/asp) / 2);
+				this.camera.bottom = (width * (1/asp) / -2);
 			}
+
 		} else {
 	    	this.camera.aspect = window.innerWidth / window.innerHeight;
 		}

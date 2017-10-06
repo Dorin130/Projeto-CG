@@ -29,7 +29,7 @@ window.addEventListener( 'keyup', onKeyUp, false );
 /* Event Listener Functions */
 function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
-    customCam.prepareWindowResize();
+    customCam.prepareWindowResize(800, 450);
 }
 
 function mouseWheelHandler(e) {
@@ -102,12 +102,6 @@ function init() {
 
 	render(customCam.getCamera());
 	animate();
-}
-
-/* Event Listener Functions */
-function onWindowResize() {
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    customCam.prepareWindowResize(800,450);
 }
 
 /* Animation main function and update/render cycle */
