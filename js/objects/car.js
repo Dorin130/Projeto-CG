@@ -10,7 +10,8 @@ class car {
 		this.speed = 0;
 		this.maxSpeed = 250;
 		this.minSpeed = -100;
-		this.maxAttrition = 15;
+		this.maxAttrition = 30;
+		this.speedStopThreshold = 3;
 
 		//Creation
 		this.car = new THREE.Object3D();
@@ -120,15 +121,22 @@ class car {
 
 
 	getTurnSpeed() {
-		return this.turnSpeed - Math.abs(this.speed/this.maxSpeed);
+		var maxTurnAtSpeed = 50
+		if(Math.abs(this.speed > maxTurnAtSpeed)) {
+			return this.turnSpeed - Math.abs(this.speed/this.maxSpeed);
+		} else if(Math.abs(this.speed) > this.speedStopThreshold) {
+			var x = Math.max(0, (Math.abs(this.speed)-this.speedStopThreshold)/maxTurnAtSpeed*this.turnSpeed);
+			console.log(x);
+			return x;
+		} else 
+			return 0;
 	}
 
 	simplePositionUpdate(delta_time) {
-		var speedStopThreshold = 3;
 		this.speed += this.acceleration*delta_time;
 		this.speed = Math.max(this.minSpeed, Math.min(this.maxSpeed, this.speed)); //Setting speed within bounds
 		
-		if(Math.abs(this.speed) < speedStopThreshold && Math.abs(this.acceleration) <= this.maxAttrition) this.speed = 0;
+		if(Math.abs(this.speed) < this.speedStopThreshold && Math.abs(this.acceleration) <= this.maxAttrition) this.speed = 0;
 
 		this.car.rotation.y += this.turnDirection*this.getTurnSpeed()*delta_time;
 		//this.car.rotateOnAxis(this.car.up, this.turnDirection*this.getTurnSpeed()*delta_time);
