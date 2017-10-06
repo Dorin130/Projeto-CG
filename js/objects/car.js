@@ -117,6 +117,8 @@ class car {
 			return +this.maxAttrition;
 	}
 
+
+
 	getTurnSpeed() {
 		return this.turnSpeed - Math.abs(this.speed/this.maxSpeed);
 	}
@@ -129,14 +131,12 @@ class car {
 		if(Math.abs(this.speed) < speedStopThreshold && Math.abs(this.acceleration) <= this.maxAttrition) this.speed = 0;
 
 		this.car.rotation.y += this.turnDirection*this.getTurnSpeed()*delta_time;
-		//this.car.rotateOnAxis(this.car.up, this.turn*this.getTurnSpeed()*delta_time);
+		//this.car.rotateOnAxis(this.car.up, this.turnDirection*this.getTurnSpeed()*delta_time);
 
 		this.direction.applyAxisAngle(this.car.up, this.turnDirection*this.getTurnSpeed()*delta_time);
-		//var direction = this.carFront.applyAxisAngle(this.car.up, this.car.rotation.y); //conceptually prettier but less simple
+		//var direction = this.direction.applyAxisAngle(this.car.up, this.car.rotation.y); //conceptually prettier but less simple
 
-		var x = this.car.position.x;
-		var z = this.car.position.z;
-		this.car.position.set(x + this.direction.x*this.speed*delta_time, 0, z + this.direction.z*this.speed*delta_time);
+		this.car.position.add(this.direction.clone().multiplyScalar(this.speed*delta_time));
 		//console.log(this.speed);
 	}
 }
@@ -236,7 +236,7 @@ class dome {
 
 		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.6, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
 		//var geometry = new THREE.SphereGeometry( scale, 4, 4, 0, 6.3, 0, 1.6);
-		var material = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false} );
+		var material = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false, opacity:0.6, transparent:true} );
 		var cyl1 = new THREE.Mesh( geometry, material );
 		cyl1.position.set(0, 0, scale*0.75)
 

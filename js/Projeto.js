@@ -60,16 +60,24 @@ function onKeyDown(e) {
 			});
 			break;
 	}
-	if(e.keyCode == 37) 
+	if(e.keyCode == 37) {
 		playerCar.input("left");
-	if(e.keyCode == 38)
+		e.preventDefault();
+	}
+	if(e.keyCode == 38) {
 		playerCar.input("up");
-	if(e.keyCode == 39)
+		e.preventDefault();
+	}
+	if(e.keyCode == 39) {
 		playerCar.input("right");
-	if(e.keyCode == 40)	
+		e.preventDefault();
+	}
+	if(e.keyCode == 40){
 		playerCar.input("down");
+		e.preventDefault();
+	} 	
 
-	e.preventDefault(); //avoid page scrolling in firefox
+	
 }
 
 
@@ -84,11 +92,12 @@ function init() {
 	createScene();
 
 	customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
-	//customCam = new customCamera(createOrtographicCamera(200, 0, 40, 0), scene.position);
+	//customCam = new customCamera(createOrtographicCamera(470, 0, 40, 0), scene.position);
 	customCam.focusOn(playerCar.getObject());
 	customCam.follow(playerCar.getObject(), true);
 	//customCam.setTransform(30, 0, 0, 0, 0);
-	customCam.setTransform(30, 0, 0, Math.PI/3, 0);
+	customCam.setTransform(50, 0, 0, Math.PI/3, 0);
+	customCam.manualControl();
 
 	render(customCam.getCamera());
 	animate();
@@ -145,15 +154,18 @@ function createScene() {
 	//CREATION OF A ROAD EXAMPLE
   	var gameRoad = new road(0, 0, 0, 7, 30, 3, 1);
     gameRoad.roadBegin();
-	gameRoad.roadCurve(2*Math.PI, 70);
-  	gameRoad.setPosition(-100,0,0);
+    gameRoad.straightRoad(18);
+	gameRoad.roadCurve(Math.PI/2, 30);
+	gameRoad.straightRoad(39);
+	gameRoad.roadCurve(Math.PI*(1/2+1/3), 100);
+	gameRoad.straightRoad(15);
+	gameRoad.roadCurve(Math.PI*(1-1/2-1/3), 10);
+	gameRoad.straightRoad(30);
+	gameRoad.roadCurve(Math.PI/2, 24);
+  	gameRoad.setPosition(-350,0,-120);
   	gameRoad.roadEnd();
 
-
-  	playerCar = new car(100,0,0,5);
-  	playerCar.setRotation(0,3*Math.PI/2,0);
-
-  	var gameTable = new table(0,-10,0, 400, 20, 400);
+  	var gameTable = new table(0,-10, 0, 800, 20, 450);
 
   	var orange1 = new orange(-80, 10, -30,10);
   	var orange2 = new orange(60, 10, 80,10);
@@ -164,7 +176,7 @@ function createScene() {
   	var butterCube1 = new fallenButter(-90,20,-40,15,20,20);
   	butterCube1.setRotation(0,Math.PI/4,0);
 
-  	playerCar = new car(0,0,0,5)
+  	playerCar = new car(0,5,0,5)
   	playerCar.setRotation(0, Math.PI/2, 0)
   	var butterCube2 = new fallenButter(100,20,-40,15,20,20);
   	//playerCar.setRotation(Math.PI/2, 0, 0)

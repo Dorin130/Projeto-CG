@@ -31,7 +31,11 @@ class customCamera {
 		this.followObject = obj;
 		this.followObject.updateMatrixWorld();
 		this.objectStart = obj.position.clone();
+		this.camera.position.set(obj.position.clone());
+		this.cameraStart = obj.position.clone();
 		if(rotateWith) {
+			this.transRadius = 5;
+			this.transPhi = Math.PI/4;
 			this.rotateWithObject = obj;
 		}
 	}
@@ -78,6 +82,7 @@ class customCamera {
 		if(this.followObject != undefined) {
 			this.followObject.updateMatrixWorld();
 			pos.add(this.followObject.getWorldPosition().clone().sub(this.objectStart));
+			console.log(pos);
 		}
 		this.camera.position.set(pos.getComponent(0), pos.getComponent(1), pos.getComponent(2));
 		
