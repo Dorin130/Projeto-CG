@@ -91,13 +91,14 @@ function init() {
 
 	createScene();
 
-	customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
-	//customCam = new customCamera(createOrtographicCamera(500, 0, 40, 0), scene.position);
-	customCam.focusOn(playerCar.getObject());
-	customCam.follow(playerCar.getObject(), true);
+
+	//customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
+	customCam = new customCamera(createOrtographicCamera(450, 0, 40, 0), scene.position);
+	//customCam.focusOn(playerCar.getObject());
+	//customCam.follow(playerCar.getObject(), true);
 	//customCam.setTransform(30, 0, 0, 0, 0);
-	customCam.setTransform(50, 0, 0, Math.PI/3, 0);
-	customCam.manualControl();
+	//customCam.setTransform(50, 0, 0, Math.PI/3, 0);
+	//customCam.manualControl();
 
 	render(customCam.getCamera());
 	animate();
@@ -106,7 +107,7 @@ function init() {
 /* Event Listener Functions */
 function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
-    customCam.prepareWindowResize();
+    customCam.prepareWindowResize(800,450);
 }
 
 /* Animation main function and update/render cycle */

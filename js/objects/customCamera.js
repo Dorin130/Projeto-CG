@@ -21,6 +21,9 @@ class customCamera {
 		this.scrollSpeed = 5;
 			//Inputs
 		this.upScroll = 0;
+
+		//aspect ratio
+		this.minWindowSize = undefined;
 	}
 
 	getCamera() {
@@ -51,8 +54,11 @@ class customCamera {
 		}
 	}
 
-	prepareWindowResize() {
+	prepareWindowResize(minWidth=0, minHeight=0) {
 		this.windowResize = true;
+		this.minWindowSize = [minWidth, minHeight];
+		if(minHeight == 0 || minWidth == 0)
+			this.minWindowSize = undefined;
 	}
 
 	manualControl() {
@@ -136,9 +142,15 @@ class customCamera {
 	updateWindowResize() {
 		if(this.camera.isOrthographicCamera) {
 			var asp = (window.innerWidth / window.innerHeight);
-			var view = this.camera.top-this.camera.bottom;
-			this.camera.left = (view*asp / - 2);
-			this.camera.right = (view*asp / 2);
+			if (this.minWindowSize != undefined && asp < this.minWindowSize[0]/this.minWindowSize[1]) {
+				var view = this.camera.top-this.camera.bottom;
+				this.camera.left = (view*asp / - 2);
+				this.camera.right = (view*asp / 2);
+			} else {
+				var view = this.camera.right-this.camera.right;
+				this.camera.top = (view/asp / 2);
+				this.camera.bottom = (view/asp / -2);
+			}
 		} else {
 	    	this.camera.aspect = window.innerWidth / window.innerHeight;
 		}
