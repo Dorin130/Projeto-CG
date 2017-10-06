@@ -6,8 +6,8 @@ var TorusRadiusDEFAULT = 3;
 var TorusTubeRadiusDEFAULT = 1;
 var ColorDEFAULT = 0xaaaaaa;
 
-var RadialSegmentsDEFAULT = 8;
-var TubularSegmentsDEFAULT = 12;
+var RadialSegmentsDEFAULT = 5;
+var TubularSegmentsDEFAULT = 8;
 
 function wrapToPI(Angle) {
 	if(Angle > 0 && Angle < 2*Math.PI) {
