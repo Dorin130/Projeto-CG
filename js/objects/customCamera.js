@@ -88,7 +88,6 @@ class customCamera {
 		if(this.followObject != undefined) {
 			this.followObject.updateMatrixWorld();
 			pos.add(this.followObject.getWorldPosition().clone().sub(this.objectStart));
-			console.log(pos);
 		}
 		this.camera.position.set(pos.getComponent(0), pos.getComponent(1), pos.getComponent(2));
 		
@@ -142,7 +141,7 @@ class customCamera {
 	updateWindowResize() {
 		if(this.camera.isOrthographicCamera) {
 			var asp = (window.innerWidth / window.innerHeight);
-			if(16/9 < asp) {
+			if( this.minWindowSize[0]/this.minWindowSize[1] < asp) {
 				var height = this.minWindowSize[1] || this.camera.top-this.camera.bottom;
 				this.camera.top = height/2
 				this.camera.bottom = height/-2
@@ -184,19 +183,20 @@ class customCamera {
 	}
 }
 
+/* Normal camera related functions */
+function createOrtographicCamera(view, x, y, z) {
+	if(view == undefined) view = 100; //view = distance top to bottom 
+	var aspect = (window.innerWidth / window.innerHeight);
+	var camera = new THREE.OrthographicCamera( view*aspect / - 2, view*aspect / 2, view / 2, view / - 2, 1, 1000);
 
+	camera.position.set(x, y, z);
+	return camera;
+}
 
-/*
-		//deprecated but funny
-		var smoothFactor = 15; // distance at which 1 physical scroll = 1 unit of radius
-		if(this.upScroll > 0) {
-			console.log(this.scrollSpeed);
-			this.upScroll = Math.max(0, this.upScroll-this.scrollSpeed);
-			this.transRadius = Math.max(0.1, this.transRadius-this.scrollSpeed);
-		} else if (this.upScroll < 0) {
-			console.log(this.scrollSpeed);
-			this.upScroll = Math.min(0, this.upScroll+this.scrollSpeed);
-			this.transRadius = Math.max(0.1, this.transRadius+this.scrollSpeed);
-		}
-		this.scrollSpeed = this.transRadius/smoothFactor;
-*/
+function createPerspectiveCamera(x, y, z) {
+	var camera = new THREE.PerspectiveCamera(70,
+	window.innerWidth / window.innerHeight, 1, 1000);
+
+	camera.position.set(x, y, z);
+	return camera;
+}

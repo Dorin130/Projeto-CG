@@ -8,7 +8,6 @@ class butterSlice {
 
 		this.slice = new THREE.Object3D();
 
-
 		var angle = Math.PI/4;
 		var geometry = new THREE.BoxGeometry( Width/4, Height, Depth);
 		var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: false} );
@@ -16,7 +15,6 @@ class butterSlice {
 		mesh.position.set(PosX + Width/2 + (Height/2 + Width/8)*Math.sin(angle) , PosY, PosZ ); 
 		mesh.rotation.z = angle;
 		this.slice.add(mesh);
-
 	}
 
 	setPosition(PosX, PosY, PosZ) {
@@ -31,6 +29,7 @@ class butterSlice {
 		return this.slice;
 	}
 }
+
 class fallenButter {
 	constructor(PosX, PosY, PosZ, Width, Height, Depth) {
 		var Width = Width || 30;
@@ -46,7 +45,6 @@ class fallenButter {
 		mesh.position.set(PosX , PosY, PosZ );
 		this.fallenButter.add(mesh);
 		scene.add(this.fallenButter);
-
 	}
 
 	setPosition(PosX, PosY, PosZ) {
@@ -61,6 +59,7 @@ class fallenButter {
 		return this.fallenButter;
 	}
 }
+
 class butterCube {
 		/*Width, Height and Depth are optional*/
 	constructor(PosX, PosY, PosZ, Width, Height, Depth) {
@@ -70,7 +69,6 @@ class butterCube {
 		var Color = 0xffbf00;
 
 		this.slice = new THREE.Object3D();
-
 
 		var angle = Math.PI/4;
 		var geometry = new THREE.BoxGeometry( Width/4, Height, Depth);
@@ -105,9 +103,9 @@ class butterPlate {
 
 		this.butterPlate = new THREE.Object3D();
 		var angle = Math.PI/4;
-		geometry = new THREE.BoxGeometry( Width + (Height + Width/4)*Math.sin(angle) + 10, Height/4, Depth + 10);
-		material = new THREE.MeshBasicMaterial( {color: 0xd3d3d3, wireframe: false} );
-		mesh = new THREE.Mesh( geometry, material );
+		var geometry = new THREE.BoxGeometry( Width + (Height + Width/4)*Math.sin(angle) + 10, Height/4, Depth + 10);
+		var material = new THREE.MeshBasicMaterial( {color: 0xd3d3d3, wireframe: false} );
+		var mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set(PosX+ (Height/2 + Width/8)*Math.sin(angle), PosY - Height/2 - Height/4, PosZ);
 		this.butterPlate.add(mesh);
 
@@ -137,8 +135,6 @@ class butterPlate {
 		mesh.position.set(PosX + (Height/2 + Width/8)*Math.sin(angle)  , PosY - Height/2 - Height/8  , PosZ + (Depth + 10)/2);
 		mesh.rotation.y = Math.PI/2;
 		this.butterPlate.add(mesh);
-
-
 	}
 
 	setPosition(PosX, PosY, PosZ) {
@@ -153,7 +149,6 @@ class butterPlate {
 		return this.butterPlate;
 	}
 }
-
 
 class butter {
 	/*Width, Height and Depth  are optional*/

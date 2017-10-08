@@ -83,9 +83,7 @@ class straightRoad {
 		var z = 0;
 
 		for(var i = 0; i < nrSegments; i++) {
-			var segment = new roadSegment(x, 
-										  y, 
-										  z,
+			var segment = new roadSegment(x, y, z,
 										  RoadSegmentWidth, 
 										  TorusRadius, 
 										  TorusTubeRadius, 
@@ -175,19 +173,13 @@ class curvedRoad {
 
 		this.curvedRoad = new THREE.Object3D();
 
-		var curvedRd1 = new roadCircle(PosX,
-										PosY,
-										PosZ,
-										Radius,
-										Angle,
+		var curvedRd1 = new roadCircle(PosX, PosY, PosZ, Radius, Angle,
 										this.RoadSpaceBetweenSegments,
 										this.RoadSegmentWidth,
 									    this.TorusRadius,
 									  	this.TorusTubeRadius,
 									  	this.Color);
-		var curvedRd2 = new roadCircle(PosX,
-										PosY,
-										PosZ,
+		var curvedRd2 = new roadCircle(PosX, PosY, PosZ,
 										Radius + 2*this.RoadSegmentWidth,
 										Angle,
 										this.RoadSpaceBetweenSegments,
@@ -324,17 +316,13 @@ class road {
 
 	roadEnd() {
 		if(this.RoadBuilding) {
-
-
-				scene.add(this.road);
-
-			
+			scene.add(this.road); 
 		}
 		else  {
 			console.log("Error in roadEnd: You need to start building a road first");
 		}
-
 	}
+	
 	setPosition(PosX, PosY, PosZ) {
 		this.road.position.set(PosX, PosY, PosZ)
 				console.log(this.road)
