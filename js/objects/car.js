@@ -223,7 +223,7 @@ class WheelHub {
 		var geometry = new THREE.CylinderGeometry( scale*0.02, scale*0.02, scale*0.2, 3);
 		var material = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe: false} );
 
-		var hubPlate = new ringOfMeshes(geometry, material, 20, scale*0.2, 0, 0, 0, true);
+		var hubPlate = new ringOfMeshes(geometry, material, 10, scale*0.2, 0, 0, 0, true);
 		hubPlate.getObject().rotation.x = Math.PI/2;
 		this.wheelHub.add(hubPlate.getObject());
 	}

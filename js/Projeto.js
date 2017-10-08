@@ -6,6 +6,7 @@ var scene, renderer, customCam;
 
 var updateList = []; /* contains every object to be updated in the update cycle except customCamera */
 var inputList = []; /* contains every object to be updated in the update cycle except customCamera */
+var camFocus = [];
 
 var clock = new THREE.Clock();
 
@@ -81,6 +82,47 @@ function onKeyDown(e) {
 					node.material.wireframe = !node.material.wireframe;
 			});
 			break;
+		//custom stuff
+		case 49:
+			customCam = new customCamera(createOrtographicCamera(450, 0, 40, 0), scene.position);
+			e.preventDefault();
+			break;
+		case 50:
+			var playerCar = camFocus[2];
+			customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
+			customCam.focusOn(playerCar.getObject());
+			customCam.follow(playerCar.getObject(), true);
+			customCam.setTransform(50, 0, 0, Math.PI/3, 0);
+			customCam.manualControl();
+			e.preventDefault();
+			break;
+		case 51:
+			var playerCar = camFocus[2];
+			customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
+			customCam.focusOn(playerCar.getObject());
+			customCam.follow(playerCar.getObject(), false);
+			customCam.setTransform(50, 0, Math.PI/8, Math.PI/3, 0);
+			customCam.manualControl();
+			e.preventDefault();
+			break;
+		case 52:
+			var orange = camFocus[0];
+			customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
+			customCam.focusOn(orange.getObject());
+			customCam.follow(orange.getObject(), false);
+			customCam.setTransform(50, 0, Math.PI/8, Math.PI/3, 0);
+			customCam.manualControl();
+			e.preventDefault();
+			break;
+		case 53:
+			var butter = camFocus[1];
+			customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
+			customCam.focusOn(butter.getObject());
+			customCam.follow(butter.getObject(), false);
+			customCam.setTransform(50, 0,  Math.PI/8, Math.PI/2, 0);
+			customCam.manualControl();
+			e.preventDefault();
+			break;
 		default:
 	}
 	for(var i = 0; i<inputList.length && action != ""; i++) { /* notifies each individual object that 'asks' to be notified */
@@ -100,12 +142,7 @@ function init() {
  	var playerCar = updateList[0];
 
 	customCam = new customCamera(createOrtographicCamera(450, 0, 40, 0), scene.position);
-	//customCam = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
-	//customCam.focusOn(playerCar.getObject());
-	//customCam.follow(playerCar.getObject(), true);
-	//customCam.setTransform(50, 0, 0, Math.PI/3, 0);
-	//customCam.manualControl();
-
+	
 	render(customCam.getCamera());
 	animate();
 }
@@ -135,8 +172,10 @@ function createScene() {
   	var orange1 = new orange(-80, 10, -30,10);
   	var orange2 = new orange(60, 10, 80,10);
   	var orange3 = new orange(50, 10, -100,10);
+  	camFocus.push(orange1);
 
   	var butter1 = new butter(-50,20,20);
+  	camFocus.push(butter1);
 
   	var butterCube1 = new fallenButter(-90,20,-40,15,20,20);
   	butterCube1.setRotation(0,Math.PI/4,0);
@@ -144,6 +183,7 @@ function createScene() {
   	var playerCar = new car(0,5,0,5)
   	updateList.push(playerCar);
   	inputList.push(playerCar);
+  	camFocus.push(playerCar);
   	playerCar.setRotation(0, Math.PI/2, 0)
   	var butterCube2 = new fallenButter(100,20,-40,15,20,20);
 	
