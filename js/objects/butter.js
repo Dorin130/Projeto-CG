@@ -101,6 +101,8 @@ class butterPlate {
 		var Depth = Depth || 20;
 		var Color = 0xffbf00;
 
+
+		//base
 		this.butterPlate = new THREE.Object3D();
 		var angle = Math.PI/4;
 		var geometry = new THREE.BoxGeometry( Width + (Height + Width/4)*Math.sin(angle) + 10, Height/4, Depth + 10);
@@ -109,13 +111,14 @@ class butterPlate {
 		mesh.position.set(PosX+ (Height/2 + Width/8)*Math.sin(angle), PosY - Height/2 - Height/4, PosZ);
 		this.butterPlate.add(mesh);
 
+		//front of the plate
 		geometry = new THREE.BoxGeometry( Height/4 , Height/2, Depth + 10 + Height/4 );
 		material = new THREE.MeshBasicMaterial( {color: 0xffffff, wireframe: false} );
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set(PosX + (Height/2 + Width/8)*Math.sin(angle) + Width, PosY - Height/2 - Height/8 , PosZ);
 		this.butterPlate.add(mesh);
 
-
+		//back of the plate
 		geometry = new THREE.BoxGeometry( Height/4 , Height/2, Depth + 10 + Height/4);
 		material = new THREE.MeshBasicMaterial( {color: 0xffffff, wireframe: false} );
 		mesh = new THREE.Mesh( geometry, material );
@@ -160,20 +163,22 @@ class butter {
 		var angle = Math.PI/4; // Don't change this angle
 
 		this.butter = new THREE.Object3D();
-		this.slice = new butterSlice(0,0,0).getObject();
+		this.slice = new butterSlice(0,-Height/4,0).getObject();
 		this.butterCube = new THREE.Object3D();
 		this.butterPlate = new butterPlate(0,0,0).getObject();
 
+		//main butter
 		var geometry = new THREE.BoxGeometry( Width, Height, Depth );
 		var material = new THREE.MeshBasicMaterial( {color: Color, wireframe: false} );
 		var mesh = new THREE.Mesh( geometry, material );
+		mesh.position.y = -Height/4
 		this.butter.add(mesh);
 
-
+		//upper cube
 		geometry = new THREE.BoxGeometry( Width/4, Height/2, Depth/2);
 		material = new THREE.MeshBasicMaterial( {color: 0xffef00, wireframe: false} );
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( - Width/4 ,  Height/2 + Width/8, - Width/8);
+		mesh.position.set( - Width/4 ,  Height/2 + Width/8 -Height/4, - Width/8);
 		mesh.rotation.z = Math.PI/2;
 		mesh.rotation.y = Math.PI/6;
 		this.butterCube.add(mesh);
