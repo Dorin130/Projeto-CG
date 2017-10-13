@@ -80,12 +80,13 @@ class orange {
 		this.orange = new THREE.Object3D();
 
 		var geometry = new THREE.SphereGeometry( sphereRadius, 12, 12 );
-		//var material = new THREE.MeshBasicMaterial( {color: 0xbe822d} );
+		var material = new THREE.MeshBasicMaterial( {color: 0xbe822d} );
 		//var texture = new THREE.TextureLoader().load( "textures/orange-skin.jpg" );
-		texture.wrapS = THREE.RepeatWrapping;
-		texture.wrapT = THREE.RepeatWrapping;
-		texture.repeat.set( 4, 4 );
-		var material = new THREE.MeshBasicMaterial( { color: 0xbe822d, map: texture} );
+		//texture.wrapS = THREE.RepeatWrapping;
+		//texture.wrapT = THREE.RepeatWrapping;
+		//texture.repeat.set( 4, 4 );
+		//var material = new THREE.MeshBasicMaterial( { color: 0xbe822d, map: texture} );
+
 		var sphere = new THREE.Mesh( geometry, material );
 
 		this.orange.add(sphere);
