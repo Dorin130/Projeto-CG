@@ -81,7 +81,7 @@ class orange {
 
 		var geometry = new THREE.SphereGeometry( sphereRadius, 12, 12 );
 		//var material = new THREE.MeshBasicMaterial( {color: 0xbe822d} );
-		var texture = new THREE.TextureLoader().load( "textures/orange-skin.jpg" );
+		//var texture = new THREE.TextureLoader().load( "textures/orange-skin.jpg" );
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( 4, 4 );
