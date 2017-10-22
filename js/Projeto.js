@@ -2,6 +2,8 @@
 'use strict'
 
 /* Global variables */
+var globalAspectRatio = 16/9;
+
 var scene, renderer, customCam;
 var customCamManager;
 
@@ -27,8 +29,8 @@ window.addEventListener( 'keyup', onKeyUp, false );
 
 /* Event Listener Functions */
 function onWindowResize() {
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    customCam.prepareWindowResize(800, 450);
+    renderer.setSize( getRendererWidth(), getRendererHeight() );
+    customCamManager.prepareWindowResize();
 }
 
 function mouseWheelHandler(e) {
@@ -108,13 +110,13 @@ function onKeyDown(e) {
 /* INIT */
 function init() {
 	renderer = new THREE.WebGLRenderer({antialias: true});
-	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setSize( getRendererWidth(), getRendererHeight() );
 	document.body.appendChild(renderer.domElement);
 
 	createScene();
  	var playerCar = updateList[0];
 
-	var cam1 = new customCamera(createOrtographicCamera(450, 0, 40, 0), scene.position);
+	var cam1 = new customCamera(createOrtographicCamera(450, 0, 40, 0, globalAspectRatio), scene.position);
 
 	var cam2 = new customCamera(createPerspectiveCamera(0, 400, 200), scene.position);
 
@@ -182,7 +184,7 @@ function animate() {
 	for(var i = 0; i<updateList.length; i++) { //updates each individual object
 		if(updateList[i].update != undefined) { updateList[i].update(delta_t); }
 	}
-	
+
 	customCamManager.update(delta_t);
 
 	//render:
@@ -192,4 +194,20 @@ function animate() {
 /* Render function */
 function render(cam) {
 	renderer.render(scene, cam);
+}
+
+function getRendererWidth() {
+	if(window.innerWidth/window.innerHeight >= globalAspectRatio) {
+		return window.innerHeight*globalAspectRatio;
+	} else {
+		return window.innerWidth;
+	}
+}
+
+function getRendererHeight() {
+	if(window.innerWidth/window.innerHeight >= globalAspectRatio) {
+		return window.innerHeight;
+	} else {
+		return window.innerWidth/globalAspectRatio;
+	}
 }

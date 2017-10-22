@@ -14,7 +14,7 @@ class cameraManager {
 	update(delta_t) {
 		this.currentCamera.update(delta_t);
 	}
-	
+
 	input(action) {
 		if(action in this.cameraList) {
 			this.currentCamera = this.cameraList[action];
@@ -29,6 +29,10 @@ class cameraManager {
 
 	getCamera(switchKey) {
 		return this.cameraList[String(switchKey)];
+	}
+
+	prepareWindowResize() {
+		this.currentCamera.prepareWindowResize();
 	}
 
 }

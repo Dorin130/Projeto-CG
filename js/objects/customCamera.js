@@ -71,6 +71,9 @@ class customCamera {
 
 	prepareWindowResize(minWidth=0, minHeight=0) {
 		this.windowResize = true;
+	}
+
+	ortographicMinSize(minWidth=0, minHeight=0) {
 		this.minWindowSize = [minWidth, minHeight];
 		if(minHeight == 0 || minWidth == 0)
 			this.minWindowSize = undefined;
@@ -148,23 +151,10 @@ class customCamera {
 
 	updateWindowResize() {
 		if(this.camera.isOrthographicCamera) {
-			var asp = (window.innerWidth / window.innerHeight);
-			if( this.minWindowSize[0]/this.minWindowSize[1] < asp) {
-				var height = this.minWindowSize[1] || this.camera.top-this.camera.bottom;
-				this.camera.top = height/2
-				this.camera.bottom = height/-2
-				this.camera.left = (height*asp / - 2);
-				this.camera.right = (height*asp / 2);
-			} else {
-				var width = this.minWindowSize[0] || this.camera.right-this.camera.left;
-				this.camera.left = width/-2
-				this.camera.right = width/2
-				this.camera.top = (width * (1/asp) / 2);
-				this.camera.bottom = (width * (1/asp) / -2);
-			}
-
+			//redone
 		} else {
-	    	this.camera.aspect = window.innerWidth / window.innerHeight;
+			this.camera.fov = 90;
+	    	//this.camera.aspect = window.innerWidth / window.innerHeight;
 		}
 
 	    this.camera.updateProjectionMatrix();
@@ -192,9 +182,8 @@ class customCamera {
 }
 
 /* Normal camera related functions */
-function createOrtographicCamera(view, x, y, z) {
+function createOrtographicCamera(view, x, y, z, aspect) {
 	if(view == undefined) view = 100; //view = distance top to bottom 
-	var aspect = (window.innerWidth / window.innerHeight);
 	var camera = new THREE.OrthographicCamera( view*aspect / - 2, view*aspect / 2, view / 2, view / - 2, 1, 1000);
 
 	camera.position.set(x, y, z);
@@ -202,7 +191,7 @@ function createOrtographicCamera(view, x, y, z) {
 }
 
 function createPerspectiveCamera(x, y, z) {
-	var camera = new THREE.PerspectiveCamera(70,
+	var camera = new THREE.PerspectiveCamera(90,
 	window.innerWidth / window.innerHeight, 1, 1000);
 
 	camera.position.set(x, y, z);
