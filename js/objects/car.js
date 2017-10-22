@@ -1,3 +1,4 @@
+
 class car {
 	constructor(PosX, PosY, PosZ, scale) {
 		//Movement Defaults (Simple version)

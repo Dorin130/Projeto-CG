@@ -1,4 +1,5 @@
 /* Camera related functions and classes */
+
 class customCamera {
 	constructor(camera, LookAtPos) {
 		this.camera = camera;
@@ -28,6 +29,20 @@ class customCamera {
 
 	getCamera() {
 		return this.camera;
+	}
+
+	input(action) {
+		//Up Arrow Key
+		switch(action) {
+			case "scrollUp":
+				this.upScroll += this.scrollSpeed;
+				break;
+			case "scrollDown":
+				this.upScroll -= this.scrollSpeed;
+				break;
+			default:
+				break;
+		}
 	}
 
 	follow(obj, rotateWith) {
@@ -66,14 +81,6 @@ class customCamera {
 		/* add manual control */
 	}
 
-	scrollUp() {
-		this.upScroll += this.scrollSpeed;
-	}
-
-	scrollDown() {
-		this.upScroll -= this.scrollSpeed;
-	}
-
 	//internal functions
 
 	update(delta_time) {
@@ -107,6 +114,7 @@ class customCamera {
 			else 
 				theta = this.rotateWithObject.getWorldRotation().y-Math.PI;
 			phi = this.transPhi;
+			console.log(this.rotateWithObject.getWorldRotation());
 		}
 		if(this.wrapAroundPhi) {
 			this.transPhi %= Math.PI;
