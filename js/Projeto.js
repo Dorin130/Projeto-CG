@@ -118,9 +118,9 @@ function init() {
 
 	var cam1 = new customCamera(createOrtographicCamera(450, 0, 40, 0, globalAspectRatio), scene.position);
 
-	var cam2 = new customCamera(createPerspectiveCamera(0, 400, 200), scene.position);
+	var cam2 = new customCamera(createPerspectiveCamera(0, 400, 200, globalAspectRatio), scene.position);
 
-	var cam3 = new customCamera(createPerspectiveCamera(0, 0, 0), scene.position);
+	var cam3 = new customCamera(createPerspectiveCamera(0, 0, 0, globalAspectRatio), scene.position);
 	cam3.focusOn(playerCar.getObject());
 	cam3.follow(playerCar.getObject(), true);
 	cam3.setTransform(50, 0, 0, Math.PI/3, 0);

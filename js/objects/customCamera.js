@@ -117,7 +117,6 @@ class customCamera {
 			else 
 				theta = this.rotateWithObject.getWorldRotation().y-Math.PI;
 			phi = this.transPhi;
-			console.log(this.rotateWithObject.getWorldRotation());
 		}
 		if(this.wrapAroundPhi) {
 			this.transPhi %= Math.PI;
@@ -153,6 +152,7 @@ class customCamera {
 		if(this.camera.isOrthographicCamera) {
 			//redone
 		} else {
+			this.camera.aspect = 16/9;
 			this.camera.fov = 90;
 	    	//this.camera.aspect = window.innerWidth / window.innerHeight;
 		}
@@ -190,10 +190,9 @@ function createOrtographicCamera(view, x, y, z, aspect) {
 	return camera;
 }
 
-function createPerspectiveCamera(x, y, z) {
+function createPerspectiveCamera(x, y, z, aspect) {
 	var camera = new THREE.PerspectiveCamera(90,
-	window.innerWidth / window.innerHeight, 1, 1000);
-
+	aspect, 1, 1000);
 	camera.position.set(x, y, z);
 	return camera;
 }
