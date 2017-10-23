@@ -70,13 +70,13 @@ class butterCube {
 
 		this.slice = new THREE.Object3D();
 
-		var angle = Math.PI/4;
-		var geometry = new THREE.BoxGeometry( Width/4, Height, Depth);
+		var geometry = new THREE.BoxGeometry( Width, Height, Depth);
 		var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: false} );
 		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set(PosX + Width/2 + (Height/2 + Width/8)*Math.sin(angle) , PosY, PosZ ); 
-		mesh.rotation.z = angle;
+		mesh.rotation.set(0,Math.random()*2*Math.PI,0);
+		mesh.position.set(PosX , PosY, PosZ ); 
 		this.slice.add(mesh);
+		scene.add(this.slice);
 
 
 	}

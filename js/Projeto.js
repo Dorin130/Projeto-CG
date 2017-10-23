@@ -114,7 +114,7 @@ function init() {
 	document.body.appendChild(renderer.domElement);
 
 	createScene();
- 	var playerCar = updateList[0];
+
 
 	var cam1 = new customCamera(createOrtographicCamera(450, 0, 40, 0, globalAspectRatio), scene.position);
 
@@ -157,19 +157,17 @@ function createScene() {
 
   	var gameTable = new table(0,-10, 0, 800, 20, 450);
 
-  	var orange1 = new orange(-80, 10, -30,10);
-  	var orange2 = new orange(60, 10, 80,10);
-  	var orange3 = new orange(50, 10, -100,10);
 
   	var butter1 = new butter(-50,20,20);
 
-  	var butterCube1 = new fallenButter(-90,20,-40,15,20,20);
-  	butterCube1.setRotation(0,Math.PI/4,0);
-  	var butterCube2 = new fallenButter(100,20,-40,15,20,20);
+  	var pathRandomizer = new randomizer(400,10,225);
+  	pathRandomizer.createOranges(5, 15, 10);
+  	pathRandomizer.createButters(5, 10, 10,10,20);
+
 
   	playerCar = new car(0,5,0,5)
   	playerCar.setRotation(0, Math.PI/2, 0)
-	
+	updateList.push(pathRandomizer);	
 	updateList.push(playerCar);
 	inputList.push(playerCar);
 }

@@ -73,11 +73,8 @@ class randomizer {
 	createButters(minButters, maxButters, width, height, depth) {
 		for(var i=0; i < this.random(minButters, maxButters); i++) {
 
-			var object = new butter(this.random(-this.limitX, this.limitX), this.limitY, 
+			var object = new butterCube(this.random(-this.limitX, this.limitX), this.limitY/2, 
 								this.random(-this.limitZ, this.limitZ), width, height, depth);
-			var objPath = new path(object, new THREE.Vector3(0,0,0), this);
-
-			this.paths.push(path);
 		}
 	}
 
