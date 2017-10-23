@@ -40,17 +40,37 @@ function curvedLine(spacing, start, end, up, offset, includeLast) {
 	return posList;
 }
 
-function testTemp(posList) {
+function fillPos(posList, cheerio) {
 	console.log(posList.length);
 	var length = posList.length;
 	for(var i=0; i<length; i++) {
+		var newCheerio = cheerio();
 		var geometry = new THREE.TorusGeometry( 3, 1, 10, 8 );
 		var material = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
 		var torus = new THREE.Mesh( geometry, material );
 		torus.rotation.x = Math.PI/2;
 		var pos = posList.pop();
-		torus.position.set(pos.x, pos.y, pos.z);
+
+		newCheerio.setPosition(pos.x, pos.y, pos.z);
 		scene.add(torus);
 	}
 	return 1;
+}
+
+class cheerio {
+	constructor(radius, tubeRadius, radialSegments, tubularSegments) {
+		//movement
+		this.direction = new THREE.Vector3(0,0,0);
+		this.
+
+		//mesh
+		this.geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
+		this.material = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
+		this.cheerioMesh = new THREE.Mesh( geometry, material );
+		this.cheerioMesh.rotation.x = Math.PI/2;
+	}
+
+	getClone() {
+		return new cheerio(this.radius, this.tubeRadius, this.radialSegments, this.tubularSegments);
+	}
 }

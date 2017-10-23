@@ -114,7 +114,6 @@ function init() {
 	document.body.appendChild(renderer.domElement);
 
 	createScene();
- 	var playerCar = updateList[0];
 
 	var cam1 = new customCamera(createOrtographicCamera(450, 0, 40, 0, globalAspectRatio), scene.position);
 
