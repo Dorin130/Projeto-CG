@@ -75,10 +75,11 @@ class orangeLeafStem {
 	}
 }
 
-class orange {
+class orange extends randomizableObject {
 	constructor(PosX, PosY, PosZ, sphereRadius) {
+		super()
 		this.orange = new THREE.Object3D();
-
+		this.sphereRadius = sphereRadius;
 		var geometry = new THREE.SphereGeometry( sphereRadius, 12, 12 );
 		var material = new THREE.MeshBasicMaterial( {color: 0xbe822d} );
 		//var texture = new THREE.TextureLoader().load( "textures/orange-skin.jpg" );
@@ -86,11 +87,13 @@ class orange {
 		//texture.wrapT = THREE.RepeatWrapping;
 		//texture.repeat.set( 4, 4 );
 		//var material = new THREE.MeshBasicMaterial( { color: 0xbe822d, map: texture} );
-
 		var sphere = new THREE.Mesh( geometry, material );
-
+		//this.orange.add(new THREE.AxisHelper(100));
 		this.orange.add(sphere);
 		this.orange.add(new orangeLeafStem(0, sphereRadius, 0).getObject());
+		this.orange.rotation.z = Math.random()*Math.PI/2;
+		this.orange.rotation.x = Math.random()*Math.PI/2;
+		this.orange = new THREE.Object3D().add(this.orange);
 		this.orange.position.set(PosX, PosY, PosZ);
 		scene.add(this.orange);
 	}
@@ -105,5 +108,17 @@ class orange {
 
 	getObject() {
 		return this.orange;
+	}
+	getPosition() {
+		return this.orange.position;
+	}
+	randomizerUpdater(delta_t) {
+		this.setPosition(this.orange.position.x + this.randomizerInputs.x,this.orange.position.y+ this.randomizerInputs.y, this.orange.position.z +  this.randomizerInputs.z);
+		var distance = Math.sqrt(this.randomizerInputs.x^2 + this.randomizerInputs.z ^2 );
+		this.orange.rotateOnAxis(this.rotationAxis, -this.currentSpeed* delta_t/this.sphereRadius);//w = v/r
+	}
+
+	update(delta_t) {
+		this.randomizerUpdater(delta_t)
 	}
 }
