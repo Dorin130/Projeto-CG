@@ -70,13 +70,13 @@ class butterCube {
 
 		this.slice = new THREE.Object3D();
 
-		var angle = Math.PI/4;
-		var geometry = new THREE.BoxGeometry( Width/4, Height, Depth);
+		var geometry = new THREE.BoxGeometry( Width, Height, Depth);
 		var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: false} );
 		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set(PosX + Width/2 + (Height/2 + Width/8)*Math.sin(angle) , PosY, PosZ ); 
-		mesh.rotation.z = angle;
+		mesh.rotation.set(0,Math.random()*2*Math.PI,0);
+		mesh.position.set(PosX , PosY, PosZ ); 
 		this.slice.add(mesh);
+		scene.add(this.slice);
 
 
 	}
@@ -153,7 +153,7 @@ class butterPlate {
 	}
 }
 
-class butter {
+class butter extends randomizableObject{
 	/*Width, Height and Depth  are optional*/
 	constructor(PosX, PosY, PosZ, Width, Height, Depth) {
 		var Width = Width || 30;
@@ -161,7 +161,7 @@ class butter {
 		var Depth = Depth || 20;
 		var Color = 0xffbf00;
 		var angle = Math.PI/4; // Don't change this angle
-
+		super();
 		this.butter = new THREE.Object3D();
 		this.slice = new butterSlice(0,-Height/4,0).getObject();
 		this.butterCube = new THREE.Object3D();
@@ -201,5 +201,15 @@ class butter {
 
 	getObject() {
 		return this.butter;
+	}
+	getPosition(){
+		return this.butter.position;
+	}
+	randomizerUpdater(delta_t) {
+		this.setPosition(this.randomizerInputs.x, this.randomizerInputs.y, this.randomizerInputs.z);
+	}
+
+	update(delta_t) {
+
 	}
 }
