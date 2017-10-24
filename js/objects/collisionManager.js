@@ -34,7 +34,10 @@ class collisionManager {
 	checkCarCheerios() {
 		for (var i = 0; i < this.cheerios.length; i++) {
 			if (this.hasCollision(this.car, this.cheerios[i])) {
-				this.cheerios[i].incomingCollision(this.car.getCollisionResponse(true));
+				this.cheerios[i].incomingCollision(this.car.getCollisionResponse(false));
+				this.cheerios[i].resolveClipping();
+				this.cheerios[i].incomingList = [];
+				this.cheerios[i].setFinal();
 			}
 		}
 	}
@@ -43,8 +46,18 @@ class collisionManager {
 		for (var i = 0; i < this.cheerios.length; i++) {
 			for (var j = i + 1; j < this.cheerios.length; j++) {
 				if (this.hasCollision(this.cheerios[i], this.cheerios[j])) {
-					this.cheerios[i].incomingCollision(this.cheerios[j].getCollisionResponse(true));
-					this.cheerios[j].incomingCollision(this.cheerios[i].getCollisionResponse(true));
+					var final1 = this.cheerios[i].isFinal(); var final2 = this.cheerios[j].isFinal();
+					if((final1&&final2) || ((!final1)&&(!final2))) {
+						final1 = (Math.random()>0.5)? true: false;
+						console.log(final1);
+						final2 = !final1;
+					}
+					this.cheerios[i].incomingCollision(this.cheerios[j].getCollisionResponse(final1));
+					this.cheerios[j].incomingCollision(this.cheerios[i].getCollisionResponse(final2)); 
+					if(final1||final2) {
+						this.cheerios[i].setFinal();
+						this.cheerios[j].setFinal();
+					}
 				}
 			}
 		}
@@ -52,7 +65,7 @@ class collisionManager {
 
 
 	hasCollision(one, two) {
-		return Math.pow(one.boundingRadius + two.boundingRadius, 2) >=
+		return Math.pow(one.boundingRadius + two.boundingRadius, 2)-0.1 >=
 		one.getTentativePosition().distanceToSquared(two.getTentativePosition());
 	}
 }
