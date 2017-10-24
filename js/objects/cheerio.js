@@ -36,8 +36,8 @@ class cheerio {
 		this.resolveClipping();
 		//this.computePreSpeed();
 		//physicsResponses = this.applyCollisionsToOthers();
-		this.computeSpeed();
-		this.isFinal = true;
+		//this.computeSpeed();
+		//this.isFinal = true;
 	}
 
 	resolveClipping() { //also 
@@ -48,6 +48,7 @@ class cheerio {
 			distance = fromDir.length();
 			unclipDir.add(fromDir.normalize().multiplyScalar(this.boundingRadius+incomingList[i][1]-distance));
 		}
+		this.tentativePos.add(unclipDir);
 	}
 
 	//computePreSpeed() { computeAfterSpeed(this.incomingList); } //unchecked if correct
@@ -70,17 +71,21 @@ class cheerio {
 		return physicsResponses;
 	}*/
 
-	incomingCollision(fromPos, boundingRadius, speed, mass, isCar) {
+	incomingCollision(singleCollision) { //[fromPos, boundingRadius, speed, mass]
 		if(isCar) {
-			incomingList.unshift([fromPos, boundingRadius, speed, mass, false]);
+			incomingList.unshift(singleCollision);
 		} else {
-			incomingList.push([fromPos, boundingRadius, speed, mass, false]);
+			incomingList.push(singleCollision);
 		}
-		return [this.tentativePos, this.boundingRadius, this.speed, this.mass, false];
+		return [this.tentativePos, this.boundingRadius, this.speed, this.mass];
+	}
+
+	getCollisionResponse() {
+		return [this.tentativePos, this.boundingRadius, this.speed, this.mass];
 	}
 
 	applyAttrition() {
-		if (this.speed.length() < this.speedStopThreshold = 3;) {
+		if (this.speed.length() < this.speedStopThreshold) {
 			this.speed.multiplyScalar(0);
 		} else {
 			this.speed.multiplyScalar(1/3);
