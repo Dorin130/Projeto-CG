@@ -153,7 +153,7 @@ class customCamera {
 			//redone
 		} else {
 			this.camera.aspect = 16/9;
-			this.camera.fov = 90;
+			this.camera.fov = 120;
 	    	//this.camera.aspect = window.innerWidth / window.innerHeight;
 		}
 
@@ -191,7 +191,7 @@ function createOrtographicCamera(view, x, y, z, aspect) {
 }
 
 function createPerspectiveCamera(x, y, z, aspect) {
-	var camera = new THREE.PerspectiveCamera(90,
+	var camera = new THREE.PerspectiveCamera(120,
 	aspect, 1, 1000);
 	camera.position.set(x, y, z);
 	return camera;

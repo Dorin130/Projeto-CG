@@ -2,8 +2,8 @@
 
 var TorusRadiusDEFAULT = 5;
 var TorusTubeRadiusDEFAULT = 3;
-var RadialSegmentsDEFAULT = 10;
-var TubularSegmentsDEFAULT = 8;
+var RadialSegmentsDEFAULT = 32;
+var TubularSegmentsDEFAULT = 16;
 var MassDEFAULT = 10;
 
 function straightLine(spacing, start, end, includeLast) {
@@ -50,18 +50,14 @@ function curvedLine(spacing, start, end, up, offset, includeLast) {
 function fillPos(posList) {
 	console.log(posList.length);
 	var length = posList.length;
+	cheerioList = [];
 	for(var i=0; i<length; i++) {
-		var newCheerio = new cheerio(TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, TorusTubeRadiusDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
-		var geometry = new THREE.TorusGeometry( 3, 1, 10, 8 );
-		var material = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
-		var torus = new THREE.Mesh( geometry, material );
-		torus.rotation.x = Math.PI/2;
+		var newCheerio = new cheerio(TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
 		var pos = posList.pop();
 		console.log(pos);
-
-
 		newCheerio.setPosition(pos.x, pos.y, pos.z);
+		cheerioList.push(newCheerio);
 		scene.add(newCheerio.getObject());
 	}
-	return 1;
+	return cheerioList;
 }

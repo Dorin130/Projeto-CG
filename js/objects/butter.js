@@ -6,6 +6,10 @@ class butterSlice {
 		var Depth = Depth || 20;
 		var Color = 0xffbf00;
 
+		//Collisions
+		this.boundingRadius = 1;
+		//end--
+
 		this.slice = new THREE.Object3D();
 
 		var angle = Math.PI/4;
@@ -74,11 +78,13 @@ class butterCube {
 		var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: false} );
 		var mesh = new THREE.Mesh( geometry, material );
 		mesh.rotation.set(0,Math.random()*2*Math.PI,0);
-		mesh.position.set(PosX , PosY, PosZ ); 
 		this.slice.add(mesh);
 		scene.add(this.slice);
 
+		var corner = new THREE.Vector3(Width/2, Height/2, Depth/2);
+		this.boundingRadius = corner.length();
 
+		this.setPosition(PosX , PosY, PosZ ); 
 	}
 
 	setPosition(PosX, PosY, PosZ) {
@@ -91,6 +97,10 @@ class butterCube {
 
 	getObject() {
 		return this.slice;
+	}
+
+	getTentativePosition() {
+		return this.slice.position;
 	}
 }
 class butterPlate {

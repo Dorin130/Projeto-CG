@@ -96,6 +96,8 @@ class orange extends randomizableObject {
 		this.orange = new THREE.Object3D().add(this.orange);
 		this.orange.position.set(PosX, PosY, PosZ);
 		scene.add(this.orange);
+
+		this.boundingRadius = sphereRadius;
 	}
 
 	setPosition(PosX, PosY, PosZ) {
@@ -121,4 +123,10 @@ class orange extends randomizableObject {
 	update(delta_t) {
 		this.randomizerUpdater(delta_t)
 	}
+
+	getTentativePosition() {
+		return this.getPosition();
+	}
+
+	
 }

@@ -8,8 +8,13 @@ class cameraManager {
 	}
 
 	addCamera(customCamera, switchKey) {
+		var oldCam = this.cameraList[String(switchKey)]
 		this.cameraList[String(switchKey)] = customCamera;
+		if(oldCam == this.currentCamera) {
+			this.currentCamera = customCamera;
+		}
 	}
+
 
 	update(delta_t) {
 		this.currentCamera.update(delta_t);

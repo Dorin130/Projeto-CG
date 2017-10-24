@@ -4,6 +4,8 @@
 /* Global variables */
 var globalAspectRatio = 16/9;
 
+var pause = false;
+
 var scene, renderer, customCam;
 var customCamManager;
 var collManager;
@@ -137,7 +139,6 @@ function init() {
  	customCamManager.addCamera(cam3, "3");
 	inputList.push(customCamManager);
 
-	collManager = new collisionManager(playerCar, );
 	render(customCamManager.getCurrentCam());
 	animate();
 }
@@ -162,21 +163,21 @@ function createScene() {
 	gameRoad.roadCurve(Math.PI/2, 24);
   	gameRoad.setPosition(-350, 1,-120);
   	gameRoad.roadEnd();*/
-/*
+
   	var road = [];
 	road.push.apply(road, straightLine(20, new THREE.Vector3(0,0,70), new THREE.Vector3(100,0,70), false));
 	road.push.apply(road, curvedLine(20, new THREE.Vector3(100,0,70),
 										new THREE.Vector3(200,0,-200), new THREE.Vector3(0,1,0), 0,false));
-	fillPos(road);*/
-
+	cheerioList = fillPos(road);
+	updateList.push.apply(updateList, cheerioList);
   	var gameTable = new table(0,-10, 0, 800, 20, 450);
 
 
   	var butter1 = new butter(-50,20,20);
 
   	var pathRandomizer = new randomizer(400,10,225);
-  	pathRandomizer.createOranges(5, 15, 10);
-  	pathRandomizer.createButters(5, 10, 10,10,20);
+  	orangeList = pathRandomizer.createOranges(5, 15, 10);
+  	butterList = pathRandomizer.createButters(5, 10, 10,10,20);
 
 
   	playerCar = new car(0,5,0,5)
@@ -184,20 +185,23 @@ function createScene() {
 	updateList.push(pathRandomizer);	
 	updateList.push(playerCar);
 	inputList.push(playerCar);
+
+	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList);
 }
 
 /* Animation main function and update/render cycle */
 function animate() {
+	if (pause) {return}
 	requestAnimationFrame(animate);
 
 	//update:
 	var delta_t = clock.getDelta();
 
-	for(var i = 0; i<cheerioList.length; i++) { //computes tentative position for all collision affectable objects
+	for(var i = 0; i<cheerioList.length; i++) { //computes tentative position for all collision affectable objects (cheerios)
 		cheerioList[i].firstTentative(delta_t);
 	}
 
-	collisionManager.checkAllCollisions();
+	collManager.checkAllCollisions();
 
 	for(var i = 0; i<updateList.length; i++) { //updates each individual object
 		if(updateList[i].update != undefined) { updateList[i].update(delta_t); }
@@ -228,4 +232,22 @@ function getRendererHeight() {
 	} else {
 		return window.innerWidth/globalAspectRatio;
 	}
+}
+
+function resetCameras() {
+	var cam3 = new customCamera(createPerspectiveCamera(0, 0, 0, globalAspectRatio), scene.position);
+	cam3.focusOn(playerCar.getObject());
+	cam3.follow(playerCar.getObject(), true);
+	cam3.setTransform(50, 0, 0, Math.PI/3, 0);
+	cam3.manualControl();
+
+	customCamManager.addCamera(cam3, "3");
+}
+
+function resetGame() {
+	pause = true;
+	createScene();
+	resetCameras();
+	pause = false;
+	animate();
 }

@@ -56,6 +56,7 @@ class randomizer {
 	}
 
 	createOranges(minOranges, maxOranges, radius) {
+		orangeList = [];
 		for(var i=0; i < this.random(minOranges, maxOranges); i++) {
 
 			var object = new orange(this.random(-this.limitX, this.limitX), this.limitY, 
@@ -66,16 +67,20 @@ class randomizer {
 			object.rotationAxis = direction.clone().cross(new THREE.Vector3(0,1,0));
 			
 			this.paths.push(objPath);
+			orangeList.push(object);
 		}
-		console.log(this.paths);
+		return orangeList;
 	}
 
 	createButters(minButters, maxButters, width, height, depth) {
+		butterList = [];
 		for(var i=0; i < this.random(minButters, maxButters); i++) {
 
 			var object = new butterCube(this.random(-this.limitX, this.limitX), this.limitY/2, 
 								this.random(-this.limitZ, this.limitZ), width, height, depth);
+			butterList.push(object);
 		}
+		return butterList;
 	}
 
 	replyToNotifications() {

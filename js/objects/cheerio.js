@@ -6,7 +6,7 @@ class cheerio {
 		this.speedStopThreshold = 3;
 
 		//collisions
-		this.boundingRadius = radius;
+		this.boundingRadius = radius+tubeRadius;
 		this.final = false;
 		this.tentativePos;
 		this.incomingList = [];	//(position from, boundingRadius, speed vector, mass) 
@@ -15,7 +15,7 @@ class cheerio {
 		//mesh
 		this.geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
 		this.material = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
-		var cheerioMesh = new THREE.Mesh( geometry, material );
+		var cheerioMesh = new THREE.Mesh( this.geometry, this.material );
 		cheerioMesh.rotation.x = Math.PI/2;
 		this.cheerioObj = new THREE.Object3D().add(cheerioMesh);
 
@@ -23,13 +23,13 @@ class cheerio {
 
 	update(delta_t) { //after first tentative and collision handling
 		this.collisionHandling(delta_t);
-		this.position = this.tentativePos;
-		this.final = false;
+		this.setPosition(this.tentativePos.x, this.tentativePos.y, this.tentativePos.z);
+		this.incomingList = [];
 	}
 
 
 	firstTentative(delta_t) { //before any collision detection
-		applyAttrition(); 
+		this.applyAttrition(); 
 		this.tentativePos = this.cheerioObj.position.clone().addScaledVector(this.speed, delta_t);
 	}
 
@@ -42,13 +42,13 @@ class cheerio {
 	}
 
 	resolveClipping() { //also 
-		collsNo = incomingList.length;
+		var collsNo = this.incomingList.length;
 		var unclipDir = new THREE.Vector3(0,0,0);
-		for(i=0; i<collsNo; i++) {
-			if(incomingList[4] == true) {
-				var fromDir = this.tentativePos.clone().sub(incomingList[i][0]);
-				distance = fromDir.length();
-				unclipDir.add(fromDir.normalize().multiplyScalar(this.boundingRadius+incomingList[i][1]-distance));
+		for(var i=0; i<collsNo; i++) {
+			if(this.incomingList[i][4] == true) {
+				var fromDir = this.tentativePos.clone().sub(this.incomingList[i][0]);
+				var distance = fromDir.length();
+				unclipDir.add(fromDir.normalize().multiplyScalar(this.boundingRadius+this.incomingList[i][1]-distance));
 			}
 		}
 		this.tentativePos.add(unclipDir);
@@ -75,15 +75,11 @@ class cheerio {
 	}*/
 
 	incomingCollision(singleCollision) { //[fromPos, boundingRadius, speed, mass]
-		if(isCar) {
-			incomingList.unshift(singleCollision);
-		} else {
-			incomingList.push(singleCollision);
-		}
+		this.incomingList.push(singleCollision);
 	}
 
 	getCollisionResponse(youClip) {
-		return [this.tentativePos, this.boundingRadius, this.speed, this.mass, youClip];
+		return [this.tentativePos.clone(), this.boundingRadius, this.speed.clone(), this.mass, youClip];
 	}
 
 	applyAttrition() {
@@ -106,6 +102,14 @@ class cheerio {
 
 	setRotation(RotX, RotY, RotZ) {
 		this.cheerioObj.rotation.set(RotX, RotY, RotZ);
+	}
+
+	getObject() {
+		return this.cheerioObj;
+	}
+
+	getTentativePosition() {
+		return this.tentativePos;
 	}
 
 }

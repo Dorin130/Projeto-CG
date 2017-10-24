@@ -14,6 +14,10 @@ class car {
 		this.maxAttrition = 30;
 		this.speedStopThreshold = 3;
 
+		//Collision
+		this.boundingRadius = 3*scale;
+		this.mass = 10;
+
 		//Creation
 		this.car = new THREE.Object3D();
 		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*2);
@@ -142,6 +146,18 @@ class car {
 
 		this.car.position.add(this.direction.clone().multiplyScalar(this.speed*delta_time));
 		//console.log(this.speed);
+	}
+
+	getTentativePosition() {
+		return this.car.position;
+	}
+
+	getCollisionResponse(youClip) {
+		return [this.car.position.clone().setY(0), this.boundingRadius, this.direction.clone().multiplyScalar(this.speed), this.mass, youClip];
+	}
+
+	butterCollision() {
+		console.log("This is a sticky situation");
 	}
 }
 
