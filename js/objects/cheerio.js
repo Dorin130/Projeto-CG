@@ -9,7 +9,7 @@ class cheerio {
 		this.boundingRadius = radius;
 		this.final = false;
 		this.tentativePos;
-		this.incomingList[];	//(position from, boundingRadius, speed vector, mass) 
+		this.incomingList = [];	//(position from, boundingRadius, speed vector, mass) 
 
 
 		//mesh
@@ -22,6 +22,7 @@ class cheerio {
 	}
 
 	update(delta_t) { //after first tentative and collision handling
+		this.collisionHandling(delta_t);
 		this.position = this.tentativePos;
 		this.final = false;
 	}
@@ -44,9 +45,11 @@ class cheerio {
 		collsNo = incomingList.length;
 		var unclipDir = new THREE.Vector3(0,0,0);
 		for(i=0; i<collsNo; i++) {
-			var fromDir = this.tentativePos.clone().sub(incomingList[i][0]);
-			distance = fromDir.length();
-			unclipDir.add(fromDir.normalize().multiplyScalar(this.boundingRadius+incomingList[i][1]-distance));
+			if(incomingList[4] == true) {
+				var fromDir = this.tentativePos.clone().sub(incomingList[i][0]);
+				distance = fromDir.length();
+				unclipDir.add(fromDir.normalize().multiplyScalar(this.boundingRadius+incomingList[i][1]-distance));
+			}
 		}
 		this.tentativePos.add(unclipDir);
 	}
@@ -77,11 +80,10 @@ class cheerio {
 		} else {
 			incomingList.push(singleCollision);
 		}
-		return [this.tentativePos, this.boundingRadius, this.speed, this.mass];
 	}
 
-	getCollisionResponse() {
-		return [this.tentativePos, this.boundingRadius, this.speed, this.mass];
+	getCollisionResponse(youClip) {
+		return [this.tentativePos, this.boundingRadius, this.speed, this.mass, youClip];
 	}
 
 	applyAttrition() {

@@ -6,10 +6,17 @@ var globalAspectRatio = 16/9;
 
 var scene, renderer, customCam;
 var customCamManager;
+var collManager;
 
 var updateList = []; /* contains every object to be updated in the update cycle except customCamera */
 var inputList = []; /* contains every object to be updated in the update cycle except customCamera */
+
+
+//COLLIDING OBJECT LISTS
 var playerCar;
+var orangeList = [];
+var butterList = [];
+var cheerioList = [];
 
 var clock = new THREE.Clock();
 
@@ -130,6 +137,7 @@ function init() {
  	customCamManager.addCamera(cam3, "3");
 	inputList.push(customCamManager);
 
+	collManager = new collisionManager(playerCar, );
 	render(customCamManager.getCurrentCam());
 	animate();
 }
@@ -141,6 +149,7 @@ function createScene() {
 	//scene.add(new THREE.AxisHelper(15));
 
 	//CREATION OF A ROAD EXAMPLE
+	/*
   	var gameRoad = new road(0, 0, 0, 7, 30, 3, 1);
     gameRoad.roadBegin();
     gameRoad.straightRoad(18);
@@ -152,7 +161,13 @@ function createScene() {
 	gameRoad.straightRoad(30);
 	gameRoad.roadCurve(Math.PI/2, 24);
   	gameRoad.setPosition(-350, 1,-120);
-  	gameRoad.roadEnd();
+  	gameRoad.roadEnd();*/
+/*
+  	var road = [];
+	road.push.apply(road, straightLine(20, new THREE.Vector3(0,0,70), new THREE.Vector3(100,0,70), false));
+	road.push.apply(road, curvedLine(20, new THREE.Vector3(100,0,70),
+										new THREE.Vector3(200,0,-200), new THREE.Vector3(0,1,0), 0,false));
+	fillPos(road);*/
 
   	var gameTable = new table(0,-10, 0, 800, 20, 450);
 
@@ -177,7 +192,13 @@ function animate() {
 
 	//update:
 	var delta_t = clock.getDelta();
-	
+
+	for(var i = 0; i<cheerioList.length; i++) { //computes tentative position for all collision affectable objects
+		cheerioList[i].firstTentative(delta_t);
+	}
+
+	collisionManager.checkAllCollisions();
+
 	for(var i = 0; i<updateList.length; i++) { //updates each individual object
 		if(updateList[i].update != undefined) { updateList[i].update(delta_t); }
 	}
