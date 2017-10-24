@@ -1,13 +1,19 @@
-var DEFAULT_SPEED = 40
+var DEFAULT_SPEED = 100
 var SPACING = 5
 var SPEED_FACTOR = 1
-
+var RESPAWN_TIME = 300
 
 class randomizableObject {
 	constructor() {
 		this.randomizerInputs = new THREE.Vector3(0,0,0); //use this to get info
 		this.rotationAxis = new THREE.Vector3(0,0,0);
-		this.currentSpeed = DEFAULT_SPEED;
+		this.currentSpeed = Math.floor(Math.random()* DEFAULT_SPEED);
+		this.clock = new THREE.Clock(false);
+		this.elapsedTime = 0;
+		this.outOfBounds = false;
+	}
+	startCLock() {
+
 	}
 	randomizerUpdater(delta_t) {
 		//IMPLEMENT THIS METHOD IN THE SUBCLASSES
@@ -22,20 +28,36 @@ class path {
 	}
 
 	notifyRandomizer() {
+		this.object.clock.stop();
+		this.object.outOfBounds = false;
+		this.object.elapsedTime = 0;
 		this.randomizer.notifications.push(this);
 	}
 
 	update(delta_t, speed, limitx, limitY, limitZ) {
-		this.object.getPosition().x
+		if(this.object.outOfBounds) {
+			var time = this.object.clock.getElapsedTime()
+			this.object.elapsedTime += time;
+			console.log(this.object.elapsedTime)
+			if(this.object.elapsedTime > RESPAWN_TIME) {
+				this.notifyRandomizer()
+			}
+			return
+		}
 		if( this.object.getPosition().x  <= limitx + SPACING  && this.object.getPosition().z <= limitZ + SPACING && 
 			this.object.getPosition().x  >= -(limitx + SPACING) && this.object.getPosition().z  >= -(limitZ + SPACING)) {
-			this.object.currentSpeed = speed;
+
+			this.object.currentSpeed +=  SPEED_FACTOR/this.object.currentSpeed;
 			
-			this.object.randomizerInputs.set(this.path.x*speed*delta_t, this.path.y*speed*delta_t, this.path.z*speed*delta_t);
+			
+			
+			this.object.randomizerInputs.set(this.path.x*this.object.currentSpeed*delta_t, this.path.y*this.object.currentSpeed*delta_t, this.path.z*this.object.currentSpeed*delta_t);
 			this.object.update(delta_t);
 		}
 		else {
-			this.notifyRandomizer(); //Notifies the randomizer that an object is out of bounds
+			this.object.outOfBounds = true;
+			this.object.clock.start();
+			this.object.setPosition(0,0,10000); //Notifies the randomizer that an object is out of bounds
 		}		
 	}
 }
