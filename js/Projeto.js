@@ -149,25 +149,10 @@ function createScene() {
 	scene = new THREE.Scene();
 	//scene.add(new THREE.AxisHelper(15));
 
-	//CREATION OF A ROAD EXAMPLE
-	/*
-  	var gameRoad = new road(0, 0, 0, 7, 30, 3, 1);
-    gameRoad.roadBegin();
-    gameRoad.straightRoad(18);
-	gameRoad.roadCurve(Math.PI/2, 30);
-	gameRoad.straightRoad(39);
-	gameRoad.roadCurve(Math.PI*(1/2+1/3), 100);
-	gameRoad.straightRoad(15);
-	gameRoad.roadCurve(Math.PI*(1-1/2-1/3), 10);
-	gameRoad.straightRoad(30);
-	gameRoad.roadCurve(Math.PI/2, 24);
-  	gameRoad.setPosition(-350, 1,-120);
-  	gameRoad.roadEnd();*/
-
   	var road = [];
-	road.push.apply(road, straightLine(20, new THREE.Vector3(0,0,70), new THREE.Vector3(100,0,70), false));
-	road.push.apply(road, curvedLine(20, new THREE.Vector3(100,0,70),
-										new THREE.Vector3(200,0,-200), new THREE.Vector3(0,1,0), 0,false));
+	road.push.apply(road, straightLine(20, new THREE.Vector3(0,0,20), new THREE.Vector3(0,0,200), false));
+	/*road.push.apply(road, curvedLine(20, new THREE.Vector3(100,0,70),
+										new THREE.Vector3(200,0,-200), new THREE.Vector3(0,1,0), 0,false));*/
 	cheerioList = fillPos(road);
 	updateList.push.apply(updateList, cheerioList);
   	var gameTable = new table(0,-10, 0, 800, 20, 450);
