@@ -1,4 +1,11 @@
 'use strict'
+
+var TorusRadiusDEFAULT = 5;
+var TorusTubeRadiusDEFAULT = 3;
+var RadialSegmentsDEFAULT = 10;
+var TubularSegmentsDEFAULT = 8;
+var MassDEFAULT = 10;
+
 function straightLine(spacing, start, end, includeLast) {
 	var doLast = includeLast || true;
 	var direction = end.clone().sub(start);
@@ -40,19 +47,21 @@ function curvedLine(spacing, start, end, up, offset, includeLast) {
 	return posList;
 }
 
-function fillPos(posList, cheerio) {
+function fillPos(posList) {
 	console.log(posList.length);
 	var length = posList.length;
 	for(var i=0; i<length; i++) {
-		var newCheerio = cheerio();
+		var newCheerio = new cheerio(TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, TorusTubeRadiusDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
 		var geometry = new THREE.TorusGeometry( 3, 1, 10, 8 );
 		var material = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
 		var torus = new THREE.Mesh( geometry, material );
 		torus.rotation.x = Math.PI/2;
 		var pos = posList.pop();
+		console.log(pos);
+
 
 		newCheerio.setPosition(pos.x, pos.y, pos.z);
-		scene.add(torus);
+		scene.add(newCheerio.getObject());
 	}
 	return 1;
 }
