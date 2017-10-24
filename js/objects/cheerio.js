@@ -2,8 +2,8 @@
 class cheerio {
 	constructor(radius, tubeRadius, radialSegments, tubularSegments, mass) {
 		//movement
-		this.mass = 10
 		this.speed = new THREE.Vector3(0,0,0);
+		this.speedStopThreshold = 3;
 
 		//collisions
 		this.boundingRadius = radius;
@@ -21,8 +21,9 @@ class cheerio {
 
 	}
 
-	update(delta_t) { //after first and second tentatives
+	update(delta_t) { //after first tentative and collision handling
 		this.position = this.tentativePos;
+		this.final = false;
 	}
 
 
@@ -31,28 +32,33 @@ class cheerio {
 		this.tentativePos = this.cheerioObj.position.clone().addScaledVector(this.speed, delta_t);
 	}
 
-	secondTentative(delta_t) { //after every cheerio has had firstTentative calculated
+	collisionHandling(delta_t) { //after every cheerio has had firstTentative calculated
 		this.resolveClipping();
-		this.computePreSpeed();
-		physicsResponses = this.applyCollisionsToOthers();
-		this.computeAfterSpeed(physicsResponses);
+		//this.computePreSpeed();
+		//physicsResponses = this.applyCollisionsToOthers();
+		this.computeSpeed();
 		this.isFinal = true;
 	}
 
 	resolveClipping() { //also 
 		collsNo = incomingList.length;
+		var unclipDir = new THREE.Vector3(0,0,0);
 		for(i=0; i<collsNo; i++) {
-			//var unclipDir = TO DO
+			var fromDir = this.tentativePos.clone().sub(incomingList[i][0]);
+			distance = fromDir.length();
+			unclipDir.add(fromDir.normalize().multiplyScalar(this.boundingRadius+incomingList[i][1]-distance));
 		}
 	}
 
-	computePreSpeed() { computeAfterSpeed(this.incomingList); } //unchecked if correct
+	//computePreSpeed() { computeAfterSpeed(this.incomingList); } //unchecked if correct
 
-	computeAfterSpeed(physicsInteractions) {
+	computeSpeed() {
+		console.log("very fast");
+		this.speed = new THREE.Vector3(0,0,0);
 		//this.speed = awesome equations thing
 	}
 
-	applyCollisionsToOthers() {
+	/*applyCollisionsToOthers() {
 		collsList = getCollisionsWithOthers();
 		len = collsList.length
 		physicsResponses = []
@@ -62,7 +68,7 @@ class cheerio {
 			}
 		}
 		return physicsResponses;
-	}
+	}*/
 
 	incomingCollision(fromPos, boundingRadius, speed, mass, isCar) {
 		if(isCar) {
@@ -73,11 +79,19 @@ class cheerio {
 		return [this.tentativePos, this.boundingRadius, this.speed, this.mass, false];
 	}
 
-	applyAttrition() {}
+	applyAttrition() {
+		if (this.speed.length() < this.speedStopThreshold = 3;) {
+			this.speed.multiplyScalar(0);
+		} else {
+			this.speed.multiplyScalar(1/3);
+		}
+	}
 
+	/*
 	isFinal() {
 		return this.final;
 	}
+	*/
 
 	setPosition(PosX, PosY, PosZ) {
 		this.cheerioObj.position.set(PosX, PosY, PosZ)
