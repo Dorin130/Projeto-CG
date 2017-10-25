@@ -4,13 +4,13 @@ class cheerio {
 		//movement
 		this.speed = new THREE.Vector3(0,0,0);
 		this.speedStopThreshold = 3;
+		this.attritionValue = 25;
 
 		//collisions
 		this.boundingRadius = radius+tubeRadius;
 		this.final = false;
 		this.tentativePos;
 		this.incomingList = [];	//(position from, boundingRadius, speed vector, mass) 
-
 
 		//mesh
 		this.geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
@@ -22,30 +22,28 @@ class cheerio {
 	}
 
 	update(delta_t) { //after first tentative and collision handling
-		this.collisionHandling(delta_t);
 		this.setPosition(this.tentativePos.x, this.tentativePos.y, this.tentativePos.z);
-		this.incomingList = [];
+		this.final = false;
 	}
 
 
 	firstTentative(delta_t) { //before any collision detection
-		this.applyAttrition(); 
+		this.applyAttrition(delta_t); 
 		this.tentativePos = this.cheerioObj.position.clone().addScaledVector(this.speed, delta_t);
+		//console.log(this.tentativePos);
 	}
 
-	collisionHandling(delta_t) { //after every cheerio has had firstTentative calculated
+	collisionHandling() { //after every cheerio has had firstTentative calculated
 		this.resolveClipping();
-		//this.computePreSpeed();
-		//physicsResponses = this.applyCollisionsToOthers();
-		//this.computeSpeed();
-		//this.isFinal = true;
+		this.computeSpeed();
+		this.incomingList = [];
 	}
 
 	resolveClipping() { //also 
 		var collsNo = this.incomingList.length;
 		var unclipDir = new THREE.Vector3(0,0,0);
 		for(var i=0; i<collsNo; i++) {
-			if(this.incomingList[i][4] == true) {
+			if(this.incomingList[i][4] == false) {
 				var fromDir = this.tentativePos.clone().sub(this.incomingList[i][0]);
 				var distance = fromDir.length();
 				unclipDir.add(fromDir.normalize().multiplyScalar(this.boundingRadius+this.incomingList[i][1]-distance));
@@ -54,47 +52,42 @@ class cheerio {
 		this.tentativePos.add(unclipDir);
 	}
 
-	//computePreSpeed() { computeAfterSpeed(this.incomingList); } //unchecked if correct
-
 	computeSpeed() {
-		console.log("very fast");
-		this.speed = new THREE.Vector3(0,0,0);
-		//this.speed = awesome equations thing
-	}
-
-	/*applyCollisionsToOthers() {
-		collsList = getCollisionsWithOthers();
-		len = collsList.length
-		physicsResponses = []
-		for(var i = 0; i<len; i++) {
-			if(!collsList[i].isFinal()) {
-				physicsResponses.push(collsList[i].incomingCollision(this.tentativePos, this.boundingRadius, this.speed, this.mass, false));
-			}
+		var collsNo = this.incomingList.length;
+		for(var i=0; i<collsNo; i++) {
+			var v2 = this.incomingList[i][2];
+			var fromDir = this.tentativePos.clone().sub(this.incomingList[i][0]);
+			var distanceSquared = this.tentativePos.distanceToSquared(this.incomingList[i][0]);
+			var factor = ((this.speed.clone().sub(v2)).dot(fromDir)/(distanceSquared));
+			this.speed.sub(fromDir.multiplyScalar(factor));
 		}
-		return physicsResponses;
-	}*/
+	}
 
 	incomingCollision(singleCollision) { //[fromPos, boundingRadius, speed, mass]
 		this.incomingList.push(singleCollision);
+		this.collisionHandling();
 	}
 
-	getCollisionResponse(youClip) {
-		return [this.tentativePos.clone(), this.boundingRadius, this.speed.clone(), this.mass, youClip];
+	getCollisionResponse(dontUnclip) {
+		return [this.tentativePos.clone(), this.boundingRadius, this.speed.clone(), this.mass, dontUnclip];
 	}
 
-	applyAttrition() {
+	applyAttrition(delta_t) {
 		if (this.speed.length() < this.speedStopThreshold) {
 			this.speed.multiplyScalar(0);
 		} else {
-			this.speed.multiplyScalar(1/3);
+			this.speed.sub(this.speed.clone().normalize().multiplyScalar(this.attritionValue*delta_t));
 		}
+		//console.log(this.speed);
 	}
 
-	/*
 	isFinal() {
 		return this.final;
 	}
-	*/
+
+	setFinal() {
+		this.final = true;
+	}
 
 	setPosition(PosX, PosY, PosZ) {
 		this.cheerioObj.position.set(PosX, PosY, PosZ)
