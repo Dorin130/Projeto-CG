@@ -38,7 +38,7 @@ class path {
 		if(this.object.outOfBounds) {
 			var time = this.object.clock.getElapsedTime()
 			this.object.elapsedTime += time;
-			console.log(this.object.elapsedTime)
+			//console.log(this.object.elapsedTime)
 			if(this.object.elapsedTime > RESPAWN_TIME) {
 				this.notifyRandomizer()
 			}

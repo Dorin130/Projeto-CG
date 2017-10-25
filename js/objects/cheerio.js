@@ -4,6 +4,7 @@ class cheerio {
 		//movement
 		this.speed = new THREE.Vector3(0,0,0);
 		this.speedStopThreshold = 3;
+		this.attritionValue = 25;
 
 		//collisions
 		this.boundingRadius = radius+tubeRadius;
@@ -21,21 +22,21 @@ class cheerio {
 	}
 
 	update(delta_t) { //after first tentative and collision handling
-		this.collisionHandling(delta_t);
 		this.setPosition(this.tentativePos.x, this.tentativePos.y, this.tentativePos.z);
-		this.incomingList = [];
 		this.final = false;
 	}
 
 
 	firstTentative(delta_t) { //before any collision detection
-		this.applyAttrition(); 
+		this.applyAttrition(delta_t); 
 		this.tentativePos = this.cheerioObj.position.clone().addScaledVector(this.speed, delta_t);
+		//console.log(this.tentativePos);
 	}
 
-	collisionHandling(delta_t) { //after every cheerio has had firstTentative calculated
+	collisionHandling() { //after every cheerio has had firstTentative calculated
 		this.resolveClipping();
-		//this.computeSpeed();
+		this.computeSpeed();
+		this.incomingList = [];
 	}
 
 	resolveClipping() { //also 
@@ -52,25 +53,32 @@ class cheerio {
 	}
 
 	computeSpeed() {
-		console.log("very fast");
-		this.speed = new THREE.Vector3(0,0,0);
-		//this.speed = awesome equations thing
+		var collsNo = this.incomingList.length;
+		for(var i=0; i<collsNo; i++) {
+			var v2 = this.incomingList[i][2];
+			var fromDir = this.tentativePos.clone().sub(this.incomingList[i][0]);
+			var distanceSquared = this.tentativePos.distanceToSquared(this.incomingList[i][0]);
+			var factor = ((this.speed.clone().sub(v2)).dot(fromDir)/(distanceSquared));
+			this.speed.sub(fromDir.multiplyScalar(factor));
+		}
 	}
 
 	incomingCollision(singleCollision) { //[fromPos, boundingRadius, speed, mass]
 		this.incomingList.push(singleCollision);
+		this.collisionHandling();
 	}
 
 	getCollisionResponse(dontUnclip) {
 		return [this.tentativePos.clone(), this.boundingRadius, this.speed.clone(), this.mass, dontUnclip];
 	}
 
-	applyAttrition() {
+	applyAttrition(delta_t) {
 		if (this.speed.length() < this.speedStopThreshold) {
 			this.speed.multiplyScalar(0);
 		} else {
-			this.speed.multiplyScalar(1/3);
+			this.speed.sub(this.speed.clone().normalize().multiplyScalar(this.attritionValue*delta_t));
 		}
+		//console.log(this.speed);
 	}
 
 	isFinal() {

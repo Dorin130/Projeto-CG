@@ -5,7 +5,6 @@ class collisionManager {
 		this.oranges = orangesList;
 		this.butters = butterList;
 		this.tears = [];
-		console.log(this.butters);
 	}
 
 	checkAllCollisions() {
@@ -48,12 +47,13 @@ class collisionManager {
 				if (this.hasCollision(this.cheerios[i], this.cheerios[j])) {
 					var final1 = this.cheerios[i].isFinal(); var final2 = this.cheerios[j].isFinal();
 					if((final1&&final2) || ((!final1)&&(!final2))) {
-						final1 = (Math.random()>0.5)? true: false;
-						console.log(final1);
+						final1 = false
 						final2 = !final1;
 					}
-					this.cheerios[i].incomingCollision(this.cheerios[j].getCollisionResponse(final1));
-					this.cheerios[j].incomingCollision(this.cheerios[i].getCollisionResponse(final2)); 
+					var response1 = this.cheerios[j].getCollisionResponse(final1);
+					var response2 = this.cheerios[i].getCollisionResponse(final1);
+					this.cheerios[i].incomingCollision(response1);
+					this.cheerios[j].incomingCollision(response2); 
 					if(final1||final2) {
 						this.cheerios[i].setFinal();
 						this.cheerios[j].setFinal();
