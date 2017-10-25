@@ -159,14 +159,22 @@ class car {
 	}
 
 	butterCollision() {
-		console.log("This is a sticky situation");
+		this.maxSpeed = 0;
+		this.minSpeed = 0;
 	}
 
 	reset() {
 		this.setPosition(0, 5, 0);
-		this.car.speed = 0;
+		this.setRotation(0,Math.PI/2,0);
+		this.speed = 0;
 		this.acceleration = 0;
 		this.speed = 0;
+		this.direction.x = 0;
+		this.direction.y = 0;
+		this.direction.z = 1;
+		this.maxSpeed = 250;
+		this.minSpeed = -100;
+
 	}
 }
 

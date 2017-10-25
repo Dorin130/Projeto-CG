@@ -138,6 +138,13 @@ class randomizer {
 		this.speed = newSpeed;
 	}
 
+	reset() {
+		this.changeSpeed(DEFAULT_SPEED);
+		for(var i=0; i < this.paths.length; i++ ) {
+			this.paths[i].object.currentSpeed = Math.floor(DEFAULT_SPEED + Math.random()* DEFAULT_SPEED);
+		}
+	}
+
 	update(delta_t) {
 		this.speed += SPEED_FACTOR/this.speed;
 		for(var i=0; i < this.paths.length; i++ ) {

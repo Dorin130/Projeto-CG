@@ -4,7 +4,7 @@ class collisionManager {
 		this.cheerios = cheerioList;
 		this.oranges = orangesList;
 		this.butters = butterList;
-		this.tears = [];
+		//this.tears = ["(┳ _ ┳)"];
 	}
 
 	checkAllCollisions() {
@@ -26,6 +26,7 @@ class collisionManager {
 		for (var i = 0; i < this.oranges.length; i++) {
 			if (this.hasCollision(this.car, this.oranges[i])) {
 				playerCar.reset();
+				pathRandomizer.reset();
 			}
 		}
 	}

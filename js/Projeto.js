@@ -9,6 +9,7 @@ var pause = false;
 var scene, renderer, customCam;
 var customCamManager;
 var collManager;
+var pathRandomizer;
 
 var updateList = []; /* contains every object to be updated in the update cycle except customCamera */
 var inputList = []; /* contains every object to be updated in the update cycle except customCamera */
@@ -168,7 +169,7 @@ function createScene() {
 
   	var butter1 = new butter(-50,20,20);
 
-  	var pathRandomizer = new randomizer(400,10,225);
+  	pathRandomizer = new randomizer(400,10,225);
   	orangeList = pathRandomizer.createOranges(5, 15, 10);
   	butterList = pathRandomizer.createButters(5, 10, 10,10,20);
 
