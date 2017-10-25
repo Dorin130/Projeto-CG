@@ -1,7 +1,7 @@
 var DEFAULT_SPEED = 100
 var SPACING = 5
 var SPEED_FACTOR = 1
-var RESPAWN_TIME = 300
+var RESPAWN_TIME = 100
 
 class randomizableObject {
 	constructor() {
@@ -11,9 +11,6 @@ class randomizableObject {
 		this.clock = new THREE.Clock(false);
 		this.elapsedTime = 0;
 		this.outOfBounds = false;
-	}
-	startCLock() {
-
 	}
 	randomizerUpdater(delta_t) {
 		//IMPLEMENT THIS METHOD IN THE SUBCLASSES
@@ -38,7 +35,6 @@ class path {
 		if(this.object.outOfBounds) {
 			var time = this.object.clock.getElapsedTime()
 			this.object.elapsedTime += time;
-			//console.log(this.object.elapsedTime)
 			if(this.object.elapsedTime > RESPAWN_TIME) {
 				this.notifyRandomizer()
 			}
@@ -47,7 +43,7 @@ class path {
 		if( this.object.getPosition().x  <= limitx + SPACING  && this.object.getPosition().z <= limitZ + SPACING && 
 			this.object.getPosition().x  >= -(limitx + SPACING) && this.object.getPosition().z  >= -(limitZ + SPACING)) {
 
-			this.object.currentSpeed +=  SPEED_FACTOR/this.object.currentSpeed;
+			//this.object.currentSpeed +=  SPEED_FACTOR/this.object.currentSpeed;
 			
 			
 			
@@ -130,7 +126,7 @@ class randomizer {
 			path.object.setRotation(0,0,0);
 			path.object.rotationAxis = path.path.clone().cross(new THREE.Vector3(0,1,0));
 			path.object.setPosition(posX, this.limitY, posZ);
-
+			path.object.currentSpeed += this.speed;
 		}
 	}
 
@@ -139,6 +135,7 @@ class randomizer {
 	}
 
 	update(delta_t) {
+		this.speed += SPEED_FACTOR/this.speed;
 		for(var i=0; i < this.paths.length; i++ ) {
 			this.replyToNotifications();
 			this.changeSpeed(this.speed + SPEED_FACTOR/this.speed);
