@@ -8,7 +8,7 @@ class collisionManager {
 	}
 
 	checkAllCollisions() {
-		//this.checkCarOrange();
+		this.checkCarOrange();
 		this.checkCarButter();
 		this.checkCarCheerios();
 		this.checkCheerioCheerio();
@@ -25,7 +25,7 @@ class collisionManager {
 	checkCarOrange() {
 		for (var i = 0; i < this.oranges.length; i++) {
 			if (this.hasCollision(this.car, this.oranges[i])) {
-				resetGame();
+				playerCar.reset();
 			}
 		}
 	}

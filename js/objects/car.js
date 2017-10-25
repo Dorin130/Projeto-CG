@@ -161,6 +161,13 @@ class car {
 	butterCollision() {
 		console.log("This is a sticky situation");
 	}
+
+	reset() {
+		this.setPosition(0, 5, 0);
+		this.car.speed = 0;
+		this.acceleration = 0;
+		this.speed = 0;
+	}
 }
 
 class axleAndWheel {
@@ -306,4 +313,5 @@ class dome {
 	getObject() {
 		return this.dome;
 	}
+
 }
