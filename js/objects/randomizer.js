@@ -2,6 +2,7 @@ var DEFAULT_SPEED = 100
 var SPACING = 5
 var SPEED_FACTOR = 1
 var RESPAWN_TIME = 100
+var MAX_SPEED = 500
 
 class randomizableObject {
 	constructor() {
@@ -126,7 +127,10 @@ class randomizer {
 			path.object.setRotation(0,0,0);
 			path.object.rotationAxis = path.path.clone().cross(new THREE.Vector3(0,1,0));
 			path.object.setPosition(posX, this.limitY, posZ);
-			path.object.currentSpeed += this.speed;
+			if(path.object.currentSpeed < MAX_SPEED) {
+				path.object.currentSpeed += this.speed;
+			}
+			
 		}
 	}
 
@@ -138,7 +142,6 @@ class randomizer {
 		this.speed += SPEED_FACTOR/this.speed;
 		for(var i=0; i < this.paths.length; i++ ) {
 			this.replyToNotifications();
-			this.changeSpeed(this.speed + SPEED_FACTOR/this.speed);
 			this.paths[i].update(delta_t, this.speed, this.limitX, this.limitY, this.limitZ);
 		}
 	}
