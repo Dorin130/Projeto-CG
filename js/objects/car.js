@@ -16,7 +16,7 @@ class car {
 
 		//Collision
 		this.boundingRadius = 3*scale;
-		this.mass = 10;
+		this.mass = 50;
 
 		//Creation
 		this.car = new THREE.Object3D();
