@@ -1,4 +1,4 @@
-var DEFAULT_SPEED = 100
+var DEFAULT_SPEED = 20
 var SPACING = 5
 var SPEED_FACTOR = 1
 var RESPAWN_TIME = 100
@@ -8,7 +8,7 @@ class randomizableObject {
 	constructor() {
 		this.randomizerInputs = new THREE.Vector3(0,0,0); //use this to get info
 		this.rotationAxis = new THREE.Vector3(0,0,0);
-		this.currentSpeed = Math.floor(Math.random()* DEFAULT_SPEED);
+		this.currentSpeed = Math.floor(DEFAULT_SPEED + Math.random()* DEFAULT_SPEED);
 		this.clock = new THREE.Clock(false);
 		this.elapsedTime = 0;
 		this.outOfBounds = false;
