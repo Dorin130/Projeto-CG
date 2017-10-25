@@ -4,9 +4,10 @@ class cheerio {
 		//movement
 		this.speed = new THREE.Vector3(0,0,0);
 		this.speedStopThreshold = 3;
-		this.attritionValue = 25;
+		this.attritionValue = 100;
 
 		//collisions
+		this.mass = 10;
 		this.boundingRadius = radius+tubeRadius;
 		this.final = false;
 		this.tentativePos;
@@ -55,10 +56,11 @@ class cheerio {
 	computeSpeed() {
 		var collsNo = this.incomingList.length;
 		for(var i=0; i<collsNo; i++) {
+			var m2 = this.incomingList[i][3];
 			var v2 = this.incomingList[i][2];
 			var fromDir = this.tentativePos.clone().sub(this.incomingList[i][0]);
 			var distanceSquared = this.tentativePos.distanceToSquared(this.incomingList[i][0]);
-			var factor = ((this.speed.clone().sub(v2)).dot(fromDir)/(distanceSquared));
+			var factor = (2*m2/(this.mass+m2))*((this.speed.clone().sub(v2)).dot(fromDir)/(distanceSquared));
 			this.speed.sub(fromDir.multiplyScalar(factor));
 		}
 	}
