@@ -26,7 +26,8 @@ class car {
 		this.car.add(box);
 		
 		this.car.add(new dome(scale*.5, scale*.5, scale*0, scale).getObject())
-		this.car.add(new axleAndWheel(scale*1.5, -scale*0.3, 0, scale).getObject());
+		this.rearAxis = new axleAndWheel(scale*1.5, -scale*0.3, 0, scale);
+		this.car.add(this.rearAxis.getObject());
 		this.frontAxis = new axleAndWheel(-scale*1.5, -scale*0.3, 0, scale);
 		this.car.add(this.frontAxis.getObject());
 
@@ -143,9 +144,10 @@ class car {
 		this.car.rotateOnAxis(this.car.up, this.turnDirection*this.getTurnSpeed()*delta_time*Math.sign(this.speed));
 		this.direction.applyAxisAngle(this.car.up, this.turnDirection*this.getTurnSpeed()*delta_time*Math.sign(this.speed));
 		this.frontAxis.turnWheels(this.turnDirection/3);
-
+		this.frontAxis.rotateWheels(-this.speed*delta_time/this.frontAxis.leftWheel.radius);
+		this.rearAxis.rotateWheels(-this.speed*delta_time/this.frontAxis.leftWheel.radius);
 		this.car.position.add(this.direction.clone().multiplyScalar(this.speed*delta_time));
-		//console.log(this.speed);
+
 	}
 
 	getTentativePosition() {
@@ -178,8 +180,19 @@ class axleAndWheel {
 	}
 
 	turnWheels(angle) {
-		this.leftWheel.setRotation(0, 0, -angle);
-		this.rightWheel.setRotation(0, 0, -angle);
+		this.direction = new THREE.Vector3(0,0,1);
+		if(this.previousAngle != angle)  {
+			this.leftWheel.setRotation(0,0,0);
+			this.rightWheel.setRotation(0,0,0);
+			this.leftWheel.getObject().rotateOnAxis(this.direction, -angle);
+			this.rightWheel.getObject().rotateOnAxis(this.direction, -angle);
+			this.previousAngle = angle
+		}
+
+	}
+	rotateWheels(angle) {
+		this.leftWheel.getObject().rotateOnAxis(this.leftWheel.getObject().up, -angle);
+		this.rightWheel.getObject().rotateOnAxis(this.rightWheel.getObject().up,  -angle);
 	}
 
 	setPosition(PosX, PosY, PosZ) {
@@ -198,7 +211,7 @@ class axleAndWheel {
 class Wheel {
 	constructor(PosX, PosY, PosZ, scale) {
 		this.wheel = new THREE.Object3D();
-
+		this.radius = scale*.4
 		var geometry = new THREE.TorusGeometry( scale*.4, scale * .15, 8, 20 );
 		var material = new THREE.MeshBasicMaterial( { color: 0xffff00 , wireframe:false } );
 		var torus = new THREE.Mesh( geometry, material );

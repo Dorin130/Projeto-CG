@@ -33,7 +33,6 @@ function curvedLine(spacing, start, end, up, offset, includeLast) {
 	var total_angle = r_start.angleTo(end.clone().sub(center));
 	var angleSpacing = 2*Math.asin(spacing/(2*r_start.length()))
 	var noPos = Math.floor(total_angle/angleSpacing);
-	console.log(noPos);
 	var angleSpacing = (total_angle/noPos) || 0;
 
 	var posList = [];
@@ -48,13 +47,11 @@ function curvedLine(spacing, start, end, up, offset, includeLast) {
 }
 
 function fillPos(posList) {
-	console.log(posList.length);
 	var length = posList.length;
 	cheerioList = [];
 	for(var i=0; i<length; i++) {
 		var newCheerio = new cheerio(TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
 		var pos = posList.pop();
-		console.log(pos);
 		newCheerio.setPosition(pos.x, pos.y, pos.z);
 		cheerioList.push(newCheerio);
 		scene.add(newCheerio.getObject());
