@@ -16,7 +16,7 @@ class car {
 
 		//Collision
 		this.boundingRadius = 3*scale;
-		this.mass = 50;
+		this.mass = 2000;
 
 		//Creation
 		this.car = new THREE.Object3D();
@@ -151,11 +151,11 @@ class car {
 	}
 
 	getTentativePosition() {
-		return this.car.position;
+		return this.car.position.clone().setY(2);
 	}
 
 	getCollisionResponse(youClip) {
-		return [this.car.position.clone().setY(0), this.boundingRadius, this.direction.clone().multiplyScalar(this.speed), this.mass, youClip];
+		return [this.getTentativePosition(), this.boundingRadius, this.direction.clone().multiplyScalar(this.speed), this.mass, youClip];
 	}
 
 	butterCollision() {
@@ -168,7 +168,6 @@ class car {
 		this.setRotation(0,Math.PI/2,0);
 		this.speed = 0;
 		this.acceleration = 0;
-		this.speed = 0;
 		this.direction.x = 0;
 		this.direction.y = 0;
 		this.direction.z = 1;

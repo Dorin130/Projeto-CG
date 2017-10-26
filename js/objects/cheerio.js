@@ -7,7 +7,7 @@ class cheerio {
 		this.attritionValue = 100;
 
 		//collisions
-		this.mass = 10;
+		this.mass = 1;
 		this.boundingRadius = radius+tubeRadius;
 		this.final = false;
 		this.tentativePos;

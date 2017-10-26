@@ -8,8 +8,8 @@ class collisionManager {
 	}
 
 	checkAllCollisions() {
-		this.checkCarOrange();
-		this.checkCarButter();
+		//this.checkCarOrange();
+		//this.checkCarButter();
 		this.checkCarCheerios();
 		this.checkCheerioCheerio();
 	}

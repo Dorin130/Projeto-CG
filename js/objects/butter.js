@@ -82,7 +82,7 @@ class butterCube {
 		scene.add(this.slice);
 
 		var corner = new THREE.Vector3(Width/2, Height/2, Depth/2);
-		this.boundingRadius = corner.length()/2;
+		this.boundingRadius = corner.length()/3;
 
 		this.setPosition(PosX , PosY, PosZ ); 
 	}
