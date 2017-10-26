@@ -4,14 +4,18 @@ class collisionManager {
 		this.cheerios = cheerioList;
 		this.oranges = orangesList;
 		this.butters = butterList;
+		this.xLimits = [-405, 405]
+		this.zLimits = [-230, 230]
 		//this.tears = ["(┳ _ ┳)"];
 	}
 
 	checkAllCollisions() {
-		//this.checkCarOrange();
-		//this.checkCarButter();
+		this.checkCarOrange();
+		this.checkCarButter();
 		this.checkCarCheerios();
 		this.checkCheerioCheerio();
+		this.checkCarInside();
+		this.checkCheerioInside();
 	}
 
 	checkCarButter() {
@@ -42,6 +46,13 @@ class collisionManager {
 		}
 	}
 
+	checkCarInside() {
+		if (!this.isInisde(this.car)) {
+			playerCar.reset();
+			pathRandomizer.reset();
+		}
+	}
+
 	checkCheerioCheerio() {
 		for (var i = 0; i < this.cheerios.length; i++) {
 			for (var j = i + 1; j < this.cheerios.length; j++) {
@@ -64,9 +75,27 @@ class collisionManager {
 		}
 	}
 
+	checkCheerioInside() {
+		for (var i = 0; i < this.cheerios.length; i++) {
+			if (!this.isInisde(this.cheerios[i])) {
+				scene.remove(this.cheerios[i].getObject());
+			}
+		}
+	}
+
 
 	hasCollision(one, two) {
 		return Math.pow(one.boundingRadius + two.boundingRadius, 2)-0.1 >=
 		one.getTentativePosition().distanceToSquared(two.getTentativePosition());
 	}
+
+	isInisde(thing) {
+		var pos = thing.getTentativePosition();
+		return  pos.x > this.xLimits[0] && pos.x < this.xLimits[1] && pos.z > this.zLimits[0] && pos.z < this.zLimits[1]
+	}
+}
+
+function removeEntity(object) {
+    var selectedObject = scene.getObjectByName(object.name);
+    scene.remove( selectedObject );
 }

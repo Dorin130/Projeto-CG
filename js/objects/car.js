@@ -32,7 +32,6 @@ class car {
 		this.car.add(this.frontAxis.getObject());
 
 		this.setPosition(PosX, PosY, PosZ);
-
 		scene.add(this.car);
 	}
 
@@ -164,13 +163,13 @@ class car {
 	}
 
 	reset() {
-		this.setPosition(0, 5, 0);
-		this.setRotation(0,Math.PI/2,0);
+		this.setPosition(-300,5,150);
+		this.setRotation(0,Math.PI,0);
 		this.speed = 0;
 		this.acceleration = 0;
-		this.direction.x = 0;
+		this.direction.x = 1;
 		this.direction.y = 0;
-		this.direction.z = 1;
+		this.direction.z = 0;
 		this.maxSpeed = 250;
 		this.minSpeed = -100;
 
