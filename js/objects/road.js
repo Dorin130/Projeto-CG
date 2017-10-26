@@ -1,11 +1,11 @@
 'use strict'
 
-var RoadSpaceBetweenSegmentsDEFAULT = 7;
+var RoadSpaceBetweenSegmentsDEFAULT = 20;
 var RoadSegmentWidthDEFAULT = 30;
 var TorusRadiusDEFAULT = 3;
 var TorusTubeRadiusDEFAULT = 1;
 var ColorDEFAULT = 0xaaaaaa;
-
+var cheerioList = [];
 var RadialSegmentsDEFAULT = 5;
 var TubularSegmentsDEFAULT = 8;
 
@@ -33,20 +33,17 @@ class roadSegment {
 
 		this.roadSegment = new THREE.Object3D();
 
-		var geometry = new THREE.TorusGeometry( TorusRadius, TorusTubeRadius, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT );
-		var material1 = new THREE.MeshBasicMaterial( { color: Color, wireframe: false} );
-		var material2 = new THREE.MeshBasicMaterial( { color: Color, wireframe: false} );
-		var leftTorus = new THREE.Mesh( geometry, material1 );
-		var rightTorus = new THREE.Mesh( geometry, material2 );
+		var leftTorus = new cheerio(TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
+		var rightTorus = new cheerio(TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
 
-		leftTorus.position.set(- RoadSegmentWidth, 0, 0);
-		leftTorus.rotation.x = Math.PI/2;
+		leftTorus.getObject().position.set( - RoadSegmentWidth, 0, 0);
+		console.log(leftTorus.getObject().position)
+		rightTorus.getObject().position.set(RoadSegmentWidth, 0, 0);
+		cheerioList.push(leftTorus);
+		cheerioList.push(rightTorus);
 
-		rightTorus.position.set(RoadSegmentWidth, 0, 0);
-		rightTorus.rotation.x = Math.PI/2;
-
-		this.roadSegment.add(leftTorus);
-		this.roadSegment.add(rightTorus);
+		this.roadSegment.add(leftTorus.getObject());
+		this.roadSegment.add(rightTorus.getObject());
 		this.roadSegment.position.set(PosX, PosY, PosZ);
 		
 	}
@@ -131,20 +128,14 @@ class roadCircle {
 		var anglePerSegment = (2*this.TorusRadius + this.RoadSpaceBetweenSegments)/Radius;
 		var perimeter = Radius*Angle;
 		var nrSegmentsNeeded = Math.round(perimeter / (2*TorusRadius + RoadSpaceBetweenSegments));
-
-
-		var geometry = new THREE.TorusGeometry( TorusRadius, TorusTubeRadius, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT );
-		var material = new THREE.MeshBasicMaterial( { color: Color } );
-		var leftTorus = new THREE.Mesh( geometry, material );
 		var angle = 0;
 
 		for(var i=0; i<nrSegmentsNeeded; i++) {
-			//var material = new THREE.MeshBasicMaterial( { color: Color } );
-			var mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { color: Color } ) );
+			var torus = new cheerio(TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
 			angle = i*anglePerSegment;
-			mesh.position.set(Radius*Math.sin(angle), 0, Radius*Math.cos(angle))
-			mesh.rotation.x = Math.PI/2;
-			this.roadCircle.add(mesh);
+			torus.getObject().position.set(Radius*Math.sin(angle), 0, Radius*Math.cos(angle));
+			cheerioList.push(torus);
+			this.roadCircle.add(torus.getObject());
 		}
 		this.roadCircle.position.set(PosX, PosY, PosZ);
 	}
@@ -257,7 +248,6 @@ class road {
 	}
 	//Use this one to build a straight road made out of nrSegments segments.
 	straightRoad(nrSegments) {
-		var position;
 		if(!this.RoadBuilding) {
 			console.log("Error in straightRoad: You need to start building a road first");
 		}
@@ -274,7 +264,6 @@ class road {
 										  	this.TorusTubeRadius,
 										  	this.Color);
 				this.road.add(road.getObject());
-				position = road.getPosition();
 				this.PosZ += nrSegments*(2*this.TorusRadius + this.RoadSpaceBetweenSegments)*Math.cos(this.Direction);
 				this.PosX += nrSegments*(2*this.TorusRadius + this.RoadSpaceBetweenSegments)*Math.sin(this.Direction);
 
@@ -321,6 +310,10 @@ class road {
 		else  {
 			console.log("Error in roadEnd: You need to start building a road first");
 		}
+		/*for(var i=0; i<cheerioList.length; i++) {
+
+			scene.add(cheerioList[i].getObject())
+		}*/
 	}
 	
 	setPosition(PosX, PosY, PosZ) {
