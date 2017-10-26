@@ -2,8 +2,8 @@
 
 var TorusRadiusDEFAULT = 5;
 var TorusTubeRadiusDEFAULT = 3;
-var RadialSegmentsDEFAULT = 32;
-var TubularSegmentsDEFAULT = 16;
+var RadialSegmentsDEFAULT = 14;
+var TubularSegmentsDEFAULT = 14;
 var MassDEFAULT = 10;
 
 function straightLine(spacing, start, end, includeLast) {
@@ -43,6 +43,14 @@ function curvedLine(spacing, start, end, up, offset, includeLast) {
 	}
 	if(includeLast) {
 		posList.push(end);
+	}
+	return posList;
+}
+
+function circleLine(spacing, center, radius, startAngle, endAngle, offset) {
+	var posList = [];
+	for(var i = startAngle; i<endAngle; i = i + spacing) {
+		posList.push(new THREE.Vector3(center.x + radius*Math.cos(i+offset), center.y, center.z + radius*Math.sin(i+offset)));
 	}
 	return posList;
 }

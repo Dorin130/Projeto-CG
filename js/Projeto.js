@@ -150,17 +150,27 @@ function createScene() {
 	scene = new THREE.Scene();
 	//scene.add(new THREE.AxisHelper(15));
   	var road = [];
-  	road.push.apply(road, straightLine(20, new THREE.Vector3(-250,2,100), new THREE.Vector3(250,2,100), true));
-  	road.push.apply(road, straightLine(20, new THREE.Vector3(-330,2,200), new THREE.Vector3(330,2,200), true));
+  	//road.push.apply(road, straightLine(20, new THREE.Vector3(-200,2,100), new THREE.Vector3(200,2,100), true));
+  	//road.push.apply(road, straightLine(20, new THREE.Vector3(-330,2,200), new THREE.Vector3(330,2,200), true));
 
-  	road.push.apply(road, straightLine(20, new THREE.Vector3(-250,2,-100), new THREE.Vector3(250,2,-100), true));
-  	road.push.apply(road, straightLine(20, new THREE.Vector3(-330,2,-200), new THREE.Vector3(330,2,-200), true));
+  	//road.push.apply(road, straightLine(20, new THREE.Vector3(-200,2,-100), new THREE.Vector3(200,2,-100), true));
+  	//road.push.apply(road, straightLine(20, new THREE.Vector3(-330,2,-200), new THREE.Vector3(330,2,-200), true));
+  	road.push.apply(road, circleLine(.2, new THREE.Vector3(185,2,0), 120, -Math.PI/2, Math.PI/2 , .1));
+  	road.push.apply(road, circleLine(.1, new THREE.Vector3(185,2,0), 200, -Math.PI/2, Math.PI/2 , .1));
+  	road.push.apply(road, straightLine(22, new THREE.Vector3(-168,2,120), new THREE.Vector3(170,2,120), true))
+  	road.push.apply(road, straightLine(22, new THREE.Vector3(-168,2,-120), new THREE.Vector3(170,2,-120), true))
+  	road.push.apply(road, circleLine(.2, new THREE.Vector3(-185,2,0), 120, Math.PI/2, 3*Math.PI/2 , .1));
+  	road.push.apply(road, circleLine(.1, new THREE.Vector3(-185,2,0), 200, Math.PI/2, 3*Math.PI/2 , .1));
 
-	road.push.apply(road, straightLine(20, new THREE.Vector3(250,2,-80), new THREE.Vector3(250,2,80), true));
-	road.push.apply(road, straightLine(20, new THREE.Vector3(-250,2,-80), new THREE.Vector3(-250,2,80), true));
+  	road.push.apply(road, straightLine(22, new THREE.Vector3(-180,2,200), new THREE.Vector3(155,2,200), true))
+  	road.push.apply(road, straightLine(22, new THREE.Vector3(-155,2,-200), new THREE.Vector3(180,2,-200), true))
+  	
 
-	road.push.apply(road, straightLine(20, new THREE.Vector3(350,2,-200), new THREE.Vector3(350,2,200), true));
-	road.push.apply(road, straightLine(20, new THREE.Vector3(-350,2,-200), new THREE.Vector3(-350,2,200), true));
+	//road.push.apply(road, straightLine(20, new THREE.Vector3(250,2,-30), new THREE.Vector3(250,2,30), true));
+	//road.push.apply(road, straightLine(20, new THREE.Vector3(-250,2,-30), new THREE.Vector3(-250,2,30), true));
+
+	//road.push.apply(road, straightLine(20, new THREE.Vector3(350,2,-200), new THREE.Vector3(350,2,200), true));
+	//road.push.apply(road, straightLine(20, new THREE.Vector3(-350,2,-200), new THREE.Vector3(-350,2,200), true));
 
 	cheerioList = fillPos(road);
 	updateList.push.apply(updateList, cheerioList);
@@ -175,7 +185,7 @@ function createScene() {
   	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
 
 
-  	playerCar = new car(-300,5,150,5)
+  	playerCar = new car(0,5,150,5)
   	playerCar.setRotation(0, Math.PI, 0)
 	updateList.push(pathRandomizer);	
 	updateList.push(playerCar);

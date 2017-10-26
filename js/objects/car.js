@@ -163,7 +163,7 @@ class car {
 	}
 
 	reset() {
-		this.setPosition(-300,5,150);
+		this.setPosition(0,5,150);
 		this.setRotation(0,Math.PI,0);
 		this.speed = 0;
 		this.acceleration = 0;
