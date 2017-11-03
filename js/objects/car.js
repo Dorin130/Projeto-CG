@@ -33,6 +33,9 @@ class car {
 
 		this.setPosition(PosX, PosY, PosZ);
 		scene.add(this.car);
+
+		//WIP TEMP
+		this.boundingOffset = new THREE.Vector3(0,0,0);
 	}
 
 	setPosition(PosX, PosY, PosZ) {
@@ -173,6 +176,18 @@ class car {
 		this.maxSpeed = 250;
 		this.minSpeed = -100;
 
+	}
+	//temp for WIP
+	getSpeed() {
+		return this.direction.clone().multiplyScalar(this.speed);
+	}
+
+	getBoundingRadius() {
+		return this.boundingRadius;
+	}
+
+	getBoundingCenter() {
+		return this.getTentativePosition();
 	}
 }
 

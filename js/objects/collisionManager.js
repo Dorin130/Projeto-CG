@@ -1,11 +1,13 @@
 class collisionManager {
-	constructor(playerCar, cheerioList, orangesList, butterList) {
+	constructor(playerCar, cheerioList, orangesList, butterList, wipCheeriosList) {
 		this.car = playerCar;
 		this.cheerios = cheerioList;
 		this.oranges = orangesList;
 		this.butters = butterList;
+		this.wipCheerios = wipCheeriosList;
 		this.xLimits = [-405, 405]
 		this.zLimits = [-230, 230]
+		console.log(this.wipCheerios);
 		//this.tears = ["(┳ _ ┳)"];
 	}
 
@@ -16,6 +18,8 @@ class collisionManager {
 		this.checkCheerioCheerio();
 		this.checkCarInside();
 		this.checkCheerioInside();
+		this.wipCheckCarCheerio();
+		this.wipCheckCheerioCheerio();
 	}
 
 	checkCarButter() {
@@ -92,6 +96,31 @@ class collisionManager {
 	isInside(thing) {
 		var pos = thing.getTentativePosition();
 		return  pos.x > this.xLimits[0] && pos.x < this.xLimits[1] && pos.z > this.zLimits[0] && pos.z < this.zLimits[1]
+	}
+
+	wipCheckCarCheerio() {
+		for (var i = 0; i < this.wipCheerios.length; i++) {
+			if (this.wiphasCollision(this.car, this.wipCheerios[i])) {
+				this.wipCheerios[i].handleCollision(this.car, false);
+			}
+		}
+	}
+
+	wipCheckCheerioCheerio() {
+		for (var i = 0; i < this.wipCheerios.length; i++) {
+			for (var j = i + 1; j < this.wipCheerios.length; j++) {
+				if (this.hasCollision(this.wipCheerios[i], this.wipCheerios[j])) {
+
+					this.wipCheerios[i].handleCollision(this.wipCheerios[j], true);
+					this.wipCheerios[j].handleCollision(this.wipCheerios[i], true);
+				}
+			}
+		}
+	}
+
+	wiphasCollision(first, second) {
+		return Math.pow(first.getBoundingRadius() + second.getBoundingRadius(), 2)-0.1 >=
+		first.getBoundingCenter().distanceToSquared(second.getBoundingCenter());
 	}
 }
 

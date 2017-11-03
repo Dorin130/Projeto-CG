@@ -20,6 +20,7 @@ var playerCar;
 var orangeList = [];
 var butterList = [];
 var cheerioList = [];
+var wipCheeriosList = [];
 
 var clock = new THREE.Clock();
 
@@ -157,54 +158,6 @@ function init() {
 }
 
 
-/* Scene related functions and classes */
-function createScene() {
-	scene = new THREE.Scene();
-	//scene.add(new THREE.AxisHelper(15));
-  	var road = [];
-  	//road.push.apply(road, straightLine(20, new THREE.Vector3(-200,2,100), new THREE.Vector3(200,2,100), true));
-  	//road.push.apply(road, straightLine(20, new THREE.Vector3(-330,2,200), new THREE.Vector3(330,2,200), true));
-
-  	//road.push.apply(road, straightLine(20, new THREE.Vector3(-200,2,-100), new THREE.Vector3(200,2,-100), true));
-  	//road.push.apply(road, straightLine(20, new THREE.Vector3(-330,2,-200), new THREE.Vector3(330,2,-200), true));
-  	road.push.apply(road, circleLine(.2, new THREE.Vector3(185,2,0), 120, -Math.PI/2, Math.PI/2 , .1));
-  	road.push.apply(road, circleLine(.1, new THREE.Vector3(185,2,0), 200, -Math.PI/2, Math.PI/2 , .1));
-  	road.push.apply(road, straightLine(22, new THREE.Vector3(-168,2,120), new THREE.Vector3(170,2,120), true))
-  	road.push.apply(road, straightLine(22, new THREE.Vector3(-168,2,-120), new THREE.Vector3(170,2,-120), true))
-  	road.push.apply(road, circleLine(.2, new THREE.Vector3(-185,2,0), 120, Math.PI/2, 3*Math.PI/2 , .1));
-  	road.push.apply(road, circleLine(.1, new THREE.Vector3(-185,2,0), 200, Math.PI/2, 3*Math.PI/2 , .1));
-
-  	road.push.apply(road, straightLine(22, new THREE.Vector3(-180,2,200), new THREE.Vector3(155,2,200), true))
-  	road.push.apply(road, straightLine(22, new THREE.Vector3(-155,2,-200), new THREE.Vector3(180,2,-200), true))
-  	
-
-	//road.push.apply(road, straightLine(20, new THREE.Vector3(250,2,-30), new THREE.Vector3(250,2,30), true));
-	//road.push.apply(road, straightLine(20, new THREE.Vector3(-250,2,-30), new THREE.Vector3(-250,2,30), true));
-
-	//road.push.apply(road, straightLine(20, new THREE.Vector3(350,2,-200), new THREE.Vector3(350,2,200), true));
-	//road.push.apply(road, straightLine(20, new THREE.Vector3(-350,2,-200), new THREE.Vector3(-350,2,200), true));
-
-	cheerioList = fillPos(road);
-	updateList.push.apply(updateList, cheerioList);
-
-  	var gameTable = new table(0,-10, 0, 800, 20, 450);
-
-
-  	var butter1 = new butter(-50,20,20);
-
-  	pathRandomizer = new randomizer(400,10,225);
-  	orangeList = pathRandomizer.createOranges(5, 15, 10);
-  	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
-
-
-  	playerCar = new car(0,5,150,5)
-  	playerCar.setRotation(0, Math.PI, 0)
-	updateList.push(pathRandomizer);	
-	updateList.push(playerCar);
-	inputList.push(playerCar);
-
-	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList);
-}
 
 /* Animation main function and update/render cycle */
 function animate() {
@@ -215,6 +168,10 @@ function animate() {
 	var delta_t = clock.getDelta();
 
 	for(var i = 0; i<cheerioList.length; i++) { //computes tentative position for all collision affectable objects (cheerios)
+		cheerioList[i].firstTentative(delta_t);
+	}
+
+	for(var i = 0; i<wipCheeriosList.length; i++) { //computes tentative position for all collision affectable objects (cheerios)
 		cheerioList[i].firstTentative(delta_t);
 	}
 
@@ -275,4 +232,68 @@ function toggleShading() {
 			node.material.shading = !node.material.wireframe;
 	});
 
+}
+
+/* Scene related functions and classes */
+function createScene() {
+	scene = new THREE.Scene();
+	//scene.add(new THREE.AxisHelper(15));
+  	var road = [];
+  	road.push.apply(road, circleLine(.2, new THREE.Vector3(185,2,0), 120, -Math.PI/2, Math.PI/2 , .1));
+  	road.push.apply(road, circleLine(.1, new THREE.Vector3(185,2,0), 200, -Math.PI/2, Math.PI/2 , .1));
+  	road.push.apply(road, straightLine(22, new THREE.Vector3(-168,2,120), new THREE.Vector3(170,2,120), true))
+  	road.push.apply(road, straightLine(22, new THREE.Vector3(-168,2,-120), new THREE.Vector3(170,2,-120), true))
+  	road.push.apply(road, circleLine(.2, new THREE.Vector3(-185,2,0), 120, Math.PI/2, 3*Math.PI/2 , .1));
+  	road.push.apply(road, circleLine(.1, new THREE.Vector3(-185,2,0), 200, Math.PI/2, 3*Math.PI/2 , .1));
+
+  	road.push.apply(road, straightLine(22, new THREE.Vector3(-180,2,200), new THREE.Vector3(155,2,200), true))
+  	road.push.apply(road, straightLine(22, new THREE.Vector3(-155,2,-200), new THREE.Vector3(180,2,-200), true))
+  	
+
+	cheerioList = fillPos(road);
+	updateList.push.apply(updateList, cheerioList);
+
+  	var gameTable = new table(0,-10, 0, 800, 20, 450);
+
+
+  	var butter1 = new butter(-50,20,20);
+
+  	pathRandomizer = new randomizer(400,10,225);
+  	orangeList = pathRandomizer.createOranges(5, 15, 10);
+  	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
+
+
+  	playerCar = new car(0,5,150,5)
+  	playerCar.setRotation(0, Math.PI, 0)
+	updateList.push(pathRandomizer);	
+	updateList.push(playerCar);
+	inputList.push(playerCar);
+
+	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList, wipCheeriosList);
+
+	make_cheerios_example();
+}
+
+function make_cheerios_example() {
+	var o1 = new physicalObject(new THREE.Vector3(0,2,0), 8);
+	var geo = new THREE.TorusGeometry(5, 3, 14, 14);
+	var mat = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
+	var cheerioMesh = new THREE.Mesh( geo, mat );
+	cheerioMesh.rotation.x = Math.PI/2;
+	o1.add(cheerioMesh);
+	scene.add(o1);
+	o1.mass = 10;
+	wipCheeriosList.push(o1);
+	updateList.push(o1);
+
+	var o2 = new physicalObject(new THREE.Vector3(30,2,0), 8);
+	var geo2 = new THREE.TorusGeometry(5, 3, 14, 14);
+	var mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
+	var cheerioMesh2 = new THREE.Mesh( geo, mat );
+	cheerioMesh2.rotation.x = Math.PI/2;
+	o2.add(cheerioMesh2);
+	scene.add(o2);
+	o2.mass = 10;
+	wipCheeriosList.push(o2);
+	updateList.push(o2);
 }
