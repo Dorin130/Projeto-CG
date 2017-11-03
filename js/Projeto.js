@@ -108,6 +108,18 @@ function onKeyDown(e) {
 			action = "3";
 			e.preventDefault();
 			break;
+		case 71: //"G"
+			toggleShading();
+			e.preventDefault();
+			break;
+		case 76: //"L"
+			action = "lightsToggle";
+			e.preventDefault();
+			break;
+		case 78: //"N"
+			action = "dayNightToggle";
+			e.preventDefault();
+			break;
 		default:
 	}
 	for(var i = 0; i<inputList.length && action != ""; i++) { /* notifies each individual object that 'asks' to be notified */
@@ -255,4 +267,12 @@ function resetGame() {
 	resetCameras();
 	pause = false;
 	animate();
+}
+
+function toggleShading() {
+	scene.traverse(function (node) {
+		if (node instanceof THREE.Mesh)
+			node.material.shading = !node.material.wireframe;
+	});
+
 }

@@ -47,7 +47,7 @@ class collisionManager {
 	}
 
 	checkCarInside() {
-		if (!this.isInisde(this.car)) {
+		if (!this.isInside(this.car)) {
 			playerCar.reset();
 			pathRandomizer.reset();
 		}
@@ -77,7 +77,7 @@ class collisionManager {
 
 	checkCheerioInside() {
 		for (var i = 0; i < this.cheerios.length; i++) {
-			if (!this.isInisde(this.cheerios[i])) {
+			if (!this.isInside(this.cheerios[i])) {
 				scene.remove(this.cheerios[i].getObject());
 			}
 		}
@@ -89,7 +89,7 @@ class collisionManager {
 		one.getTentativePosition().distanceToSquared(two.getTentativePosition());
 	}
 
-	isInisde(thing) {
+	isInside(thing) {
 		var pos = thing.getTentativePosition();
 		return  pos.x > this.xLimits[0] && pos.x < this.xLimits[1] && pos.z > this.zLimits[0] && pos.z < this.zLimits[1]
 	}

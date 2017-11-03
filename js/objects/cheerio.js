@@ -108,5 +108,3 @@ class cheerio {
 	}
 
 }
-
-function getCollisionsWithOthers() {}  //DORIN i can explain this later if need be
