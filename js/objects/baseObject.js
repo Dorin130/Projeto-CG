@@ -215,9 +215,7 @@ class wipcheerio extends physicalObject {
 		this.setBoundingRadius(radius+tubeRadius);
 
 		var geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
-		console.log("1");
-		if ( typeof wipcheerio.mat1 == 'undefined' || typeof wipcheerio.mat2 == 'undefined' ) {
-			console.log("2");
+		if ( typeof wipcheerio.mat1 == 'undefined' || typeof wipcheerio.mat2 == 'undefined' ) { //static values
         	wipcheerio.mat1 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
         	wipcheerio.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: true} );
     	}
@@ -228,5 +226,14 @@ class wipcheerio extends physicalObject {
 
 	toggleMesh() {
 		this.mesh.material = (this.mesh.material == wipcheerio.mat1)? wipcheerio.mat2 : wipcheerio.mat1;
+	}
+
+	setWireframe(activated) {
+		if ( typeof wipcheerio.mat1 == 'undefined' || typeof wipcheerio.mat2 == 'undefined' ) { //static values
+        	wipcheerio.mat1 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
+        	wipcheerio.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: true} );
+    	}
+		wipcheerio.mat1.wireframe = activated;
+		wipcheerio.mat2.wireframe = activated;
 	}
 }
