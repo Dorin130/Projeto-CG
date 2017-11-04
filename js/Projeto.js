@@ -153,6 +153,8 @@ function init() {
  	customCamManager.addCamera(cam3, "3");
 	inputList.push(customCamManager);
 
+	
+
 	render(customCamManager.getCurrentCam());
 	animate();
 }
@@ -268,6 +270,14 @@ function createScene() {
 	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList, wipCheeriosList);
 
 	make_cheerios_example();
+
+	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+	directionalLight.position.set(0,30,0)
+	scene.add( directionalLight );
+
+	var light = new THREE.PointLight( 0xff0000, 1, 100 );
+	light.position.set( 50, 50, 50 );
+	scene.add( light )
 }
 
 function make_cheerios_example() {
