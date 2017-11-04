@@ -1,13 +1,11 @@
 class collisionManager {
-	constructor(playerCar, cheerioList, orangesList, butterList, wipCheeriosList) {
+	constructor(playerCar, cheerioList, orangesList, butterList) {
 		this.car = playerCar;
 		this.cheerios = cheerioList;
 		this.oranges = orangesList;
 		this.butters = butterList;
-		this.wipCheerios = wipCheeriosList;
 		this.xLimits = [-405, 405]
 		this.zLimits = [-230, 230]
-		console.log(this.wipCheerios);
 		//this.tears = ["(┳ _ ┳)"];
 	}
 
@@ -18,8 +16,6 @@ class collisionManager {
 		this.checkCheerioCheerio();
 		this.checkCarInside();
 		this.checkCheerioInside();
-		this.wipCheckCarCheerio();
-		this.wipCheckCheerioCheerio();
 	}
 
 	checkCarButter() {
@@ -41,11 +37,8 @@ class collisionManager {
 
 	checkCarCheerios() {
 		for (var i = 0; i < this.cheerios.length; i++) {
-			if (this.hasCollision(this.car, this.cheerios[i])) {
-				this.cheerios[i].incomingCollision(this.car.getCollisionResponse(false));
-				this.cheerios[i].resolveClipping();
-				this.cheerios[i].incomingList = [];
-				this.cheerios[i].setFinal();
+			if (this.wiphasCollision(this.car, this.cheerios[i])) {
+				this.cheerios[i].handleCollision(this.car, true);
 			}
 		}
 	}
@@ -60,20 +53,10 @@ class collisionManager {
 	checkCheerioCheerio() {
 		for (var i = 0; i < this.cheerios.length; i++) {
 			for (var j = i + 1; j < this.cheerios.length; j++) {
-				if (this.hasCollision(this.cheerios[i], this.cheerios[j])) {
-					var final1 = this.cheerios[i].isFinal(); var final2 = this.cheerios[j].isFinal();
-					if((final1&&final2) || ((!final1)&&(!final2))) {
-						final1 = false
-						final2 = !final1;
-					}
-					var response1 = this.cheerios[j].getCollisionResponse(final1);
-					var response2 = this.cheerios[i].getCollisionResponse(final1);
-					this.cheerios[i].incomingCollision(response1);
-					this.cheerios[j].incomingCollision(response2); 
-					if(final1||final2) {
-						this.cheerios[i].setFinal();
-						this.cheerios[j].setFinal();
-					}
+				if (this.wiphasCollision(this.cheerios[i], this.cheerios[j])) {
+
+					this.cheerios[i].handleCollision(this.cheerios[j], true);
+					this.cheerios[j].handleCollision(this.cheerios[i], true);
 				}
 			}
 		}
@@ -82,7 +65,7 @@ class collisionManager {
 	checkCheerioInside() {
 		for (var i = 0; i < this.cheerios.length; i++) {
 			if (!this.isInside(this.cheerios[i])) {
-				scene.remove(this.cheerios[i].getObject());
+				scene.remove(this.cheerios[i]);
 			}
 		}
 	}
@@ -99,20 +82,20 @@ class collisionManager {
 	}
 
 	wipCheckCarCheerio() {
-		for (var i = 0; i < this.wipCheerios.length; i++) {
-			if (this.wiphasCollision(this.car, this.wipCheerios[i])) {
-				this.wipCheerios[i].handleCollision(this.car, true);
+		for (var i = 0; i < this.cheerios.length; i++) {
+			if (this.wiphasCollision(this.car, this.cheerios[i])) {
+				this.cheerios[i].handleCollision(this.car, true);
 			}
 		}
 	}
 
 	wipCheckCheerioCheerio() {
-		for (var i = 0; i < this.wipCheerios.length; i++) {
-			for (var j = i + 1; j < this.wipCheerios.length; j++) {
-				if (this.hasCollision(this.wipCheerios[i], this.wipCheerios[j])) {
+		for (var i = 0; i < this.cheerios.length; i++) {
+			for (var j = i + 1; j < this.cheerios.length; j++) {
+				if (this.wiphasCollision(this.cheerios[i], this.cheerios[j])) {
 
-					this.wipCheerios[i].handleCollision(this.wipCheerios[j], true);
-					this.wipCheerios[j].handleCollision(this.wipCheerios[i], true);
+					this.cheerios[i].handleCollision(this.cheerios[j], true);
+					this.cheerios[j].handleCollision(this.cheerios[i], true);
 				}
 			}
 		}

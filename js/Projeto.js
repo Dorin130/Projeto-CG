@@ -167,10 +167,6 @@ function animate() {
 	//update:
 	var delta_t = clock.getDelta();
 
-	for(var i = 0; i<cheerioList.length; i++) { //computes tentative position for all collision affectable objects (cheerios)
-		cheerioList[i].firstTentative(delta_t);
-	}
-
 	collManager.checkAllCollisions();
 
 	for(var i = 0; i<updateList.length; i++) { //updates each individual object
@@ -265,7 +261,7 @@ function createScene() {
 	updateList.push(playerCar);
 	inputList.push(playerCar);
 
-	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList, wipCheeriosList);
+	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList);
 
 	make_cheerios_example();
 }
@@ -273,16 +269,16 @@ function createScene() {
 function make_cheerios_example() {
 	var cheerio1 = new wipcheerio(new THREE.Vector3(60,2,0), 5, 3, 14, 14, 10);
 	scene.add(cheerio1);
-	wipCheeriosList.push(cheerio1);
+	cheerioList.push(cheerio1);
 	updateList.push(cheerio1);
 	
 	var cheerio2 = new wipcheerio(new THREE.Vector3(30,2,0), 5, 3, 14, 14, 10);
 	scene.add(cheerio2);
-	wipCheeriosList.push(cheerio2);
+	cheerioList.push(cheerio2);
 	updateList.push(cheerio2);
 
 	var cheerio3 = new wipcheerio(new THREE.Vector3(0,2,0), 5, 3, 14, 14, 10);
 	scene.add(cheerio3);
-	wipCheeriosList.push(cheerio3);
+	cheerioList.push(cheerio3);
 	updateList.push(cheerio3);
 }
