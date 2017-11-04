@@ -184,13 +184,13 @@ class physicalObject extends movingObject {
 		this.tentativePos.add(unclipDir);
 	}
 
-	/*
+	/* elastic collisions formula:
 						2 * m2       (v1-v2) . (x1-x2)						m: mass
 		v1'	=  v1  -  ----------- * -------------------- * (x1-x2)			v: speed
 					    m1 + m2		   ||x1 - x2||^2						x: position
 	*/
 	receiveKineticEnergy(otherObject) {
-		var m1 = this.getMass(); var m2 = otherObject.getMass();
+		var m1 = this.getMass(); var m2 = otherObject.getMass() || 100*m1;
 		var v1 = this.getSpeed(); var v2 = otherObject.getSpeed();
 		var x1 = this.getTentativePosition(); var x2 = otherObject.getTentativePosition();
 		var factor = (2*m2/(m1+m2))*(v1.sub(v2)).dot(x1.clone().sub(x2))/(x1.distanceToSquared(x2));

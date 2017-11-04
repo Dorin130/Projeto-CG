@@ -59,12 +59,10 @@ function fillPos(posList) {
 	var length = posList.length;
 	cheerioList = [];
 	for(var i=0; i<length; i++) {
-		var newCheerio = new cheerio(TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
 		var pos = posList.pop();
-		//console.log(pos);
-		newCheerio.setPosition(pos.x, pos.y, pos.z);
+		var newCheerio = new wipcheerio(pos, TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
 		cheerioList.push(newCheerio);
-		scene.add(newCheerio.getObject());
+		scene.add(newCheerio);
 	}
 	return cheerioList;
 }
