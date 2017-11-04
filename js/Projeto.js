@@ -138,7 +138,7 @@ function init() {
 
 	createScene();
 
-	var cam1 = new customCamera(createOrtographicCamera(450, 0, 40, 0, globalAspectRatio), scene.position);
+	var cam1 = new customCamera(createOrtographicCamera(450, 0, 200, 0, globalAspectRatio), scene.position);
 
 	var cam2 = new customCamera(createPerspectiveCamera(0, 400, 200, globalAspectRatio), scene.position);
 
@@ -268,12 +268,13 @@ function createScene() {
 	make_cheerios_example();
 
 	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-	directionalLight.position.set(0,30,0)
+	directionalLight.position.set(0,30,0);
 	scene.add( directionalLight );
 
-	var light = new THREE.PointLight( 0xff0000, 1, 100 );
-	light.position.set( 50, 50, 50 );
-	scene.add( light )
+	var candle1 = new candle(new THREE.Vector3(0,0,50));
+	var candle2 = new candle(new THREE.Vector3(0,0,80));
+	scene.add(candle1)
+	scene.add(candle2)
 }
 
 function make_cheerios_example() {
