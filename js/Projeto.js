@@ -171,10 +171,6 @@ function animate() {
 		cheerioList[i].firstTentative(delta_t);
 	}
 
-	for(var i = 0; i<wipCheeriosList.length; i++) { //computes tentative position for all collision affectable objects (cheerios)
-		cheerioList[i].firstTentative(delta_t);
-	}
-
 	collManager.checkAllCollisions();
 
 	for(var i = 0; i<updateList.length; i++) { //updates each individual object
