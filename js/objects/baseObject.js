@@ -15,13 +15,20 @@ class baseObject extends THREE.Object3D {
 	reset() {
 		this.resetPosAndRot();
 		/* Specific code above */
-
 		this.propagateReset();
 	}
 
+	setPosition(PosX, PosY, PosZ) {
+		this.position.set(PosX, PosY, PosZ);
+	}
+
+	setRotation(RotX, RotY, RotZ) {
+		this.rotation.set(x,y,z);
+	}
+
 	resetPosAndRot() {
-		this.position.copy(this.initialPosition);
-		this.rotation.copy(this.initialRotation);
+		this.setPosition(this.initialPosition.x, this.initialPosition.y, this.initialPosition.z);
+		this.setRotation(this.initialRotation.x, this.initialRotation.y, this.initialRotation.z)
 	}
 
 	propagateReset() {
@@ -32,9 +39,7 @@ class baseObject extends THREE.Object3D {
 	}
 
 	toggleMesh() {
-
-		/* Specific code above */
-
+		/* Specific code above*/
 		this.propagateToggleMesh();
 	}
 
@@ -63,8 +68,16 @@ class collidableObject extends baseObject {
 		return this.getTentativePosition().add(this.boundingOffset);
 	}
 
+	setBoundingOffset(v) {
+		this.boundingOffset.copy(v);
+	}
+
 	getBoundingRadius() { //must have for hasCollision
 		return this.boundingRadius;
+	}
+
+	setBoundingRadius(value) {
+		this.boundingRadius = value;
 	}
 }
 
@@ -82,27 +95,44 @@ class movingObject extends collidableObject {
 		this.isMovingObject = true;
 	}
 
-	setFriction(value) {
-		this.frictionCoefficient = value;
-	}
-
 	setSpeedStopThreshold(value) {
 		this.speedStopThreshold = value;
 	}
 
-	getAcceleration() {
-		return this.acceleration.clone();
+	setPosition(PosX, PosY, PosZ) {
+		this.position.set(PosX, PosY, PosZ);
+		this.tentativePos.set(PosX, PosY, PosZ);
 	}
 
 	getSpeed() {
 		return this.speed.clone();
 	}
 
+	setSpeed(v) {
+		this.speed.copy(v);
+	}
+
+	getAcceleration() {
+		return this.acceleration.clone();
+	}
+
+	setAcceleration(v) {
+		return this.acceleration.copy(v);
+	}
+
 	getFriction() {
 		return this.speed.clone().normalize().negate().multiplyScalar(this.frictionCoefficient);
 	}
 
+	setFrictionCoefficient(value) {
+		this.frictionCoefficient = value;
+	}
+
 	update(delta_time) {
+		this.updatePhysics(delta_time);
+	}
+
+	updatePhysics(delta_time) {
 		this.position.copy(this.getTentativePosition());
 		this.speedUpdate(delta_time);
 		this.tentativePos.add(this.speed.clone().multiplyScalar(delta_time));
@@ -129,14 +159,26 @@ class physicalObject extends movingObject {
 		this.isPhysicalObject = true;
 	}
 
-	handleCollision(otherObject, clip) {
-		if(!clip) this.resolveClipping(otherObject);
+	getMass() {
+		return this.mass;
+	}
+
+	setMass(value) {
+		this.mass = value;
+	}
+
+	setSpeed(v) {
+		this.speed.copy(v);
+		this.tentativeSpeed.copy(v);
+	}
+
+	handleCollision(otherObject, unclip) {
+		if(unclip) this.resolveClipping(otherObject);
 		this.receiveKineticEnergy(otherObject);
 	}
 
 	resolveClipping(otherObject) {
 		//if(!otherObject.isCollidableObject) return;
-
 		var unclipDir = this.getTentativePosition().sub(otherObject.getTentativePosition());
 		unclipDir.setLength(this.getBoundingRadius()+otherObject.getBoundingRadius()-unclipDir.length()+0.1);
 		this.tentativePos.add(unclipDir);
@@ -148,7 +190,7 @@ class physicalObject extends movingObject {
 					    m1 + m2		   ||x1 - x2||^2						x: position
 	*/
 	receiveKineticEnergy(otherObject) {
-		var m1 = this.mass; var m2 = otherObject.mass;
+		var m1 = this.getMass(); var m2 = otherObject.getMass();
 		var v1 = this.getSpeed(); var v2 = otherObject.getSpeed();
 		var x1 = this.getTentativePosition(); var x2 = otherObject.getTentativePosition();
 		var factor = (2*m2/(m1+m2))*(v1.sub(v2)).dot(x1.clone().sub(x2))/(x1.distanceToSquared(x2));
@@ -163,5 +205,28 @@ class physicalObject extends movingObject {
 			this.speed.set(0,0,0);
 		}
 		this.tentativeSpeed.copy(this.speed);
+	}
+}
+
+class wipcheerio extends physicalObject {
+	constructor(position, radius, tubeRadius, radialSegments, tubularSegments, mass) {
+		super(position);
+		this.setMass(mass);
+		this.setBoundingRadius(radius+tubeRadius);
+
+		var geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
+		console.log("1");
+		if ( typeof wipcheerio.mat1 == 'undefined' || typeof wipcheerio.mat2 == 'undefined' ) {
+			console.log("2");
+        	wipcheerio.mat1 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
+        	wipcheerio.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: true} );
+    	}
+    	this.mesh = new THREE.Mesh( geometry, wipcheerio.mat1 );
+    	this.mesh.rotation.x = Math.PI/2;
+    	this.add(this.mesh);
+	}
+
+	toggleMesh() {
+		this.mesh.material = (this.mesh.material == wipcheerio.mat1)? wipcheerio.mat2 : wipcheerio.mat1;
 	}
 }

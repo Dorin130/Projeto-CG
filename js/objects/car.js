@@ -189,6 +189,10 @@ class car {
 	getBoundingCenter() {
 		return this.getTentativePosition();
 	}
+
+	getMass() {
+		return this.mass;
+	}
 }
 
 class axleAndWheel {

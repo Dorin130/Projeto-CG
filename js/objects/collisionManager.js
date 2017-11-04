@@ -101,7 +101,7 @@ class collisionManager {
 	wipCheckCarCheerio() {
 		for (var i = 0; i < this.wipCheerios.length; i++) {
 			if (this.wiphasCollision(this.car, this.wipCheerios[i])) {
-				this.wipCheerios[i].handleCollision(this.car, false);
+				this.wipCheerios[i].handleCollision(this.car, true);
 			}
 		}
 	}

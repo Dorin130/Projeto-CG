@@ -275,25 +275,18 @@ function createScene() {
 }
 
 function make_cheerios_example() {
-	var o1 = new physicalObject(new THREE.Vector3(0,2,0), 8);
-	var geo = new THREE.TorusGeometry(5, 3, 14, 14);
-	var mat = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
-	var cheerioMesh = new THREE.Mesh( geo, mat );
-	cheerioMesh.rotation.x = Math.PI/2;
-	o1.add(cheerioMesh);
-	scene.add(o1);
-	o1.mass = 10;
-	wipCheeriosList.push(o1);
-	updateList.push(o1);
+	var cheerio1 = new wipcheerio(new THREE.Vector3(60,2,0), 5, 3, 14, 14, 10);
+	scene.add(cheerio1);
+	wipCheeriosList.push(cheerio1);
+	updateList.push(cheerio1);
+	
+	var cheerio2 = new wipcheerio(new THREE.Vector3(30,2,0), 5, 3, 14, 14, 10);
+	scene.add(cheerio2);
+	wipCheeriosList.push(cheerio2);
+	updateList.push(cheerio2);
 
-	var o2 = new physicalObject(new THREE.Vector3(30,2,0), 8);
-	var geo2 = new THREE.TorusGeometry(5, 3, 14, 14);
-	var mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
-	var cheerioMesh2 = new THREE.Mesh( geo, mat );
-	cheerioMesh2.rotation.x = Math.PI/2;
-	o2.add(cheerioMesh2);
-	scene.add(o2);
-	o2.mass = 10;
-	wipCheeriosList.push(o2);
-	updateList.push(o2);
+	var cheerio3 = new wipcheerio(new THREE.Vector3(0,2,0), 5, 3, 14, 14, 10);
+	scene.add(cheerio3);
+	wipCheeriosList.push(cheerio3);
+	updateList.push(cheerio3);
 }
