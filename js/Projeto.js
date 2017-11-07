@@ -247,7 +247,7 @@ function createScene() {
 	cheerioList = fillPos(road);
 	updateList.push.apply(updateList, cheerioList);
 
-  	var gameTable = new table(0,-10, 0, 800, 20, 450);
+  	var gameTable = new table(0,0, 0, 800, 450, 35, 20);
 
 
   	var butter1 = new butter(-50,20,20);
@@ -277,6 +277,9 @@ function createScene() {
 	var candle2 = new candle(new THREE.Vector3(0,0,80));
 	scene.add(candle1)
 	scene.add(candle2)
+
+	var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+	scene.add( light );
 }
 
 function make_cheerios_example() {
