@@ -242,12 +242,15 @@ class wipcheerio extends physicalObject {
 		this.setMass(mass);
 		this.setBoundingRadius(radius+tubeRadius);
 
+		this.color = [0x8B5555, 0x94A35E, 0xD98056, 0xDB5742, 0xE45640][Math.floor(Math.random() * 5)]
+		this.mat1 = new THREE.MeshPhongMaterial( {color: this.color,specular: 0x020202,shininess: 20} );
+        this.mat2 = new THREE.MeshLambertMaterial( { color: this.color, wireframe: false} );
 		var geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
-		if ( typeof wipcheerio.mat1 == 'undefined' || typeof wipcheerio.mat2 == 'undefined' ) { //static values
-        	wipcheerio.mat1 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
+		/*if ( typeof wipcheerio.mat1 == 'undefined' || typeof wipcheerio.mat2 == 'undefined' ) { //static values
+        	wipcheerio.mat1 = new THREE.MeshPhongMaterial( {color: this.color,specular: 0x050505,shininess: 100} );
         	wipcheerio.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: true} );
-    	}
-    	this.mesh = new THREE.Mesh( geometry, wipcheerio.mat1 );
+    	}*/
+    	this.mesh = new THREE.Mesh( geometry, this.mat1 );
     	this.mesh.rotation.x = Math.PI/2;
     	this.add(this.mesh);
 	}
