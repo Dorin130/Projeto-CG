@@ -25,7 +25,7 @@ class car {
 		var box = new THREE.Mesh( geometry, material );
 		this.car.add(box);
 		
-		this.car.add(new dome(scale*.5, scale*.5, scale*0, scale).getObject())
+		this.car.add(new Dome(scale*.5, scale*.5, scale*0, scale).getObject())
 		this.rearAxis = new axleAndWheel(scale*1.5, -scale*0.3, 0, scale);
 		this.car.add(this.rearAxis.getObject());
 		this.frontAxis = new axleAndWheel(-scale*1.5, -scale*0.3, 0, scale);
@@ -303,15 +303,15 @@ class WheelHub {
 	}
 }
 
-class dome {
+class Dome {
 	constructor(PosX, PosY, PosZ, scale) {
-		this.dome = new THREE.Object3D();
+		this.Dome = new THREE.Object3D();
 
 		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.6, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
 		//var geometry = new THREE.SphereGeometry( scale, 4, 4, 0, 6.3, 0, 1.6);
 		var material = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false, opacity:0.6, transparent:true} );
 		var cyl1 = new THREE.Mesh( geometry, material );
-		cyl1.position.set(0, 0, scale*0.75)
+		cyl1.position.set(0, 0, scale*0.75);
 
 
 
@@ -323,20 +323,19 @@ class dome {
 
 		this.setRotation(Math.PI/2, 0, 0);
 		this.setPosition(PosX, PosY, PosZ);
-		this.dome.add(cyl1);
-		//this.dome.add(cyl2);
+		this.Dome.add(cyl1);
+		//this.Dome.add(cyl2);
 	}
 
 	setPosition(PosX, PosY, PosZ) {
-		this.dome.position.set(PosX, PosY, PosZ)
+		this.Dome.position.set(PosX, PosY, PosZ)
 	}
 
 	setRotation(RotX, RotY, RotZ) {
-		this.dome.rotation.set(RotX, RotY, RotZ);
+		this.Dome.rotation.set(RotX, RotY, RotZ);
 	}
 
 	getObject() {
-		return this.dome;
+		return this.Dome;
 	}
-
 }

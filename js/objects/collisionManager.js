@@ -10,7 +10,7 @@ class collisionManager {
 	}
 
 	checkAllCollisions() {
-		this.checkCarOrange();
+		//this.checkCarOrange();
 		this.checkCarButter();
 		this.checkCarCheerios();
 		this.checkCheerioCheerio();
@@ -29,8 +29,8 @@ class collisionManager {
 	checkCarOrange() {
 		for (var i = 0; i < this.oranges.length; i++) {
 			if (this.hasCollision(this.car, this.oranges[i])) {
-				playerCar.reset();
-				pathRandomizer.reset();
+				this.reset();
+				break;
 			}
 		}
 	}
@@ -45,8 +45,7 @@ class collisionManager {
 
 	checkCarInside() {
 		if (!this.isInside(this.car)) {
-			playerCar.reset();
-			pathRandomizer.reset();
+			this.reset();
 		}
 	}
 
@@ -104,6 +103,19 @@ class collisionManager {
 	wiphasCollision(first, second) {
 		return Math.pow(first.getBoundingRadius() + second.getBoundingRadius(), 2)-0.1 >=
 		first.getBoundingCenter().distanceToSquared(second.getBoundingCenter());
+	}
+
+	reset() {
+		playerCar.reset();
+		pathRandomizer.reset();
+		for(var j=0; j<updateList.length; j++) {
+			if(updateList[j].reset != undefined) {
+				if(updateList[j].isBaseObject) {
+					scene.add(updateList[j]);
+					updateList[j].reset();
+				}
+			}
+		}
 	}
 }
 

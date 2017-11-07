@@ -1,6 +1,6 @@
 /* GLOBAL THREE */
 'use strict'
-
+var gl1;
 /* Global variables */
 var globalAspectRatio = 16/9;
 
@@ -143,8 +143,8 @@ function init() {
 	var cam2 = new customCamera(createPerspectiveCamera(0, 400, 200, globalAspectRatio), scene.position);
 
 	var cam3 = new customCamera(createPerspectiveCamera(0, 0, 0, globalAspectRatio), scene.position);
-	cam3.focusOn(playerCar.getObject());
-	cam3.follow(playerCar.getObject(), true);
+	cam3.focusOn(playerCar);
+	cam3.follow(playerCar, true);
 	cam3.setTransform(50, 0, 0, Math.PI/3, 0);
 	cam3.manualControl();
 
@@ -202,8 +202,8 @@ function getRendererHeight() {
 
 function resetCameras() {
 	var cam3 = new customCamera(createPerspectiveCamera(0, 0, 0, globalAspectRatio), scene.position);
-	cam3.focusOn(playerCar.getObject());
-	cam3.follow(playerCar.getObject(), true);
+	cam3.focusOn(playerCar);
+	cam3.follow(playerCar, true);
 	cam3.setTransform(50, 0, 0, Math.PI/3, 0);
 	cam3.manualControl();
 
@@ -255,9 +255,11 @@ function createScene() {
   	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
 
 
-  	playerCar = new car(0,5,150,5)
-  	playerCar.setRotation(0, Math.PI, 0)
+  	playerCar = new wipcar(0,5,150,5);
+  	playerCar.setInitialRotation(0, Math.PI, 0);
+  	scene.add(playerCar);
 	updateList.push(pathRandomizer);	
+	
 	updateList.push(playerCar);
 	inputList.push(playerCar);
 
@@ -276,9 +278,24 @@ function make_cheerios_example() {
 	scene.add(cheerio2);
 	cheerioList.push(cheerio2);
 	updateList.push(cheerio2);
-
+	/*
 	var cheerio3 = new wipcheerio(new THREE.Vector3(0,2,0), 5, 3, 14, 14, 10);
 	scene.add(cheerio3);
 	cheerioList.push(cheerio3);
 	updateList.push(cheerio3);
+	
+	var wipWheel = new wheel(0, 2, 0, 5);
+	scene.add(wipWheel);
+
+	var wipDome = new dome(0, 10, 0, 5);
+	scene.add(wipDome);
+	
+	var axleAndWheel = new wipaxleAndWheel(0, 10, 0, 5);
+	axleAndWheel.setRotation(0,0,0);
+	scene.add(axleAndWheel);
+
+	gl1 = axleAndWheel;
+	*/
+	var car = new wipcar(0, 5, 0, 5);
+	scene.add(car);
 }

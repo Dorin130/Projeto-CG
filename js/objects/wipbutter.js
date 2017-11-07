@@ -5,11 +5,11 @@ class wipbutter extends collidableObject {
 
 		var geometry = new new THREE.BoxGeometry( Width, Height, Depth);
 		if ( typeof wipbutter.mat1 == 'undefined' || typeof wipbutter.mat2 == 'undefined' ) { //static values
-        	wipbutter.mat1 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
-        	wipbutter.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: true} );
-    	}
-    	this.mesh = new THREE.Mesh( geometry, wipbutter.mat1 );
-    	this.add(this.mesh);
+			wipbutter.mat1 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
+			wipbutter.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
+		}
+		this.mesh = new THREE.Mesh( geometry, wipbutter.mat1 );
+		this.add(this.mesh);
 	}
 
 	toggleMesh() {
@@ -17,10 +17,6 @@ class wipbutter extends collidableObject {
 	}
 
 	setWireframe(activated) {
-		if ( typeof wipbutter.mat1 == 'undefined' || typeof wipbutter.mat2 == 'undefined' ) { //static values
-        	wipbutter.mat1 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
-        	wipbutter.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: true} );
-    	}
 		wipbutter.mat1.wireframe = activated;
 		wipbutter.mat2.wireframe = activated;
 	}

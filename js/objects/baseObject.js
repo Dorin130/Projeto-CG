@@ -1,11 +1,13 @@
 'use strict'
 class baseObject extends THREE.Object3D {
-	constructor(position) {
+	constructor(position, rotation) {
 		super();
 		var pos = position || new THREE.Vector3(0,0,0);
+		var rot = rotation || new THREE.Vector3(0,0,0);
 		this.position.copy(pos);
 		this.initialPosition = this.position.clone();
 		this.initialRotation = this.rotation.clone();
+		this.isBaseObject = true;
 	}
 
 	update(delta_time) {}
@@ -22,13 +24,23 @@ class baseObject extends THREE.Object3D {
 		this.position.set(PosX, PosY, PosZ);
 	}
 
+	setInitialPosition(PosX, PosY, PosZ) {
+		this.setPosition(PosX, PosY, PosZ);
+		this.initialPosition.copy(this.position);
+	}
+
 	setRotation(RotX, RotY, RotZ) {
-		this.rotation.set(x,y,z);
+		this.rotation.set(RotX, RotY, RotZ);
+	}
+
+	setInitialRotation(RotX, RotY, RotZ) {
+		this.setRotation(RotX, RotY, RotZ);
+		this.initialRotation.copy(this.rotation);
 	}
 
 	resetPosAndRot() {
 		this.setPosition(this.initialPosition.x, this.initialPosition.y, this.initialPosition.z);
-		this.setRotation(this.initialRotation.x, this.initialRotation.y, this.initialRotation.z)
+		this.setRotation(this.initialRotation.x, this.initialRotation.y, this.initialRotation.z);
 	}
 
 	propagateReset() {
@@ -90,7 +102,9 @@ class movingObject extends collidableObject {
 		this.speedStopThreshold = speedStopThreshold || DEFAULT_STOP_THRESHOLD;
 		this.frictionCoefficient = frictionCoefficient || DEFAULT_FRICTION_COEFFICIENT;
 		this.speed = speed || new THREE.Vector3(0,0,0);
+		this.initialSpeed = this.speed.clone();
 		this.acceleration = acceleration || new THREE.Vector3(0,0,0);
+		this.initialAcceleration = this.acceleration.clone();
 		this.tentativePos = this.position.clone();
 		this.isMovingObject = true;
 	}
@@ -149,12 +163,26 @@ class movingObject extends collidableObject {
 			this.speed.set(0,0,0);
 		}
 	}
+
+	reset() {
+		this.resetPosAndRot();
+		this.resetSpeedAndAccel();
+		
+		this.propagateReset();
+	}
+
+	resetSpeedAndAccel() {
+		this.setSpeed(this.initialSpeed);
+		this.setAcceleration(this.initialAcceleration);
+	}
 }
+
+var DEFAULT_MASS = 1;
 
 class physicalObject extends movingObject {
 	constructor(position, boundingRadius, speedStopThreshold, frictionCoefficient, mass) {
 		super(position, boundingRadius, speedStopThreshold, frictionCoefficient);
-		this.mass = mass;
+		this.mass = mass || DEFAULT_MASS;
 		this.tentativeSpeed = this.speed.clone();
 		this.isPhysicalObject = true;
 	}
@@ -179,7 +207,7 @@ class physicalObject extends movingObject {
 
 	resolveClipping(otherObject) {
 		//if(!otherObject.isCollidableObject) return;
-		var unclipDir = this.getTentativePosition().sub(otherObject.getTentativePosition());
+		var unclipDir = this.getBoundingCenter().sub(otherObject.getBoundingCenter());
 		unclipDir.setLength(this.getBoundingRadius()+otherObject.getBoundingRadius()-unclipDir.length()+0.1);
 		this.tentativePos.add(unclipDir);
 	}
@@ -192,7 +220,7 @@ class physicalObject extends movingObject {
 	receiveKineticEnergy(otherObject) {
 		var m1 = this.getMass(); var m2 = otherObject.getMass() || 100*m1;
 		var v1 = this.getSpeed(); var v2 = otherObject.getSpeed();
-		var x1 = this.getTentativePosition(); var x2 = otherObject.getTentativePosition();
+		var x1 = this.getBoundingCenter(); var x2 = otherObject.getBoundingCenter();
 		var factor = (2*m2/(m1+m2))*(v1.sub(v2)).dot(x1.clone().sub(x2))/(x1.distanceToSquared(x2));
 		this.tentativeSpeed.sub((x1.sub(x2)).multiplyScalar(factor));
 	}
@@ -229,10 +257,6 @@ class wipcheerio extends physicalObject {
 	}
 
 	setWireframe(activated) {
-		if ( typeof wipcheerio.mat1 == 'undefined' || typeof wipcheerio.mat2 == 'undefined' ) { //static values
-        	wipcheerio.mat1 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
-        	wipcheerio.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: true} );
-    	}
 		wipcheerio.mat1.wireframe = activated;
 		wipcheerio.mat2.wireframe = activated;
 	}
