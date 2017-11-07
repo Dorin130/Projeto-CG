@@ -269,14 +269,22 @@ function createScene() {
 
 	make_cheerios_example();
 
-	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-	directionalLight.position.set(0,30,0);
-	scene.add( directionalLight );
 
-	var candle1 = new candle(new THREE.Vector3(0,0,50));
-	var candle2 = new candle(new THREE.Vector3(0,0,80));
+	var globallight = new globalLight(new THREE.Vector3(0,50,0));
+
+	var candle1 = new candle(new THREE.Vector3(0,0,0), 8);
+	var candle2 = new candle(new THREE.Vector3(0,0,100), 6);
+	var candle3 = new candle(new THREE.Vector3(50,0,75), 4);
+	var candle4 = new candle(new THREE.Vector3(70,0,95), 2);
 	scene.add(candle1)
 	scene.add(candle2)
+	scene.add(candle3)
+	scene.add(candle4)
+	inputList.push(candle1);
+	inputList.push(candle2);
+	inputList.push(candle3);
+	inputList.push(candle4);
+	inputList.push(globallight);
 }
 
 function make_cheerios_example() {

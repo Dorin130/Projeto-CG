@@ -15,7 +15,7 @@ class cheerio {
 
 		//mesh
 		this.geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
-		this.material = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
+		this.material = new new THREE.MeshPhongMaterial();
 		var cheerioMesh = new THREE.Mesh( this.geometry, this.material );
 		cheerioMesh.rotation.x = Math.PI/2;
 		this.cheerioObj = new THREE.Object3D().add(cheerioMesh);
