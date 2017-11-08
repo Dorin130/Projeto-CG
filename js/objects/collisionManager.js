@@ -28,7 +28,7 @@ class collisionManager {
 
 	checkCarOrange() {
 		for (var i = 0; i < this.oranges.length; i++) {
-			if (this.hasCollision(this.car, this.oranges[i])) {
+			if (this.wiphasCollision(this.car, this.oranges[i])) {
 				this.reset();
 				break;
 			}

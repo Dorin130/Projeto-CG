@@ -161,6 +161,7 @@ class wipcar extends physicalObject {
 		this.direction = new THREE.Vector3(-1,0,0);
 		this.initialDirection = this.direction.clone();
 
+		this.stuck = false;
 		this.keyInputs = []; //up, down, left, right
 		this.keyInputs["up"] = this.keyInputs["down"] = this.keyInputs["left"] = this.keyInputs["right"] = false;
 		this.turnDirection = 0; //positive means left
@@ -245,13 +246,12 @@ class wipcar extends physicalObject {
 
 
 	simpleInputInterpret() {
-		var carAcceleration = 0; //attempted acceleration from motor and breaks
-		if(this.keyInputs["up"] && !this.keyInputs["down"]) {
+		if(this.keyInputs["up"] && !this.keyInputs["down"] && !this.stuck) {
 			if(this.speed.dot(this.direction) < 0)
 				this.acceleration = this.direction.clone().multiplyScalar(+200); //moving backwards --> using breaks
 			else
 				this.acceleration = this.direction.clone().multiplyScalar(+75); //moving forward --> using engine
-		} else if(this.keyInputs["down"] && !this.keyInputs["up"]) {
+		} else if(this.keyInputs["down"] && !this.keyInputs["up"] && !this.stuck) {
 			if(this.speed.dot(this.direction) >= 0)
 				this.acceleration = this.direction.clone().multiplyScalar(-200) //moving forward --> using breaks
 			else
@@ -296,8 +296,8 @@ class wipcar extends physicalObject {
 	}
 
 	butterCollision() {
-		this.forwardMaxSpeed = 0;
-		this.backwardsMaxSpeed = 0;
+		this.stuck = true;
+		this.resetSpeedAndAccel();
 	}
 
 	speedUpdate(delta_time) {
@@ -317,6 +317,7 @@ class wipcar extends physicalObject {
 		this.setPosition(this.initialPosition.x, this.initialPosition.y, this.initialPosition.z);
 		this.setRotation(this.initialRotation.x, this.initialRotation.y, this.initialRotation.z);//this.setRotation(0,Math.PI,0);
 		this.resetSpeedAndAccel();
+		this.stuck = false;
 		//this.propagateReset();
 	}
 }

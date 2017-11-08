@@ -1,5 +1,5 @@
 class globalLight extends baseObject {
-	constructor(position, color, intensity) {
+	constructor(position, intensity, color) {
 			super(position);
 			this.color = color || 0xffffff;
 			this.intensity = intensity || 1;

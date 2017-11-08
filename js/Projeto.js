@@ -222,10 +222,10 @@ function resetGame() {
 }
 
 function toggleShading() {
-	gameTable.toggleMesh();
-	for (var i = cheerioList.length - 1; i >= 0; i--) {
-		cheerioList[i].toggleMesh();
-	}
+	scene.traverse(function (node) {
+		if (node.isBaseObject)
+			node.toggleMesh();
+	});
 
 }
 
@@ -271,7 +271,7 @@ function createScene() {
 	//make_cheerios_example();
 
 
-	var globallight = new globalLight(new THREE.Vector3(0,50,0));
+	var globallight = new globalLight(new THREE.Vector3(0,50,0), 1.5);
 
 	var candle1 = new candle(new THREE.Vector3(0,0,0), 8);
 	var candle2 = new candle(new THREE.Vector3(0,0,100), 6);

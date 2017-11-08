@@ -4,7 +4,7 @@ var TorusRadiusDEFAULT = 5;
 var TorusTubeRadiusDEFAULT = 3;
 var RadialSegmentsDEFAULT = 14;
 var TubularSegmentsDEFAULT = 14;
-var MassDEFAULT = 10;
+var MassDEFAULT = 100;
 
 function straightLine(spacing, start, end, includeLast) {
 	var doLast = includeLast || true;

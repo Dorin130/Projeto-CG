@@ -8,7 +8,6 @@ class randomizableObject extends collidableObject {
 	constructor(position, boundingRadius) {
 		super(position, boundingRadius);
 		this.randomizerInputs = new THREE.Vector3(0,0,0); //use this to get info
-		this.rotationAxis = new THREE.Vector3(0,0,0);
 		this.currentSpeed = Math.floor(DEFAULT_SPEED + Math.random()* DEFAULT_SPEED);
 		this.clock = new THREE.Clock(false);
 		this.elapsedTime = 0;
@@ -16,6 +15,10 @@ class randomizableObject extends collidableObject {
 	}
 	randomizerUpdater(delta_t) {
 		//IMPLEMENT THIS METHOD IN THE SUBCLASSES
+	}
+
+	getCurrentSpeed() {
+		return this.currentSpeed;
 	}
 }
 
@@ -79,8 +82,9 @@ class randomizer {
 		orangeList = [];
 		for(var i=0; i < this.random(minOranges, maxOranges); i++) {
 
-			var object = new wiporange(this.random(-this.limitX, this.limitX), this.limitY, 
-								this.random(-this.limitZ, this.limitZ), radius);
+			var pos = new THREE.Vector3(this.random(-this.limitX, this.limitX), this.limitY, this.random(-this.limitZ, this.limitZ));
+
+			var object = new wiporange(pos, radius);
 			var direction = new THREE.Vector3(this.random(-1,1), 0, this.random(-1,1)).normalize();
 			var objPath = new path(object, direction ,this);
 
@@ -125,7 +129,7 @@ class randomizer {
 				posX = this.random(-this.limitX, this.limitX);
 				path.path = new THREE.Vector3(this.random(-1,1), 0, -Math.sign(posZ)*this.random(0,1)).normalize();
 			}
-			path.object.setRotation(0,0,0);
+			path.object.orange.rotation.set(0,0,0);
 			path.object.rotationAxis = path.path.clone().cross(new THREE.Vector3(0,1,0));
 			path.object.setPosition(posX, this.limitY, posZ);
 			if(path.object.currentSpeed < MAX_SPEED) {
