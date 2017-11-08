@@ -23,6 +23,10 @@ class baseObject extends THREE.Object3D {
 		this.propagateReset();
 	}
 
+	getPosition(PosX, PosY, PosZ) {
+		return this.position;
+	}
+
 	setPosition(PosX, PosY, PosZ) {
 		this.position.set(PosX, PosY, PosZ);
 	}
@@ -48,15 +52,20 @@ class baseObject extends THREE.Object3D {
 
 	propagateReset() {
 		for(var i=0; i<this.children.length; i++) {
-			if(this.children[i].reset != undefined)
+			if(this.children[i].isBaseObject)
 				this.children[i].reset();
 		}
 	}
 
 	toggleMesh() {
-		console.log("toggleMesh");
-		this.mesh.material = (this.mesh.material instanceof THREE.MeshPhongMaterial)? this.matGouroud : this.matPhong;
+		this.mesh.material = (this.mesh.material == this.matPhong)? this.matGouroud : this.matPhong;
 		this.propagateToggleMesh();
+	}
+
+
+	setWireframe(activated) {
+		this.matPhong.wireframe = activated;
+		this.matGouroud.wireframe = activated;
 	}
 
 	propagateToggleMesh() {
@@ -247,16 +256,11 @@ class wipcheerio extends physicalObject {
 		this.setMass(mass);
 		this.setBoundingRadius(radius+tubeRadius);
 		var geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
-		this.color = [0x8B5555, 0x94A35E, 0xD98056, 0xDB5742, 0xE45640][Math.floor(Math.random() * 5)]
-		this.matPhong = ( new THREE.MeshPhongMaterial( {color: this.color,specular: 0x020202,shininess: 20} ));
-		this.matGouroud = (new THREE.MeshLambertMaterial( { color: this.color, wireframe: false} ));
+		var color = Math.floor(Math.random() * 5);
+		this.matPhong = CHEERIO_MATERIALS[color][0];
+		this.matGouroud = CHEERIO_MATERIALS[color][1];
     	this.mesh = new THREE.Mesh( geometry, this.matGouroud );
     	this.mesh.rotation.x = Math.PI/2;
     	this.add(this.mesh);
-	}
-
-	setWireframe(activated) {
-		wipcheerio.mat1.wireframe = activated;
-		wipcheerio.mat2.wireframe = activated;
 	}
 }

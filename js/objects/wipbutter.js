@@ -3,21 +3,11 @@ class wipbutter extends collidableObject {
 		var corner = new THREE.Vector3(Width/2, Height/2, Depth/2);
 		super(position, corner.length()/3);
 
-		var geometry = new new THREE.BoxGeometry( Width, Height, Depth);
-		if ( typeof wipbutter.mat1 == 'undefined' || typeof wipbutter.mat2 == 'undefined' ) { //static values
-			wipbutter.mat1 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
-			wipbutter.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: false} );
-		}
-		this.mesh = new THREE.Mesh( geometry, wipbutter.mat1 );
+		var geometry = new THREE.BoxGeometry( Width, Height, Depth);
+		this.matPhong = BUTTER_MATERIAL[0];
+		this.matGouroud = BUTTER_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.add(this.mesh);
-	}
-
-	toggleMesh() {
-		this.mesh.material = (this.mesh.material == wipbutter.mat1)? wipbutter.mat2 : wipbutter.mat1;
-	}
-
-	setWireframe(activated) {
-		wipbutter.mat1.wireframe = activated;
-		wipbutter.mat2.wireframe = activated;
+		scene.add(this);
 	}
 }

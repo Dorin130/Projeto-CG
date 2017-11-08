@@ -3,7 +3,7 @@ class candle extends baseObject {
 		var scale = scale || 10;
 		var radiusSegments = 10;
 		var intensity = intensity || 1;
-		var distance = 100;
+		var distance = 250;
 		var decay = 0 
 		var color = color || 0xffffff;
 		position.y += (scale*0.36)/2

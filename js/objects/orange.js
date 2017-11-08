@@ -1,5 +1,4 @@
 
-
 /* Leaf */
 class orangeLeaf {
 	constructor(PosX, PosY, PosZ) {
@@ -75,9 +74,37 @@ class orangeLeafStem {
 	}
 }
 
+class wiporange extends randomizableObject {
+	constructor(position, sphereRadius) {
+		super(position, sphereRadius);
+
+		var geometry = new THREE.SphereGeometry( sphereRadius, 12, 12 );
+		this.matPhong = BUTTER_MATERIAL[0];
+		this.matGouroud = BUTTER_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
+		this.orange = new THREE.Object3D();
+		this.orange.add(this.mesh);
+		this.add(this.orange);
+		scene.add(this);
+
+	}
+
+	randomizerUpdater(delta_t) {
+		this.setPosition(this.orange.position.x + this.randomizerInputs.x,this.orange.position.y+ this.randomizerInputs.y, this.orange.position.z +  this.randomizerInputs.z);
+		var distance = Math.sqrt(this.randomizerInputs.x^2 + this.randomizerInputs.z ^2 );
+		this.orange.rotateOnAxis(this.rotationAxis, -this.currentSpeed* delta_t/this.sphereRadius);//w = v/r
+	}
+
+	update(delta_t) {
+		this.randomizerUpdater(delta_t)
+	}
+
+}
+
+
 class orange extends randomizableObject {
 	constructor(PosX, PosY, PosZ, sphereRadius) {
-		super()
+		super();
 		this.orange = new THREE.Object3D();
 		this.sphereRadius = sphereRadius;
 		var geometry = new THREE.SphereGeometry( sphereRadius, 12, 12 );

@@ -103,7 +103,6 @@ class wheel extends baseObject {
 		this.wheelJoint.add(this.torus);
 		this.wheelJoint.add(this.hub);
 		this.add(this.wheelJoint);
-		this.add(new THREE.AxisHelper(5,5,5));
 	}
 
 	spin(angle) {
@@ -297,8 +296,8 @@ class wipcar extends physicalObject {
 	}
 
 	butterCollision() {
-		this.maxSpeed = 0;
-		this.minSpeed = 0;
+		this.forwardMaxSpeed = 0;
+		this.backwardsMaxSpeed = 0;
 	}
 
 	speedUpdate(delta_time) {

@@ -9,7 +9,6 @@ class globalLight extends baseObject {
 	}
 
 	input(action) {
-		console.log("hey")
 		if(action == "dayNightToggle") {
 			if( this.directionalLight.intensity == 0 && this.intensity != 0){
 				this.directionalLight.intensity = this.intensity;

@@ -10,7 +10,7 @@ class collisionManager {
 	}
 
 	checkAllCollisions() {
-		//this.checkCarOrange();
+		this.checkCarOrange();
 		this.checkCarButter();
 		this.checkCarCheerios();
 		this.checkCheerioCheerio();
@@ -20,7 +20,7 @@ class collisionManager {
 
 	checkCarButter() {
 		for (var i = 0; i < this.butters.length; i++) {
-			if (this.hasCollision(this.car, this.butters[i])) {
+			if (this.wiphasCollision(this.car, this.butters[i])) {
 				this.car.butterCollision();
 			}
 		}
@@ -64,7 +64,7 @@ class collisionManager {
 	checkCheerioInside() {
 		for (var i = 0; i < this.cheerios.length; i++) {
 			if (!this.isInside(this.cheerios[i])) {
-				scene.remove(this.cheerios[i]);
+				this.cheerios[i].setPosition(0,1000,0);
 			}
 		}
 	}
@@ -109,17 +109,10 @@ class collisionManager {
 		playerCar.reset();
 		pathRandomizer.reset();
 		for(var j=0; j<updateList.length; j++) {
-			if(updateList[j].reset != undefined) {
-				if(updateList[j].isBaseObject) {
-					scene.add(updateList[j]);
-					updateList[j].reset();
-				}
+			if(updateList[j].isBaseObject) {
+				//scene.add(updateList[j]);
+				updateList[j].reset();
 			}
 		}
 	}
-}
-
-function removeEntity(object) {
-    var selectedObject = scene.getObjectByName(object.name);
-    scene.remove( selectedObject );
 }

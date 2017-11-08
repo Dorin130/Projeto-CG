@@ -4,8 +4,9 @@ var SPEED_FACTOR = 1
 var RESPAWN_TIME = 100
 var MAX_SPEED = 500
 
-class randomizableObject {
-	constructor() {
+class randomizableObject extends collidableObject {
+	constructor(position, boundingRadius) {
+		super(position, boundingRadius);
 		this.randomizerInputs = new THREE.Vector3(0,0,0); //use this to get info
 		this.rotationAxis = new THREE.Vector3(0,0,0);
 		this.currentSpeed = Math.floor(DEFAULT_SPEED + Math.random()* DEFAULT_SPEED);
@@ -78,7 +79,7 @@ class randomizer {
 		orangeList = [];
 		for(var i=0; i < this.random(minOranges, maxOranges); i++) {
 
-			var object = new orange(this.random(-this.limitX, this.limitX), this.limitY, 
+			var object = new wiporange(this.random(-this.limitX, this.limitX), this.limitY, 
 								this.random(-this.limitZ, this.limitZ), radius);
 			var direction = new THREE.Vector3(this.random(-1,1), 0, this.random(-1,1)).normalize();
 			var objPath = new path(object, direction ,this);
@@ -94,9 +95,9 @@ class randomizer {
 	createButters(minButters, maxButters, width, height, depth) {
 		butterList = [];
 		for(var i=0; i < this.random(minButters, maxButters); i++) {
-
-			var object = new butterCube(this.random(-this.limitX, this.limitX), this.limitY/2, 
-								this.random(-this.limitZ, this.limitZ), width, height, depth);
+			var pos = new THREE.Vector3(this.random(-this.limitX, this.limitX), this.limitY/2, this.random(-this.limitZ, this.limitZ));
+			var object = new wipbutter(pos, width, height, depth);
+			object.setRotation(0,Math.random()*2*Math.PI,0);
 			butterList.push(object);
 		}
 		return butterList;

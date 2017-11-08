@@ -14,7 +14,7 @@ var pathRandomizer;
 var updateList = []; /* contains every object to be updated in the update cycle except customCamera */
 var inputList = []; /* contains every object to be updated in the update cycle except customCamera */
 
-
+var gameTable;
 //COLLIDING OBJECT LISTS
 var playerCar;
 var orangeList = [];
@@ -91,9 +91,10 @@ function onKeyDown(e) {
 			e.preventDefault();
 			break;
 		case 65:
+			WIREFRAME = !WIREFRAME;
 			scene.traverse(function (node) {
-				if (node instanceof THREE.Mesh)
-					node.material.wireframe = !node.material.wireframe;
+				if (node.isBaseObject)
+					node.setWireframe(WIREFRAME);
 			});
 			e.preventDefault();
 			break;
@@ -221,6 +222,7 @@ function resetGame() {
 }
 
 function toggleShading() {
+	gameTable.toggleMesh();
 	for (var i = cheerioList.length - 1; i >= 0; i--) {
 		cheerioList[i].toggleMesh();
 	}
@@ -246,10 +248,10 @@ function createScene() {
 	cheerioList = fillPos(road);
 	updateList.push.apply(updateList, cheerioList);
 
-  	var gameTable = new table(0,0, 0, 800, 450, 35, 20);
+  	gameTable = new table(0,0, 0, 800, 450, 35, 20);
 
 
-  	var butter1 = new butter(-50,20,20);
+  	//var butter1 = new butter(-50,20,20);
 
   	pathRandomizer = new randomizer(400,10,225);
   	orangeList = pathRandomizer.createOranges(5, 15, 10);
@@ -266,7 +268,7 @@ function createScene() {
 
 	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList);
 
-	make_cheerios_example();
+	//make_cheerios_example();
 
 
 	var globallight = new globalLight(new THREE.Vector3(0,50,0));
@@ -319,6 +321,6 @@ function make_cheerios_example() {
 
 	gl1 = axleAndWheel;
 	*/
-	var car = new wipcar(0, 5, 0, 5);
-	scene.add(car);
+	//var car = new wipcar(0, 5, 0, 5);
+	//scene.add(car);
 }
