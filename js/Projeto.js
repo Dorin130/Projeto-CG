@@ -221,10 +221,9 @@ function resetGame() {
 }
 
 function toggleShading() {
-	scene.traverse(function (node) {
-		if (node instanceof THREE.Mesh)
-			node.material.shading = !node.material.wireframe;
-	});
+	for (var i = cheerioList.length - 1; i >= 0; i--) {
+		cheerioList[i].toggleMesh();
+	}
 
 }
 

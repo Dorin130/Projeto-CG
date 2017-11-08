@@ -7,6 +7,9 @@ class baseObject extends THREE.Object3D {
 		this.position.copy(pos);
 		this.initialPosition = this.position.clone();
 		this.initialRotation = this.rotation.clone();
+		this.matPhong = undefined;
+		this.matGouroud = undefined;
+		this.mesh = undefined;
 		this.isBaseObject = true;
 	}
 
@@ -51,13 +54,15 @@ class baseObject extends THREE.Object3D {
 	}
 
 	toggleMesh() {
-		/* Specific code above*/
+		console.log("toggleMesh");
+		this.mesh.material = (this.mesh.material instanceof THREE.MeshPhongMaterial)? this.matGouroud : this.matPhong;
 		this.propagateToggleMesh();
 	}
 
 	propagateToggleMesh() {
 		for(var i=0; i<this.children.length; i++) {
-			this.children[i].toggleMesh();
+			if (this.children[i].isBaseObject)
+				this.children[i].toggleMesh();
 		}
 	}
 }
@@ -241,22 +246,13 @@ class wipcheerio extends physicalObject {
 		super(position);
 		this.setMass(mass);
 		this.setBoundingRadius(radius+tubeRadius);
-
-		this.color = [0x8B5555, 0x94A35E, 0xD98056, 0xDB5742, 0xE45640][Math.floor(Math.random() * 5)]
-		this.mat1 = new THREE.MeshPhongMaterial( {color: this.color,specular: 0x020202,shininess: 20} );
-        this.mat2 = new THREE.MeshLambertMaterial( { color: this.color, wireframe: false} );
 		var geometry = new THREE.TorusGeometry(radius, tubeRadius, radialSegments, tubularSegments);
-		/*if ( typeof wipcheerio.mat1 == 'undefined' || typeof wipcheerio.mat2 == 'undefined' ) { //static values
-        	wipcheerio.mat1 = new THREE.MeshPhongMaterial( {color: this.color,specular: 0x050505,shininess: 100} );
-        	wipcheerio.mat2 = new THREE.MeshBasicMaterial( { color: 0xAAAAAA, wireframe: true} );
-    	}*/
-    	this.mesh = new THREE.Mesh( geometry, this.mat1 );
+		this.color = [0x8B5555, 0x94A35E, 0xD98056, 0xDB5742, 0xE45640][Math.floor(Math.random() * 5)]
+		this.matPhong = ( new THREE.MeshPhongMaterial( {color: this.color,specular: 0x020202,shininess: 20} ));
+		this.matGouroud = (new THREE.MeshLambertMaterial( { color: this.color, wireframe: false} ));
+    	this.mesh = new THREE.Mesh( geometry, this.matGouroud );
     	this.mesh.rotation.x = Math.PI/2;
     	this.add(this.mesh);
-	}
-
-	toggleMesh() {
-		this.mesh.material = (this.mesh.material == wipcheerio.mat1)? wipcheerio.mat2 : wipcheerio.mat1;
 	}
 
 	setWireframe(activated) {
