@@ -84,7 +84,7 @@ class randomizer {
 
 			var pos = new THREE.Vector3(this.random(-this.limitX, this.limitX), this.limitY, this.random(-this.limitZ, this.limitZ));
 
-			var object = new wiporange(pos, radius);
+			var object = new orange(pos, radius);
 			var direction = new THREE.Vector3(this.random(-1,1), 0, this.random(-1,1)).normalize();
 			var objPath = new path(object, direction ,this);
 
@@ -100,7 +100,7 @@ class randomizer {
 		butterList = [];
 		for(var i=0; i < this.random(minButters, maxButters); i++) {
 			var pos = new THREE.Vector3(this.random(-this.limitX, this.limitX), this.limitY/2, this.random(-this.limitZ, this.limitZ));
-			var object = new wipbutter(pos, width, height, depth);
+			var object = new butter(pos, width, height, depth);
 			object.setRotation(0,Math.random()*2*Math.PI,0);
 			butterList.push(object);
 		}

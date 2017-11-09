@@ -1,54 +1,215 @@
-
-class car {
+class dome extends baseObject {
 	constructor(PosX, PosY, PosZ, scale) {
+		super(new THREE.Vector3(PosX, PosY, PosZ));
+
+		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.6, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
+		if ( typeof dome.mat1 == 'undefined' || typeof dome.mat2 == 'undefined' ) { //static values
+			dome.mat1 = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false, opacity:0.6, transparent:true} );
+			dome.mat2 = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false, opacity:0.6, transparent:true} );
+		}
+		this.cyl = new THREE.Mesh( geometry, dome.mat1 );
+		this.cyl.rotation.set(Math.PI/2, 0, 0);
+		//this.cyl.position.set(0, 0, scale*0.75);
+		this.add(this.cyl);
+	}
+
+	toggleMesh() {
+		this.cyl.material = (this.cyl.material == dome.mat1)? dome.mat2 : dome.mat1;
+	}
+
+	setWireframe(activated) {
+		dome.mat1.wireframe = activated;
+		dome.mat2.wireframe = activated;
+	}
+}
+
+class rims extends baseObject {
+	constructor(PosX, PosY, PosZ, number, radius, scale) {
+		super(new THREE.Vector3(PosX, PosY, PosZ));
+		var cylgeometry = new THREE.CylinderGeometry( scale*0.02, scale*0.02, scale*0.2, 3);
+		if ( typeof rims.mat1 == 'undefined' || typeof rims.mat2 == 'undefined' ) { //static values
+			rims.mat1 = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe: false} );
+			rims.mat2 = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe: false} );
+		}
+		var theta = 0;
+		var interval = 2*Math.PI/number;
+		for(var i=0; i < number; i++) {
+			var newMesh = new THREE.Mesh( cylgeometry, rims.mat1 )
+			newMesh.position.set(radius*Math.cos(theta), radius*Math.sin(theta), 0);
+			newMesh.rotation.z = theta-(1/2)*Math.PI;
+			theta += interval;
+			this.add( newMesh );
+		}
+	}
+
+	toggleMesh() {
+		for(var i=0; i<this.children.length; i++) {
+			this.children[i].mesh.material = 
+			(this.children[i].mesh.material == rims.mat1)? rims.mat2 : rims.mat1;
+		}
+	}
+
+	setWireframe(activated) {
+		rims.mat1.wireframe = activated;
+		rims.mat2.wireframe = activated;
+	}
+
+}
+
+
+class wheelHub extends baseObject {
+	constructor(PosX, PosY, PosZ, scale) {
+		super(new THREE.Vector3(PosX, PosY, PosZ));
+
+		var geometry = new THREE.SphereGeometry( scale*0.1, 8, 8 );
+		if ( typeof wheelHub.mat1 == 'undefined' || typeof wheelHub.mat2 == 'undefined' ) { //static values
+			wheelHub.mat1 = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe:false} );
+			wheelHub.mat2 = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe:false} );
+		}
+		this.sphere = new THREE.Mesh( geometry, wheelHub.mat1 );
+		this.hubRims = new rims(0, 0, 0, 10, scale*0.2, scale);
+
+		this.add(this.sphere);
+		this.add(this.hubRims);
+	}
+
+	toggleMesh() {
+		this.sphere.material = (this.sphere.material == wheelHub.mat1)? wheelHub.mat2 : wheelHub.mat1;
+		this.hubRims.toggleMesh();
+	}
+
+	setWireframe(activated) {
+		wheelHub.mat1.wireframe = activated;
+		wheelHub.mat2.wireframe = activated;
+		this.hubRims.setWireframe(activated);
+	}
+}
+
+class wheel extends baseObject {
+	constructor(PosX, PosY, PosZ, scale) {
+		super(new THREE.Vector3(PosX, PosY, PosZ));
+
+		this.radius = scale*.4
+		var geometry = new THREE.TorusGeometry( scale*.4, scale * .15, 8, 20 );
+		if ( typeof wheel.mat1 == 'undefined' || typeof wheel.mat2 == 'undefined' ) { //static values
+			wheel.mat1 = new THREE.MeshBasicMaterial( { color: 0xffff00 , wireframe:false } );
+			wheel.mat2 = new THREE.MeshBasicMaterial( { color: 0xffff00 , wireframe:false } );
+		}
+		this.torus = new THREE.Mesh( geometry, wheel.mat1 );
+		this.hub = new wheelHub(0, 0, 0, scale);
+		this.torus.rotation.set(Math.PI/2,0,0);
+		this.hub.setRotation(Math.PI/2,0,0);
+		this.wheelJoint = new THREE.Object3D();
+		this.wheelJoint.add(this.torus);
+		this.wheelJoint.add(this.hub);
+		this.add(this.wheelJoint);
+	}
+
+	spin(angle) {
+		this.wheelJoint.rotateOnAxis(this.up, angle);
+		this.wheelJoint.rotateOnAxis(this.up, angle);
+	}
+
+	toggleMesh() {
+		this.wheelJoint.torus.material = (this.torus.material == wheel.mat1)? wheel.mat2 : wheel.mat1;
+		this.wheelJoint.hub.toggleMesh();
+	}
+
+	setWireframe(activated) {
+		wheel.mat1.wireframe = activated;
+		wheel.mat2.wireframe = activated;
+		this.wheelJoint.hub.setWireframe(activated);
+	}
+}
+
+
+class axleAndWheel extends baseObject {
+	constructor(PosX, PosY, PosZ, scale) {
+		super(new THREE.Vector3(PosX, PosY, PosZ));
+
+		var geometry = new THREE.CylinderGeometry( scale*0.1, scale*0.1, scale*2.8, 10);
+		if ( typeof axleAndWheel.mat1 == 'undefined' || typeof axleAndWheel.mat2 == 'undefined' ) { //static values
+			axleAndWheel.mat1 = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe: false} );
+			axleAndWheel.mat2 = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe: false} );
+		}
+		this.axle = new THREE.Mesh( geometry, axleAndWheel.mat1 );
+		this.leftWheel = new wheel(0, 1.4*scale, 0, scale);
+		this.rightWheel = new wheel(0, -1.4*scale, 0, scale);
+
+		this.add(this.axle);
+		this.add(this.leftWheel);
+		this.add(this.rightWheel);
+	}
+
+	turnWheels(angle) {
+		this.leftWheel.setRotation(angle,0,0);
+		this.rightWheel.setRotation(angle,0,0);
+	}
+	rotateWheels(angle) {
+		this.leftWheel.spin(angle);
+		this.rightWheel.spin(angle);
+	}
+
+}
+
+
+class car extends physicalObject {
+	constructor(PosX, PosY, PosZ, scale) {
+		super(new THREE.Vector3(PosX, PosY, PosZ), 3*scale, 5, 20, 100);
+		this.setBoundingOffset(new THREE.Vector3(0,-3,0));
 		//Movement Defaults (Simple version)
 		this.direction = new THREE.Vector3(-1,0,0);
+		this.initialDirection = this.direction.clone();
+
+		this.stuck = false;
 		this.keyInputs = []; //up, down, left, right
 		this.keyInputs["up"] = this.keyInputs["down"] = this.keyInputs["left"] = this.keyInputs["right"] = false;
 		this.turnDirection = 0; //positive means left
 		this.turnSpeed = 3;
-		this.acceleration = 0;
-		this.speed = 0;
-		this.maxSpeed = 250;
-		this.minSpeed = -100;
-		this.maxAttrition = 30;
-		this.speedStopThreshold = 3;
 
-		//Collision
-		this.boundingRadius = 3*scale;
-		this.mass = 2000;
+		this.forwardMaxSpeed = 250;
+		this.backwardsMaxSpeed = 100;
 
 		//Creation
-		this.car = new THREE.Object3D();
 		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*2);
-		var material = new THREE.MeshBasicMaterial( { color: 0xaa0000, wireframe:false} );
-		var box = new THREE.Mesh( geometry, material );
-		this.car.add(box);
-		
-		this.car.add(new Dome(scale*.5, scale*.5, scale*0, scale).getObject())
+		if ( typeof car.mat1 == 'undefined' || typeof car.mat2 == 'undefined' ) { //static values
+			car.mat1 = new THREE.MeshBasicMaterial( {color: 0xaa0000, wireframe:false} );
+			car.mat2 = new THREE.MeshBasicMaterial( {color: 0xaa0000, wireframe:false} );
+		}
+		this.chassis = new THREE.Mesh( geometry, car.mat1 );
 		this.rearAxis = new axleAndWheel(scale*1.5, -scale*0.3, 0, scale);
-		this.car.add(this.rearAxis.getObject());
 		this.frontAxis = new axleAndWheel(-scale*1.5, -scale*0.3, 0, scale);
-		this.car.add(this.frontAxis.getObject());
+		this.rearAxis.setInitialRotation(Math.PI/2, Math.PI/2, 0);
+		this.frontAxis.setInitialRotation(Math.PI/2, Math.PI/2, 0);
 
-		this.setPosition(PosX, PosY, PosZ);
-		scene.add(this.car);
+		this.dome = new dome(scale*.5, -scale*.3, scale*0, scale);
 
-		//WIP TEMP
-		this.boundingOffset = new THREE.Vector3(0,0,0);
-	}
-
-	setPosition(PosX, PosY, PosZ) {
-		this.car.position.set(PosX, PosY, PosZ)
+		this.add(this.chassis);
+		this.add(this.dome);
+		this.add(this.rearAxis);
+		this.add(this.frontAxis);
 	}
 
 	setRotation(RotX, RotY, RotZ) {
-		this.car.rotation.set(RotX, RotY, RotZ);
-		this.direction.applyAxisAngle(this.car.up, RotY); //assuming you'll never rotate around the other axis
+		this.rotation.set(RotX, RotY, RotZ);
+		this.direction.set(-1,0,0);
+		this.direction.applyAxisAngle(this.up, RotY);
+		this.speed.copy(this.direction.clone().multiplyScalar(this.speed.length()));
+		this.tentativeSpeed.copy(this.speed);
 	}
 
-	getObject() {
-		return this.car;
+	axisRotation(axis, angle) {
+		this.rotateOnAxis(axis, angle);
+		this.direction.applyAxisAngle(axis, angle); //assuming you'll never rotate around the other axis
+		this.speed.applyAxisAngle(axis, angle);
+		this.tentativeSpeed.applyAxisAngle(axis, angle);
+		this.acceleration.applyAxisAngle(axis, angle);
+	}
+
+	setInitialRotation(RotX, RotY, RotZ) {
+		this.setRotation(RotX, RotY, RotZ);
+		this.initialRotation.copy(this.rotation);
+		this.initialDirection.copy(this.direction);
 	}
 
 	input(action) {
@@ -79,30 +240,24 @@ class car {
 				this.keyInputs["right"] = false;
 				break;
 			default:
-				console.log("Input key: car: no interaction for action '" + action + "'");
 				break;
 		}
 	}
 
-	update(delta_time) {
-		this.simpleInputInterpret();
-		this.simplePositionUpdate(delta_time);
-	}
 
-	simpleInputInterpret(delta_time) {
-		var carAcceleration = 0; //attempted acceleration from motor and breaks
-		if(this.keyInputs["up"] && !this.keyInputs["down"]) {
-			if(this.speed < 0)
-				carAcceleration = +200; //moving backwards --> using breaks
+	simpleInputInterpret() {
+		if(this.keyInputs["up"] && !this.keyInputs["down"] && !this.stuck) {
+			if(this.speed.dot(this.direction) < 0)
+				this.acceleration = this.direction.clone().multiplyScalar(+200); //moving backwards --> using breaks
 			else
-				carAcceleration = +75; //moving forward --> using engine
-		} else if(this.keyInputs["down"] && !this.keyInputs["up"]) {
-			if(this.speed > 0)
-				carAcceleration = -200; //moving forward --> using breaks
+				this.acceleration = this.direction.clone().multiplyScalar(+75); //moving forward --> using engine
+		} else if(this.keyInputs["down"] && !this.keyInputs["up"] && !this.stuck) {
+			if(this.speed.dot(this.direction) >= 0)
+				this.acceleration = this.direction.clone().multiplyScalar(-200) //moving forward --> using breaks
 			else
-				carAcceleration = -45; //moving backwards --> using engine
-		} else { //car axle attrition applies
-			carAcceleration = this.getAttrition();
+				this.acceleration = this.direction.clone().multiplyScalar(-45) //moving backwards --> using engine
+		} else {
+			this.acceleration.setLength(0);
 		}
 
 		var turn = 0; //positive means left
@@ -113,229 +268,56 @@ class car {
 		} else { //both keys or no keys --> keep current direction
 			turn = 0;
 		}
-
-		this.acceleration = carAcceleration;
 		this.turnDirection = turn;
-	}
-
-	getAttrition() {
-		if(this.speed == 0)
-			return 0;
-		else if(this.speed > 0)
-			return -this.maxAttrition;
-		else
-			return +this.maxAttrition;
 	}
 
 	getTurnSpeed() {
 		var maxTurnAtSpeed = 50
-		if(Math.abs(this.speed) > maxTurnAtSpeed) {
-			return this.turnSpeed - Math.abs(this.speed/this.maxSpeed);
-		} else if(Math.abs(this.speed) > this.speedStopThreshold) {
-			var x = Math.max(0, (Math.abs(this.speed)-this.speedStopThreshold)/maxTurnAtSpeed*this.turnSpeed);
-			return x;
+		if(Math.abs(this.speed.length()) > maxTurnAtSpeed) {
+			return this.turnSpeed - this.speed.length()/this.forwardMaxSpeed;
+		} else if(Math.abs(this.speed.length()) > this.speedStopThreshold) {
+			return Math.max(0, (this.speed.length()-this.speedStopThreshold)/maxTurnAtSpeed*this.turnSpeed);
 		} else 
 			return 0;
 	}
 
-	simplePositionUpdate(delta_time) {
-		this.speed += this.acceleration*delta_time;
-		this.speed = Math.max(this.minSpeed, Math.min(this.maxSpeed, this.speed)); //Setting speed within bounds
-		if(Math.abs(this.speed) < this.speedStopThreshold && Math.abs(this.acceleration) <= this.maxAttrition) this.speed = 0;
-
-		this.car.rotateOnAxis(this.car.up, this.turnDirection*this.getTurnSpeed()*delta_time*Math.sign(this.speed));
-		this.direction.applyAxisAngle(this.car.up, this.turnDirection*this.getTurnSpeed()*delta_time*Math.sign(this.speed));
+	simpleRotationUpdate(delta_time) {
+		//Setting speed within bounds
+		if(this.speed.dot(this.direction) < 0) this.speed.setLength(Math.min(this.backwardsMaxSpeed, this.speed.length()));
+		else this.speed.setLength(Math.min(this.forwardMaxSpeed, this.speed.length()));
+		this.axisRotation(this.up, this.turnDirection*this.getTurnSpeed()*delta_time*Math.sign(this.speed.dot(this.direction)));
 		this.frontAxis.turnWheels(this.turnDirection/3);
-		this.frontAxis.rotateWheels(-this.speed*delta_time/this.frontAxis.leftWheel.radius);
-		this.rearAxis.rotateWheels(-this.speed*delta_time/this.frontAxis.leftWheel.radius);
-		this.car.position.add(this.direction.clone().multiplyScalar(this.speed*delta_time));
-
+		this.frontAxis.rotateWheels(this.speed.dot(this.direction)*delta_time/(this.frontAxis.leftWheel.radius*2*Math.PI));
+		this.rearAxis.rotateWheels(this.speed.dot(this.direction)*delta_time/this.frontAxis.leftWheel.radius);
 	}
 
 	getTentativePosition() {
-		return this.car.position.clone().setY(2);
-	}
-
-	getCollisionResponse(youClip) {
-		return [this.getTentativePosition(), this.boundingRadius, this.direction.clone().multiplyScalar(this.speed), this.mass, youClip];
+		return this.tentativePos.clone();
 	}
 
 	butterCollision() {
-		this.maxSpeed = 0;
-		this.minSpeed = 0;
+		this.stuck = true;
+		this.resetSpeedAndAccel();
+	}
+
+	speedUpdate(delta_time) {
+		this.speed.copy(this.tentativeSpeed);
+		this.simpleInputInterpret();
+		var preFriction = this.speed.add(this.acceleration.clone().multiplyScalar(delta_time));
+		var postFriction = this.speed.add(this.getFriction().multiplyScalar(delta_time));
+		if(preFriction.dot(postFriction) <= 0 ||
+		(postFriction.length() <= this.speedStopThreshold)&&this.acceleration.length() == 0) {
+			this.speed.set(0,0,0);
+		}
+		this.simpleRotationUpdate(delta_time);
+		this.tentativeSpeed.copy(this.speed);
 	}
 
 	reset() {
-		this.setPosition(0,5,150);
-		this.setRotation(0,Math.PI,0);
-		this.speed = 0;
-		this.acceleration = 0;
-		this.direction.x = 1;
-		this.direction.y = 0;
-		this.direction.z = 0;
-		this.maxSpeed = 250;
-		this.minSpeed = -100;
-
-	}
-	//temp for WIP
-	getSpeed() {
-		return this.direction.clone().multiplyScalar(this.speed);
-	}
-
-	getBoundingRadius() {
-		return this.boundingRadius;
-	}
-
-	getBoundingCenter() {
-		return this.getTentativePosition();
-	}
-
-	getMass() {
-		return this.mass;
-	}
-}
-
-class axleAndWheel {
-	constructor(PosX, PosY, PosZ, scale) {
-		this.wheels = new THREE.Object3D();
-		var geometry = new THREE.CylinderGeometry( scale*0.1, scale*0.1, scale*2.8, 10);
-		var material = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe: false} );
-		var cylinder = new THREE.Mesh( geometry, material );
-
-		this.setRotation(Math.PI*(1/2), 0, 0);
-		this.setPosition(PosX, PosY, PosZ);
-		this.wheels.add(cylinder);
-		this.leftWheel = new Wheel(0, 1.4*scale, 0, scale);
-		this.rightWheel = new Wheel(0, -1.4*scale, 0, scale);
-		this.wheels.add(this.leftWheel.getObject());
-		this.wheels.add(this.rightWheel.getObject());
-	}
-
-	turnWheels(angle) {
-		this.direction = new THREE.Vector3(0,0,1);
-		if(this.previousAngle != angle)  {
-			this.leftWheel.setRotation(0,0,0);
-			this.rightWheel.setRotation(0,0,0);
-			this.leftWheel.getObject().rotateOnAxis(this.direction, -angle);
-			this.rightWheel.getObject().rotateOnAxis(this.direction, -angle);
-			this.previousAngle = angle
-		}
-
-	}
-	rotateWheels(angle) {
-		this.leftWheel.getObject().rotateOnAxis(this.leftWheel.getObject().up, -angle);
-		this.rightWheel.getObject().rotateOnAxis(this.rightWheel.getObject().up,  -angle);
-	}
-
-	setPosition(PosX, PosY, PosZ) {
-		this.wheels.position.set(PosX, PosY, PosZ)
-	}
-
-	setRotation(RotX, RotY, RotZ) {
-		this.wheels.rotation.set(RotX, RotY, RotZ);
-	}
-
-	getObject() {
-		return this.wheels;
-	}
-}
-
-class Wheel {
-	constructor(PosX, PosY, PosZ, scale) {
-		this.wheel = new THREE.Object3D();
-		this.radius = scale*.4
-		var geometry = new THREE.TorusGeometry( scale*.4, scale * .15, 8, 20 );
-		var material = new THREE.MeshBasicMaterial( { color: 0xffff00 , wireframe:false } );
-		var torus = new THREE.Mesh( geometry, material );
-		torus.rotation.set(Math.PI*(1/2), 0, 0);
-		this.wheel.add(torus);
-
-		var hub = new WheelHub(0, 0, 0, scale);
-		hub.setRotation(0, Math.PI*(1/2), 0);
-		this.wheel.add(hub.getObject());
-
-		this.setPosition(PosX, PosY, PosZ);
-	}
-
-	setPosition(PosX, PosY, PosZ) {
-		this.wheel.position.set(PosX, PosY, PosZ)
-	}
-
-	setRotation(RotX, RotY, RotZ) {
-		this.wheel.rotation.set(RotX, RotY, RotZ);
-	}
-
-	getObject() {
-		return this.wheel;
-	}
-}
-
-class WheelHub {
-	constructor(PosX, PosY, PosZ, scale) {
-		this.wheelHub = new THREE.Object3D();
-
-		var geometry = new THREE.SphereGeometry( scale*0.1, 8, 8 );
-		var material = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe:false} );
-		var sphere = new THREE.Mesh( geometry, material );
-
-		this.setRotation(Math.PI*(1/2), 0, 0);
-		this.setPosition(PosX, PosY, PosZ);
-		this.wheelHub.add(sphere);
-
-		var geometry = new THREE.CylinderGeometry( scale*0.02, scale*0.02, scale*0.2, 3);
-		var material = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe: false} );
-
-		var hubPlate = new ringOfMeshes(geometry, material, 10, scale*0.2, 0, 0, 0, true);
-		hubPlate.getObject().rotation.x = Math.PI/2;
-		this.wheelHub.add(hubPlate.getObject());
-	}
-
-	setPosition(PosX, PosY, PosZ) {
-		this.wheelHub.position.set(PosX, PosY, PosZ)
-	}
-
-	setRotation(RotX, RotY, RotZ) {
-		this.wheelHub.rotation.set(RotX, RotY, RotZ);
-	}
-
-	getObject() {
-		return this.wheelHub;
-	}
-}
-
-class Dome {
-	constructor(PosX, PosY, PosZ, scale) {
-		this.Dome = new THREE.Object3D();
-
-		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.6, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
-		//var geometry = new THREE.SphereGeometry( scale, 4, 4, 0, 6.3, 0, 1.6);
-		var material = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false, opacity:0.6, transparent:true} );
-		var cyl1 = new THREE.Mesh( geometry, material );
-		cyl1.position.set(0, 0, scale*0.75);
-
-
-
-		geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.7+0.1, 3, 1, true, Math.PI/2+0.5, Math.PI-1.5);
-		//var geometry = new THREE.SphereGeometry( scale, 4, 4, 0, 6.3, 0, 1.6);
-		material = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe:false} );
-		material.side = THREE.DoubleSide;
-		var cyl2 = new THREE.Mesh( geometry, material );
-
-		this.setRotation(Math.PI/2, 0, 0);
-		this.setPosition(PosX, PosY, PosZ);
-		this.Dome.add(cyl1);
-		//this.Dome.add(cyl2);
-	}
-
-	setPosition(PosX, PosY, PosZ) {
-		this.Dome.position.set(PosX, PosY, PosZ)
-	}
-
-	setRotation(RotX, RotY, RotZ) {
-		this.Dome.rotation.set(RotX, RotY, RotZ);
-	}
-
-	getObject() {
-		return this.Dome;
+		this.setPosition(this.initialPosition.x, this.initialPosition.y, this.initialPosition.z);
+		this.setRotation(this.initialRotation.x, this.initialRotation.y, this.initialRotation.z);//this.setRotation(0,Math.PI,0);
+		this.resetSpeedAndAccel();
+		this.stuck = false;
+		//this.propagateReset();
 	}
 }

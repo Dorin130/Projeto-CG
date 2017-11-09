@@ -20,7 +20,7 @@ var playerCar;
 var orangeList = [];
 var butterList = [];
 var cheerioList = [];
-var wipCheeriosList = [];
+var CheeriosList = [];
 
 var clock = new THREE.Clock();
 
@@ -258,7 +258,7 @@ function createScene() {
   	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
 
 
-  	playerCar = new wipcar(0,5,150,5);
+  	playerCar = new car(0,5,150,5);
   	playerCar.setInitialRotation(0, Math.PI, 0);
   	scene.add(playerCar);
 	updateList.push(pathRandomizer);	
@@ -294,33 +294,33 @@ function createScene() {
 }
 
 function make_cheerios_example() {
-	var cheerio1 = new wipcheerio(new THREE.Vector3(60,2,0), 5, 3, 14, 14, 10);
+	var cheerio1 = new cheerio(new THREE.Vector3(60,2,0), 5, 3, 14, 14, 10);
 	scene.add(cheerio1);
 	cheerioList.push(cheerio1);
 	updateList.push(cheerio1);
 	
-	var cheerio2 = new wipcheerio(new THREE.Vector3(30,2,0), 5, 3, 14, 14, 10);
+	var cheerio2 = new cheerio(new THREE.Vector3(30,2,0), 5, 3, 14, 14, 10);
 	scene.add(cheerio2);
 	cheerioList.push(cheerio2);
 	updateList.push(cheerio2);
 	/*
-	var cheerio3 = new wipcheerio(new THREE.Vector3(0,2,0), 5, 3, 14, 14, 10);
+	var cheerio3 = new cheerio(new THREE.Vector3(0,2,0), 5, 3, 14, 14, 10);
 	scene.add(cheerio3);
 	cheerioList.push(cheerio3);
 	updateList.push(cheerio3);
 	
-	var wipWheel = new wheel(0, 2, 0, 5);
-	scene.add(wipWheel);
+	var Wheel = new wheel(0, 2, 0, 5);
+	scene.add(Wheel);
 
-	var wipDome = new dome(0, 10, 0, 5);
-	scene.add(wipDome);
+	var Dome = new dome(0, 10, 0, 5);
+	scene.add(Dome);
 	
-	var axleAndWheel = new wipaxleAndWheel(0, 10, 0, 5);
+	var axleAndWheel = new axleAndWheel(0, 10, 0, 5);
 	axleAndWheel.setRotation(0,0,0);
 	scene.add(axleAndWheel);
 
 	gl1 = axleAndWheel;
 	*/
-	//var car = new wipcar(0, 5, 0, 5);
+	//var car = new car(0, 5, 0, 5);
 	//scene.add(car);
 }

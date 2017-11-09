@@ -60,7 +60,7 @@ function fillPos(posList) {
 	cheerioList = [];
 	for(var i=0; i<length; i++) {
 		var pos = posList.pop();
-		var newCheerio = new wipcheerio(pos, TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
+		var newCheerio = new cheerio(pos, TorusRadiusDEFAULT, TorusTubeRadiusDEFAULT, RadialSegmentsDEFAULT, TubularSegmentsDEFAULT, MassDEFAULT);
 		cheerioList.push(newCheerio);
 		scene.add(newCheerio);
 	}
