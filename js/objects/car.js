@@ -16,14 +16,12 @@ class rims extends baseObject {
 	constructor(PosX, PosY, PosZ, number, radius, scale) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 		var cylgeometry = new THREE.CylinderGeometry( scale*0.02, scale*0.02, scale*0.2, 3);
-		if ( typeof rims.mat1 == 'undefined' || typeof rims.mat2 == 'undefined' ) { //static values
-			rims.mat1 = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe: false} );
-			rims.mat2 = new THREE.MeshBasicMaterial( {color: 0xc0c0c0, wireframe: false} );
-		}
+		this.matPhong = CAR_RIMS_MATERIAL[0];
+		this.matGouroud = CAR_RIMS_MATERIAL[1];
 		var theta = 0;
 		var interval = 2*Math.PI/number;
 		for(var i=0; i < number; i++) {
-			var newMesh = new THREE.Mesh( cylgeometry, rims.mat1 )
+			var newMesh = new THREE.Mesh( cylgeometry, this.matGouroud );
 			newMesh.position.set(radius*Math.cos(theta), radius*Math.sin(theta), 0);
 			newMesh.rotation.z = theta-(1/2)*Math.PI;
 			theta += interval;
@@ -32,17 +30,11 @@ class rims extends baseObject {
 	}
 
 	toggleMesh() {
-		for(var i=0; i<this.children.length; i++) {
-			this.children[i].mesh.material = 
-			(this.children[i].mesh.material == rims.mat1)? rims.mat2 : rims.mat1;
+		for (var i = this.children.length - 1; i >= 0; i--) {
+			if (this.children[i] instanceof THREE.Mesh)
+				this.children[i].material = (this.children[i].material == this.matPhong)? this.matGouroud : this.matPhong;
 		}
 	}
-
-	setWireframe(activated) {
-		rims.mat1.wireframe = activated;
-		rims.mat2.wireframe = activated;
-	}
-
 }
 
 
@@ -51,26 +43,13 @@ class wheelHub extends baseObject {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		var geometry = new THREE.SphereGeometry( scale*0.1, 8, 8 );
-		if ( typeof wheelHub.mat1 == 'undefined' || typeof wheelHub.mat2 == 'undefined' ) { //static values
-			wheelHub.mat1 = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe:false} );
-			wheelHub.mat2 = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe:false} );
-		}
-		this.sphere = new THREE.Mesh( geometry, wheelHub.mat1 );
+		this.matPhong = CAR_HUB_MATERIAL[0];
+		this.matGouroud = CAR_HUB_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud);
 		this.hubRims = new rims(0, 0, 0, 10, scale*0.2, scale);
 
-		this.add(this.sphere);
+		this.add(this.mesh);
 		this.add(this.hubRims);
-	}
-
-	toggleMesh() {
-		this.sphere.material = (this.sphere.material == wheelHub.mat1)? wheelHub.mat2 : wheelHub.mat1;
-		this.hubRims.toggleMesh();
-	}
-
-	setWireframe(activated) {
-		wheelHub.mat1.wireframe = activated;
-		wheelHub.mat2.wireframe = activated;
-		this.hubRims.setWireframe(activated);
 	}
 }
 
@@ -80,16 +59,14 @@ class wheel extends baseObject {
 
 		this.radius = scale*.4
 		var geometry = new THREE.TorusGeometry( scale*.4, scale * .15, 8, 20 );
-		if ( typeof wheel.mat1 == 'undefined' || typeof wheel.mat2 == 'undefined' ) { //static values
-			wheel.mat1 = new THREE.MeshBasicMaterial( { color: 0xffff00 , wireframe:false } );
-			wheel.mat2 = new THREE.MeshBasicMaterial( { color: 0xffff00 , wireframe:false } );
-		}
-		this.torus = new THREE.Mesh( geometry, wheel.mat1 );
+		this.matPhong = CAR_WHEEL_MATERIAL[0];
+		this.matGouroud = CAR_WHEEL_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.hub = new wheelHub(0, 0, 0, scale);
-		this.torus.rotation.set(Math.PI/2,0,0);
+		this.mesh.rotation.set(Math.PI/2,0,0);
 		this.hub.setRotation(Math.PI/2,0,0);
 		this.wheelJoint = new THREE.Object3D();
-		this.wheelJoint.add(this.torus);
+		this.wheelJoint.add(this.mesh);
 		this.wheelJoint.add(this.hub);
 		this.add(this.wheelJoint);
 	}
@@ -99,16 +76,6 @@ class wheel extends baseObject {
 		this.wheelJoint.rotateOnAxis(this.up, angle);
 	}
 
-	toggleMesh() {
-		this.wheelJoint.torus.material = (this.torus.material == wheel.mat1)? wheel.mat2 : wheel.mat1;
-		this.wheelJoint.hub.toggleMesh();
-	}
-
-	setWireframe(activated) {
-		wheel.mat1.wireframe = activated;
-		wheel.mat2.wireframe = activated;
-		this.wheelJoint.hub.setWireframe(activated);
-	}
 }
 
 
@@ -117,15 +84,13 @@ class axleAndWheel extends baseObject {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		var geometry = new THREE.CylinderGeometry( scale*0.1, scale*0.1, scale*2.8, 10);
-		if ( typeof axleAndWheel.mat1 == 'undefined' || typeof axleAndWheel.mat2 == 'undefined' ) { //static values
-			axleAndWheel.mat1 = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe: false} );
-			axleAndWheel.mat2 = new THREE.MeshBasicMaterial( {color: 0x808080, wireframe: false} );
-		}
-		this.axle = new THREE.Mesh( geometry, axleAndWheel.mat1 );
+		this.matPhong = CAR_HUB_MATERIAL[0];
+		this.matGouroud = CAR_HUB_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.leftWheel = new wheel(0, 1.4*scale, 0, scale);
 		this.rightWheel = new wheel(0, -1.4*scale, 0, scale);
 
-		this.add(this.axle);
+		this.add(this.mesh);
 		this.add(this.leftWheel);
 		this.add(this.rightWheel);
 	}
@@ -161,11 +126,9 @@ class car extends physicalObject {
 
 		//Creation
 		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*2);
-		if ( typeof car.mat1 == 'undefined' || typeof car.mat2 == 'undefined' ) { //static values
-			car.mat1 = new THREE.MeshBasicMaterial( {color: 0xaa0000, wireframe:false} );
-			car.mat2 = new THREE.MeshBasicMaterial( {color: 0xaa0000, wireframe:false} );
-		}
-		this.chassis = new THREE.Mesh( geometry, car.mat1 );
+		this.matPhong = CAR_BODY_MATERIAL[0];
+		this.matGouroud = CAR_BODY_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.rearAxis = new axleAndWheel(scale*1.5, -scale*0.3, 0, scale);
 		this.frontAxis = new axleAndWheel(-scale*1.5, -scale*0.3, 0, scale);
 		this.rearAxis.setInitialRotation(Math.PI/2, Math.PI/2, 0);
@@ -173,7 +136,7 @@ class car extends physicalObject {
 
 		this.dome = new dome(scale*.5, -scale*.3, scale*0, scale);
 
-		this.add(this.chassis);
+		this.add(this.mesh);
 		this.add(this.dome);
 		this.add(this.rearAxis);
 		this.add(this.frontAxis);
