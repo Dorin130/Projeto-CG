@@ -1,6 +1,7 @@
 class globalLight extends baseObject {
 	constructor(position, intensity, color) {
 			super(position);
+			this.globalToggle = true;
 			this.color = color || 0xffffff;
 			this.intensity = intensity || 1;
 			this.directionalLight = new THREE.DirectionalLight( this.color, this.intensity );
@@ -10,12 +11,19 @@ class globalLight extends baseObject {
 
 	input(action) {
 		if(action == "dayNightToggle") {
-			if( this.directionalLight.intensity == 0 && this.intensity != 0){
-				this.directionalLight.intensity = this.intensity;
+			this.directionalLight.visible = !this.directionalLight.visible;
+		}
+		if(action == "toggleLight" ) {
+			if(this.globalToggle) {
+				this.directionalLight.visible = false;
+				this.globalToggle = false;
 			}
 			else {
-				this.directionalLight.intensity = 0;
+				this.directionalLight.visible = true;
+				this.globalToggle = true;
 			}
+			
+
 		}
 	}
 }

@@ -122,7 +122,12 @@ function onKeyDown(e) {
 			action = "dayNightToggle";
 			e.preventDefault();
 			break;
+		case 76: //"N"
+			action = "toggleLight";
+			e.preventDefault();
+			break;
 		default:
+
 	}
 	for(var i = 0; i<inputList.length && action != ""; i++) { /* notifies each individual object that 'asks' to be notified */
 		if(inputList[i].input != undefined) { inputList[i].input(action); }

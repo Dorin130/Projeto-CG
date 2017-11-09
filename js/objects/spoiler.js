@@ -59,8 +59,8 @@ class spoiler extends baseObject {
 		this.matGouroud.side = THREE.DoubleSide;
 
 		var geometry = new THREE.Geometry();
-	
-		var B = scale;
+		
+		var B = scale ;
 		var b = scale*0.7;
 		var h = scale*0.5; 
 		var h2 = scale*0.8;

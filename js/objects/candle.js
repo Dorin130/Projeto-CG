@@ -3,7 +3,6 @@ class candleStick extends baseObject {
 		super(new THREE.Vector3(0,0,0));
 		this.matPhong = CANDLE_MATERIAL[0];
 		this.matGouroud = CANDLE_MATERIAL[1];
-
     	var candle1 = new THREE.CylinderGeometry( scale*0.6, scale*0.8, scale*5, radiusSegments);
     	var mesh = new THREE.Mesh(candle1, this.matGouroud);
     	position.y += (scale*5)/2;
@@ -26,7 +25,7 @@ class candle extends baseObject {
 		this.intensity = intensity;
 		this.matPhong = CANDLE_BASE_MATERIAL[0];
 		this.matGouroud = CANDLE_BASE_MATERIAL[1];
-		
+		this.globalToggle = true;
 
 		var base1 = new THREE.CylinderGeometry( scale*1.10, scale*1.34, scale*0.36, radiusSegments );
     	var mesh = new THREE.Mesh(base1, this.matGouroud);
@@ -72,12 +71,20 @@ class candle extends baseObject {
 
 	input(action) {
 		if(action == "lightsToggle") {
-			if( this.light.intensity == 0 && this.intensity != 0){
-				this.light.power = this.intensity * Math.PI * 4;
+			this.light.visible = !this.light.visible;
+		}
+		console.log("he")
+		if(action == "toggleLight" ) {
+			if(this.globalToggle) {
+				this.light.visible = false;
+				this.globalToggle = false;
 			}
 			else {
-				this.light.power = 0;
+				this.light.visible = true;
+				this.globalToggle = true;
 			}
+			
+
 		}
 	}
 }
