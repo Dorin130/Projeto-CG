@@ -3,23 +3,12 @@ class dome extends baseObject {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.6, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
-		if ( typeof dome.mat1 == 'undefined' || typeof dome.mat2 == 'undefined' ) { //static values
-			dome.mat1 = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false, opacity:0.6, transparent:true} );
-			dome.mat2 = new THREE.MeshBasicMaterial( {color: 0x00aaff, wireframe:false, opacity:0.6, transparent:true} );
-		}
-		this.cyl = new THREE.Mesh( geometry, dome.mat1 );
-		this.cyl.rotation.set(Math.PI/2, 0, 0);
+		this.matPhong = CAR_DOME_MATERIAL[0];
+		this.matGouroud = CAR_DOME_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
+		this.mesh.rotation.set(Math.PI/2, 0, 0);
 		//this.cyl.position.set(0, 0, scale*0.75);
-		this.add(this.cyl);
-	}
-
-	toggleMesh() {
-		this.cyl.material = (this.cyl.material == dome.mat1)? dome.mat2 : dome.mat1;
-	}
-
-	setWireframe(activated) {
-		dome.mat1.wireframe = activated;
-		dome.mat2.wireframe = activated;
+		this.add(this.mesh);
 	}
 }
 

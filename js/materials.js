@@ -14,3 +14,5 @@ var CHEERIO_MATERIALS = [[ new THREE.MeshPhongMaterial({color: 0x8B5555,specular
 						 [ new THREE.MeshPhongMaterial({color: 0xDB5742,specular: 0x020202,shininess: 20}), new THREE.MeshLambertMaterial({color: 0xDB5742}) ],
 						 [ new THREE.MeshPhongMaterial({color: 0xE45640,specular: 0x020202,shininess: 20}), new THREE.MeshLambertMaterial({color: 0xE45640}) ]];
 
+var CAR_DOME_MATERIAL = [new THREE.MeshPhongMaterial({color: 0x00aaff,specular: 0x020202,shininess: 200}), new THREE.MeshLambertMaterial( {color: 0x00aaff})];
+
