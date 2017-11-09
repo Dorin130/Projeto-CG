@@ -58,8 +58,10 @@ class baseObject extends THREE.Object3D {
 	}
 
 	toggleMesh() {
-		this.mesh.material = (this.mesh.material == this.matPhong)? this.matGouroud : this.matPhong;
-		//this.propagateToggleMesh();
+		for (var i = this.children.length - 1; i >= 0; i--) {
+			if (this.children[i] instanceof THREE.Mesh)
+				this.children[i].material = (this.children[i].material == this.matPhong)? this.matGouroud : this.matPhong;
+		}
 	}
 
 
