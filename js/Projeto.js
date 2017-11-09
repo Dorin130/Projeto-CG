@@ -114,7 +114,7 @@ function onKeyDown(e) {
 			toggleShading();
 			e.preventDefault();
 			break;
-		case 76: //"L"
+		case 67: //"C"
 			action = "lightsToggle";
 			e.preventDefault();
 			break;

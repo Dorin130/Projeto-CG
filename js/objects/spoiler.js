@@ -129,11 +129,9 @@ class spoiler extends baseObject {
 		geometry.computeVertexNormals();
 		
 		var spoiler = new THREE.Mesh( geometry, this.matPhong );
-		var object = new THREE.Object3D();
 		spoiler.position.set(0,0,-h3/2);
-		object.add(spoiler);
-		object.add(cubeUp);
-		this.add(object);
+		this.add(spoiler);
+		this.add(cubeUp);
 	}
 
 }
