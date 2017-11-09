@@ -28,13 +28,6 @@ class rims extends baseObject {
 			this.add( newMesh );
 		}
 	}
-
-	toggleMesh() {
-		for (var i = this.children.length - 1; i >= 0; i--) {
-			if (this.children[i] instanceof THREE.Mesh)
-				this.children[i].material = (this.children[i].material == this.matPhong)? this.matGouroud : this.matPhong;
-		}
-	}
 }
 
 
