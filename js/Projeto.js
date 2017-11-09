@@ -268,7 +268,7 @@ function createScene() {
 
 	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList);
 
-	//make_cheerios_example();
+	make_cheerios_example();
 
 
 	var globallight = new globalLight(new THREE.Vector3(0,50,0), 1.5);
@@ -294,6 +294,7 @@ function createScene() {
 }
 
 function make_cheerios_example() {
+	/*
 	var cheerio1 = new cheerio(new THREE.Vector3(60,2,0), 5, 3, 14, 14, 10);
 	scene.add(cheerio1);
 	cheerioList.push(cheerio1);
@@ -303,7 +304,7 @@ function make_cheerios_example() {
 	scene.add(cheerio2);
 	cheerioList.push(cheerio2);
 	updateList.push(cheerio2);
-	/*
+	
 	var cheerio3 = new cheerio(new THREE.Vector3(0,2,0), 5, 3, 14, 14, 10);
 	scene.add(cheerio3);
 	cheerioList.push(cheerio3);
@@ -318,9 +319,8 @@ function make_cheerios_example() {
 	var axleAndWheel = new axleAndWheel(0, 10, 0, 5);
 	axleAndWheel.setRotation(0,0,0);
 	scene.add(axleAndWheel);
-
-	gl1 = axleAndWheel;
 	*/
-	//var car = new car(0, 5, 0, 5);
-	//scene.add(car);
+	
+	var chass = new chassis(50, 10, -50, 10);
+	scene.add(chass);
 }

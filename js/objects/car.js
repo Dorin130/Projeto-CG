@@ -273,3 +273,41 @@ class car extends physicalObject {
 		//this.propagateReset();
 	}
 }
+
+class chassis extends baseObject {
+	constructor(PosX, PosY, PosZ, scale) {
+		super(new THREE.Vector3(PosX, PosY, PosZ));
+
+		var geometry = new THREE.Geometry();
+
+		//vertices
+		var front = [[0, 0.5, 1], [0, 0.5, 2.5], [1.5, 0.75, 0], [1.5, 1, 0.5], [1.5, 1, 3], [1.5, 0.75, 3.5]];
+		var back = [[4, 0.75, 0], [4, 1, 0.5], [4, 1, 3], [4, 0.75, 3.5], [5, 0.5, 0.5], [5, 0.5, 3]];
+		var allV = front.concat(back);
+
+		for(var i=0; i<allV.length; i++) {
+			var vertex = new THREE.Vector3(allV[i][0], allV[i][1], allV[i][2]);
+			vertex.multiplyScalar(scale);
+			geometry.vertices.push(vertex);
+		}
+
+		var allF = [[0,3,2],[0,1,3],[1,4,3],[1,5,4],[2,3,6],[3,7,6],
+		[3,4,7],[4,8,7],[4,5,8],[5,9,8],[6,7,10],[7,8,10],[8,11,10],[8,9,11]];
+
+
+		for(var i=0; i<allF.length; i++) {
+			var face = new THREE.Face3(allF[i][0], allF[i][1], allF[i][2]);
+			geometry.faces.push(face);
+		}
+
+		//the face normals and vertex normals can be calculated automatically if not supplied above
+		geometry.computeFaceNormals();
+		geometry.computeVertexNormals();
+
+		this.matPhong = CAR_BODY_MATERIAL[0];
+		this.matGouroud = CAR_BODY_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
+		//this.cyl.position.set(0, 0, scale*0.75);
+		this.add(this.mesh);
+	}
+}
