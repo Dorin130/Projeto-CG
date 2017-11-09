@@ -145,8 +145,8 @@ function init() {
 
 	var cam3 = new customCamera(createPerspectiveCamera(0, 0, 0, globalAspectRatio), scene.position);
 	cam3.focusOn(playerCar);
-	cam3.follow(playerCar, false);
-	cam3.setTransform(50, 0, Math.PI/8, Math.PI/3, 0);
+	cam3.follow(playerCar, true);
+	cam3.setTransform(50, 0, 0, Math.PI/3, 0);
 	cam3.manualControl();
 
  	customCamManager = new cameraManager(cam1, "1");
@@ -257,6 +257,7 @@ function createScene() {
   	orangeList = pathRandomizer.createOranges(5, 15, 10);
   	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
 
+  	expoCars();
 
   	playerCar = new car(0,5,150,5);
   	playerCar.setInitialRotation(0, Math.PI, 0);
@@ -268,7 +269,7 @@ function createScene() {
 
 	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList);
 
-	make_cheerios_example();
+	//make_cheerios_example();
 
 
 	var globallight = new globalLight(new THREE.Vector3(0,50,0), 1);
@@ -333,4 +334,22 @@ function make_cheerios_example() {
 	
 	var chass = new chassis(50, 10, -50, 10);
 	scene.add(chass);
+}
+
+function expoCars() {
+	var expoCar0 = new car(12,5,-46,5);
+	var expoCar1 = new car(25,5,-25,5);
+	var expoCar2 = new car(30,5,0,5);
+	var expoCar3 = new car(25,5, 25,5);
+	var expoCar4 = new car(12,5, 46,5);
+  	expoCar0.setInitialRotation(0, Math.PI/4, 0);
+  	expoCar1.setInitialRotation(0, Math.PI/8, 0);
+  	expoCar3.setInitialRotation(0, -Math.PI/8, 0);
+  	expoCar4.setInitialRotation(0, -Math.PI/4, 0);
+  	scene.add(expoCar0);
+  	scene.add(expoCar1);
+  	scene.add(expoCar2);
+  	scene.add(expoCar3);
+  	scene.add(expoCar4);
+
 }

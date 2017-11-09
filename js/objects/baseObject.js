@@ -66,8 +66,10 @@ class baseObject extends THREE.Object3D {
 
 
 	setWireframe(activated) {
-		this.matPhong.wireframe = activated;
-		this.matGouroud.wireframe = activated;
+		if(this.matPhong)
+			this.matPhong.wireframe = activated;
+		if(this.matGouroud)
+			this.matGouroud.wireframe = activated;
 	}
 
 	propagateToggleMesh() {

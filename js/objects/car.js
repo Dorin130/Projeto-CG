@@ -119,6 +119,8 @@ class car extends physicalObject {
 
 		//Creation
 
+		this.spoiler = new spoiler(scale*1.6, scale*0.3, 0, scale*0.4);
+		this.spoiler.setRotation(0, Math.PI, 0);
 		this.chassis = new chassis(0, -scale*0.5, 0, scale*0.9);
 		this.rearAxis = new axleAndWheel(scale*1.5, -scale*0.3, 0, scale);
 		this.frontAxis = new axleAndWheel(-scale*1.7, -scale*0.3, 0, scale);
@@ -127,6 +129,7 @@ class car extends physicalObject {
 
 		this.dome = new dome(0, -scale*.7, scale*0, scale);
 
+		this.add(this.spoiler);
 		this.add(this.chassis);
 		this.add(this.dome);
 		this.add(this.rearAxis);
