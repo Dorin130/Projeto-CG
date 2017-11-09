@@ -145,8 +145,8 @@ function init() {
 
 	var cam3 = new customCamera(createPerspectiveCamera(0, 0, 0, globalAspectRatio), scene.position);
 	cam3.focusOn(playerCar);
-	cam3.follow(playerCar, true);
-	cam3.setTransform(50, 0, 0, Math.PI/3, 0);
+	cam3.follow(playerCar, false);
+	cam3.setTransform(50, 0, Math.PI/8, Math.PI/3, 0);
 	cam3.manualControl();
 
  	customCamManager = new cameraManager(cam1, "1");

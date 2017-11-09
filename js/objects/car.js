@@ -2,7 +2,7 @@ class dome extends baseObject {
 	constructor(PosX, PosY, PosZ, scale) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
-		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*1.6, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
+		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*2, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
 		this.matPhong = CAR_DOME_MATERIAL[0];
 		this.matGouroud = CAR_DOME_MATERIAL[1];
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
@@ -76,12 +76,12 @@ class axleAndWheel extends baseObject {
 	constructor(PosX, PosY, PosZ, scale) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
-		var geometry = new THREE.CylinderGeometry( scale*0.1, scale*0.1, scale*2.8, 10);
+		var geometry = new THREE.CylinderGeometry( scale*0.1, scale*0.1, scale*3, 10);
 		this.matPhong = CAR_HUB_MATERIAL[0];
 		this.matGouroud = CAR_HUB_MATERIAL[1];
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
-		this.leftWheel = new wheel(0, 1.4*scale, 0, scale);
-		this.rightWheel = new wheel(0, -1.4*scale, 0, scale);
+		this.leftWheel = new wheel(0, 1.5*scale, 0, scale);
+		this.rightWheel = new wheel(0, -1.5*scale, 0, scale);
 
 		this.add(this.mesh);
 		this.add(this.leftWheel);
@@ -118,18 +118,16 @@ class car extends physicalObject {
 		this.backwardsMaxSpeed = 100;
 
 		//Creation
-		var geometry = new THREE.BoxGeometry( scale*4, scale*1, scale*2);
-		this.matPhong = CAR_BODY_MATERIAL[0];
-		this.matGouroud = CAR_BODY_MATERIAL[1];
-		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
+
+		this.chassis = new chassis(0, -scale*0.5, 0, scale*0.9);
 		this.rearAxis = new axleAndWheel(scale*1.5, -scale*0.3, 0, scale);
-		this.frontAxis = new axleAndWheel(-scale*1.5, -scale*0.3, 0, scale);
+		this.frontAxis = new axleAndWheel(-scale*1.7, -scale*0.3, 0, scale);
 		this.rearAxis.setInitialRotation(Math.PI/2, Math.PI/2, 0);
 		this.frontAxis.setInitialRotation(Math.PI/2, Math.PI/2, 0);
 
-		this.dome = new dome(scale*.5, -scale*.3, scale*0, scale);
+		this.dome = new dome(0, -scale*.7, scale*0, scale);
 
-		this.add(this.mesh);
+		this.add(this.chassis);
 		this.add(this.dome);
 		this.add(this.rearAxis);
 		this.add(this.frontAxis);
@@ -274,9 +272,11 @@ class chassis extends baseObject {
 		var geometry = new THREE.Geometry();
 
 		//vertices
-		var front = [[0, 0.5, 1], [0, 0.5, 2.5], [1.5, 0.75, 0], [1.5, 1, 0.5], [1.5, 1, 3], [1.5, 0.75, 3.5]];
-		var back = [[4, 0.75, 0], [4, 1, 0.5], [4, 1, 3], [4, 0.75, 3.5], [5, 0.5, 0.5], [5, 0.5, 3]];
-		var allV = front.concat(back);
+		var front = [[0,0.65,0.5],[0,0.65,3],[1.5,0.75,0],[1.5,1,0.5],[1.5,1,3],[1.5,0.75,3.5]];
+		var back = [[4,0.75,0],[4,1,0.5],[4,1,3],[4,0.75,3.5],[5,0.75,0.5],[5,0.75,3]];
+		var under = [[0,0,3],[1.5,0,3.5],[4,0,3.5],[5,0,3],[0,0,0.5],[1.5,0,0],[4,0,0],[5,0,0.5]];
+		var nose = [[-0.25,0.5,1],[-0.25,0.5,2.5],[-0.25,0,1],[-0.25,0,2.5]];
+		var allV = front.concat(back).concat(under).concat(nose);
 
 		for(var i=0; i<allV.length; i++) {
 			var vertex = new THREE.Vector3(allV[i][0], allV[i][1], allV[i][2]);
@@ -284,9 +284,14 @@ class chassis extends baseObject {
 			geometry.vertices.push(vertex);
 		}
 
-		var allF = [[0,3,2],[0,1,3],[1,4,3],[1,5,4],[2,3,6],[3,7,6],
-		[3,4,7],[4,8,7],[4,5,8],[5,9,8],[6,7,10],[7,8,10],[8,11,10],[8,9,11]];
-
+		var top = [[0,3,2],[0,1,3],[1,4,3],[1,5,4],[2,3,6],[3,7,6],					//front
+		[3,4,7],[4,8,7],[4,5,8],[5,9,8],[6,7,10],[7,8,10],[8,11,10],[8,9,11],		//middle and back
+		[0,20,1],[20,21,1]];														//nose top
+		var sides = [[1,12,5],[12,13,5],[5,13,14],[14,9,5],[14,11,9],[14,15,11],	//left (driver perspective)
+		[0,2,16],[16,2,17],[18,17,2],[18,2,6],[18,6,10],[18,10,19],					//right
+		[21,23,12],[21,12,1],[16,20,0],[16,22,20],									//nose left, right
+		[22,21,20],[22,23,21],[15,10,11],[15,19,10]];								//front and back
+		var allF = top.concat(sides);
 
 		for(var i=0; i<allF.length; i++) {
 			var face = new THREE.Face3(allF[i][0], allF[i][1], allF[i][2]);
@@ -300,7 +305,7 @@ class chassis extends baseObject {
 		this.matPhong = CAR_BODY_MATERIAL[0];
 		this.matGouroud = CAR_BODY_MATERIAL[1];
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
-		//this.cyl.position.set(0, 0, scale*0.75);
+		this.mesh.position.set(-scale*5.5/2, 0, -scale*3.5/2);
 		this.add(this.mesh);
 	}
 }
