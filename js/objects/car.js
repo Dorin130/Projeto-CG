@@ -119,7 +119,7 @@ class car extends physicalObject {
 
 		//Creation
 
-		this.ornament = new ornament(-scale*2.4, scale*0.15, 0, scale*0.05);
+		this.ornament = new ornament(-scale*2.4, scale*0.12, 0, scale*0.05);
 		this.ornament.setRotation(0,0,Math.PI/16);
 		this.spoiler = new spoiler(scale*1.6, scale*0.3, 0, scale*0.7);
 		this.spoiler.setRotation(0, Math.PI, 0);
