@@ -122,7 +122,7 @@ function onKeyDown(e) {
 			action = "dayNightToggle";
 			e.preventDefault();
 			break;
-		case 76: //"N"
+		case 76: //"L"
 			action = "toggleLight";
 			e.preventDefault();
 			break;

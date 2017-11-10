@@ -119,6 +119,8 @@ class car extends physicalObject {
 
 		//Creation
 
+		this.ornament = new ornament(-scale*2.4, scale*0.15, 0, scale*0.05);
+		this.ornament.setRotation(0,0,Math.PI/16);
 		this.spoiler = new spoiler(scale*1.6, scale*0.3, 0, scale*0.7);
 		this.spoiler.setRotation(0, Math.PI, 0);
 		this.chassis = new chassis(0, -scale*0.5, 0, scale*0.9);
@@ -129,6 +131,7 @@ class car extends physicalObject {
 
 		this.dome = new dome(0, -scale*.7, scale*0, scale);
 
+		this.add(this.ornament);
 		this.add(this.spoiler);
 		this.add(this.chassis);
 		this.add(this.dome);
@@ -287,6 +290,7 @@ class chassis extends baseObject {
 			geometry.vertices.push(vertex);
 		}
 
+		//faces
 		var top = [[0,3,2],[0,1,3],[1,4,3],[1,5,4],[2,3,6],[3,7,6],					//front
 		[3,4,7],[4,8,7],[4,5,8],[5,9,8],[6,7,10],[7,8,10],[8,11,10],[8,9,11],		//middle and back
 		[0,20,1],[20,21,1]];														//nose top
@@ -309,6 +313,41 @@ class chassis extends baseObject {
 		this.matGouroud = CAR_BODY_MATERIAL[1];
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.mesh.position.set(-scale*5.5/2, 0, -scale*3.5/2);
+		this.add(this.mesh);
+	}
+}
+
+class ornament extends baseObject {
+	constructor(PosX, PosY, PosZ, scale) {
+		super(new THREE.Vector3(PosX, PosY, PosZ));
+
+		var geometry = new THREE.Geometry();
+
+		//vertices
+		var allV = [[0,0,2.5],[3,0,0],[3,0,2],[3,0,3],[3,0,5],[4,0,2.5],[5,0,1],[5,0,4]];
+
+		for(var i=0; i<allV.length; i++) {
+			var vertex = new THREE.Vector3(allV[i][0], allV[i][1], allV[i][2]);
+			vertex.multiplyScalar(scale);
+			geometry.vertices.push(vertex);
+		}
+
+		//faces
+		var allF = [[0,4,1],[1,2,6],[2,3,5],[3,4,7]];
+
+		for(var i=0; i<allF.length; i++) {
+			var face = new THREE.Face3(allF[i][0], allF[i][1], allF[i][2]);
+			geometry.faces.push(face);
+		}
+
+		//the face normals and vertex normals can be calculated automatically if not supplied above
+		geometry.computeFaceNormals();
+		geometry.computeVertexNormals();
+
+		this.matPhong = CAR_ORNAMENT_MATERIAL[0];
+		this.matGouroud = CAR_ORNAMENT_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
+		this.mesh.position.set(0, 0, -scale*5/2);
 		this.add(this.mesh);
 	}
 }
