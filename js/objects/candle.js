@@ -73,7 +73,6 @@ class candle extends baseObject {
 		if(action == "lightsToggle") {
 			this.light.visible = !this.light.visible;
 		}
-		console.log("he")
 		if(action == "toggleLight" ) {
 			if(this.globalToggle) {
 				this.light.visible = false;

@@ -4,7 +4,8 @@ var texture = new THREE.TextureLoader().load( './textures/towel.png' );
 texture.wrapS = THREE.RepeatWrapping;
 texture.wrapT = THREE.RepeatWrapping;
 texture.repeat.set( 4, 4 );
-var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({map: texture,shininess: 10}), new THREE.MeshLambertMaterial( {map: texture} )];
+//var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({map: texture,shininess: 10}), new THREE.MeshLambertMaterial( {map: texture} )];
+var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({color: 0x8B5555,shininess: 10}), new THREE.MeshLambertMaterial( {color: 0x8B5555} )];
 
 var BUTTER_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xFFFF00,specular: 0x020202,shininess: 50}), new THREE.MeshLambertMaterial( {color: 0xFFFF00})];
 
@@ -26,6 +27,7 @@ var CAR_BODY_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xaa0000,specular: 
 var CAR_SPOILSUP_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xaa0000,specular: 0xaa0000,shininess: 100}), new THREE.MeshLambertMaterial( {color: 0xaa0000})];
 var CAR_SPOILTOP_MATERIAL = [new THREE.MeshPhongMaterial({color: 0x25272b,specular: 0x020202,shininess: 100}), new THREE.MeshLambertMaterial( {color: 0x25272b})];
 var CAR_ORNAMENT_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xaaaaaa,specular: 0x020202,shininess: 800}), new THREE.MeshLambertMaterial( {color: 0xaaaaaa})];
+var CAR_HEADLIGHT_MATERIAL = [new THREE.MeshPhongMaterial({color: 0x25272b,specular: 0x020202,shininess: 1000, transparent:true, opacity:0.4}), new THREE.MeshLambertMaterial( {color: 0x25272b, transparent:true, opacity:0.4})];
 
 var CANDLE_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xaa0000,specular: 0x020202,shininess: 180}), new THREE.MeshLambertMaterial( {color: 0xaa0000})];
 var CANDLE_BASE_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xaaaaaa,specular: 0x020202,shininess: 230}), new THREE.MeshLambertMaterial( {color: 0xaaaaaa})];

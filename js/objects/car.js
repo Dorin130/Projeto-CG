@@ -1,3 +1,28 @@
+class carSpotlight extends baseObject {
+	constructor(PosX, PosY, PosZ, scale) {
+		super(new THREE.Vector3(PosX, PosY, PosZ));
+
+		var geometry = new THREE.SphereGeometry( scale*0.05, 8, 8 );
+		this.matPhong = CAR_HEADLIGHT_MATERIAL[0];
+		this.matGouroud = CAR_HEADLIGHT_MATERIAL[1];
+		this.mesh = new THREE.Mesh( geometry, this.matGouroud);
+		this.add(this.mesh);
+
+		this.spotLight = new THREE.SpotLight( 0xEEE8AA, 2, 100, 0.7, 1, 1 );
+		this.spotLight.position.set(scale*0.05,scale*0.02,0);
+		this.spotLight.target = this.mesh;
+		this.add(this.spotLight);
+	}
+
+	on() {
+		this.spotLight.intensity = 1;
+	}
+
+	off() {
+		this.spotLight.intensity = 0;
+	}
+}
+
 class dome extends baseObject {
 	constructor(PosX, PosY, PosZ, scale) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
@@ -109,8 +134,9 @@ class car extends physicalObject {
 		this.initialDirection = this.direction.clone();
 
 		this.stuck = false;
-		this.keyInputs = []; //up, down, left, right
-		this.keyInputs["up"] = this.keyInputs["down"] = this.keyInputs["left"] = this.keyInputs["right"] = false;
+		this.keyInputs = []; //up, down, left, right, lightsOn
+		this.keyInputs["up"] = this.keyInputs["down"] = this.keyInputs["left"]
+		= this.keyInputs["right"] = this.keyInputs["lightsOn"] = false;
 		this.turnDirection = 0; //positive means left
 		this.turnSpeed = 3;
 
@@ -131,12 +157,18 @@ class car extends physicalObject {
 
 		this.dome = new dome(0, -scale*.7, scale*0, scale);
 
+		this.carSpotLeft = new carSpotlight(-scale*2.65, 0, +0.8*scale, scale);
+		this.carSpotRight = new carSpotlight(-scale*2.65, 0, -0.8*scale, scale);
+
+		this.add(this.carSpotLeft);
 		this.add(this.ornament);
 		this.add(this.spoiler);
 		this.add(this.chassis);
 		this.add(this.dome);
 		this.add(this.rearAxis);
 		this.add(this.frontAxis);
+		this.add(this.carSpotLeft);
+		this.add(this.carSpotRight);
 	}
 
 	setRotation(RotX, RotY, RotZ) {
@@ -188,6 +220,9 @@ class car extends physicalObject {
 			case "rightRelease":
 				this.keyInputs["right"] = false;
 				break;
+			case "carLightsToggle":
+				this.keyInputs["lightsOn"] = !this.keyInputs["lightsOn"];
+				break;
 			default:
 				break;
 		}
@@ -218,6 +253,14 @@ class car extends physicalObject {
 			turn = 0;
 		}
 		this.turnDirection = turn;
+
+		if(this.keyInputs["lightsOn"]) {
+			this.carSpotLeft.on();
+			this.carSpotRight.on();
+		} else {
+			this.carSpotLeft.off();
+			this.carSpotRight.off();
+		}
 	}
 
 	getTurnSpeed() {

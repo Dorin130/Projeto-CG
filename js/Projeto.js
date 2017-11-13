@@ -130,6 +130,10 @@ function onKeyDown(e) {
 			gamePause();
 			e.preventDefault();
 			break;
+		case 72: //"H"
+			action = "carLightsToggle";
+			e.preventDefault();
+			break;
 		default:
 
 	}
@@ -278,7 +282,7 @@ function createScene() {
 
 	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList);
 
-	//make_cheerios_example();
+	make_cheerios_example();
 
 
 	var globallight = new globalLight(new THREE.Vector3(0,50,0), 1);
@@ -341,8 +345,6 @@ function make_cheerios_example() {
 	scene.add(axleAndWheel);
 	*/
 	
-	var chass = new chassis(50, 10, -50, 10);
-	scene.add(chass);
 }
 
 function expoCars() {
