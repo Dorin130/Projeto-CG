@@ -1,6 +1,10 @@
 var WIREFRAME = false;
 
-var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({color: 0x5B1F03,specular: 0x100202,shininess: 10}), new THREE.MeshLambertMaterial( {color: 0x5B1F03})];
+var texture = new THREE.TextureLoader().load( './textures/towel.png' );
+texture.wrapS = THREE.RepeatWrapping;
+texture.wrapT = THREE.RepeatWrapping;
+texture.repeat.set( 4, 4 );
+var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({map: texture,shininess: 10}), new THREE.MeshLambertMaterial( {map: texture} )];
 
 var BUTTER_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xFFFF00,specular: 0x020202,shininess: 50}), new THREE.MeshLambertMaterial( {color: 0xFFFF00})];
 
