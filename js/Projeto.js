@@ -126,6 +126,10 @@ function onKeyDown(e) {
 			action = "toggleLight";
 			e.preventDefault();
 			break;
+		case 83: //"S"
+			gamePause();
+			e.preventDefault();
+			break;
 		default:
 
 	}
@@ -223,7 +227,7 @@ function resetGame() {
 	createScene();
 	resetCameras();
 	pause = false;
-	animate();
+	requestAnimationFrame(animate);
 }
 
 function toggleShading() {
@@ -357,4 +361,19 @@ function expoCars() {
   	scene.add(expoCar3);
   	scene.add(expoCar4);
 
+}
+
+function gamePause() {
+	if(!pause) {
+		pause = true;
+		clock.stop();
+		var elem = document.getElementById("pauseMsg");
+		elem.style.visibility = "visible";
+	} else {
+		pause = false;
+		clock.start();
+		requestAnimationFrame(animate);
+		var elem = document.getElementById("pauseMsg");
+		elem.style.visibility = "hidden";
+	}
 }
