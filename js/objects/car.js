@@ -1,10 +1,16 @@
 class carSpotlight extends baseObject {
-	constructor(PosX, PosY, PosZ, scale) {
+	constructor(PosX, PosY, PosZ, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		var geometry = new THREE.SphereGeometry( scale*0.05, 8, 8 );
-		this.matPhong = CAR_HEADLIGHT_MATERIAL[0];
-		this.matGouroud = CAR_HEADLIGHT_MATERIAL[1];
+		if(!basic) {
+			this.matPhong = CAR_HEADLIGHT_MATERIAL[0];
+			this.matGouroud = CAR_HEADLIGHT_MATERIAL[1];
+		}
+		else {
+			this.matPhong = CAR_HEADLIGHT_MATERIAL[2];
+			this.matGouroud = CAR_HEADLIGHT_MATERIAL[2];
+		}
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud);
 		this.add(this.mesh);
 
@@ -24,12 +30,18 @@ class carSpotlight extends baseObject {
 }
 
 class dome extends baseObject {
-	constructor(PosX, PosY, PosZ, scale) {
+	constructor(PosX, PosY, PosZ, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		var geometry = new THREE.CylinderGeometry(scale*1.5, scale*1.5, scale*2, 16, 1, false, Math.PI/2+0.5, Math.PI-1);
-		this.matPhong = CAR_DOME_MATERIAL[0];
-		this.matGouroud = CAR_DOME_MATERIAL[1];
+		if(!basic) {
+			this.matPhong = CAR_DOME_MATERIAL[0];
+			this.matGouroud = CAR_DOME_MATERIAL[1];
+		}
+		else {
+			this.matPhong = CAR_DOME_MATERIAL[2];
+			this.matGouroud = CAR_DOME_MATERIAL[2];
+		}
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.mesh.rotation.set(Math.PI/2, 0, 0);
 		//this.cyl.position.set(0, 0, scale*0.75);
@@ -38,11 +50,17 @@ class dome extends baseObject {
 }
 
 class rims extends baseObject {
-	constructor(PosX, PosY, PosZ, number, radius, scale) {
+	constructor(PosX, PosY, PosZ, number, radius, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 		var cylgeometry = new THREE.CylinderGeometry( scale*0.02, scale*0.02, scale*0.2, 3);
-		this.matPhong = CAR_RIMS_MATERIAL[0];
-		this.matGouroud = CAR_RIMS_MATERIAL[1];
+		if(!basic) {
+			this.matPhong = CAR_RIMS_MATERIAL[0];
+			this.matGouroud = CAR_RIMS_MATERIAL[1];
+		}
+		else {
+			this.matPhong = CAR_RIMS_MATERIAL[2];
+			this.matGouroud = CAR_RIMS_MATERIAL[2];
+		}
 		var theta = 0;
 		var interval = 2*Math.PI/number;
 		for(var i=0; i < number; i++) {
@@ -57,12 +75,18 @@ class rims extends baseObject {
 
 
 class wheelHub extends baseObject {
-	constructor(PosX, PosY, PosZ, scale) {
+	constructor(PosX, PosY, PosZ, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		var geometry = new THREE.SphereGeometry( scale*0.1, 8, 8 );
-		this.matPhong = CAR_HUB_MATERIAL[0];
-		this.matGouroud = CAR_HUB_MATERIAL[1];
+		if(!basic) {
+			this.matPhong = CAR_HUB_MATERIAL[0];
+			this.matGouroud = CAR_HUB_MATERIAL[1];
+		}
+		else {
+			this.matPhong = CAR_HUB_MATERIAL[2];
+			this.matGouroud = CAR_HUB_MATERIAL[2];
+		}
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud);
 		this.hubRims = new rims(0, 0, 0, 10, scale*0.2, scale);
 
@@ -72,13 +96,20 @@ class wheelHub extends baseObject {
 }
 
 class wheel extends baseObject {
-	constructor(PosX, PosY, PosZ, scale) {
+	constructor(PosX, PosY, PosZ, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		this.radius = scale*.4
 		var geometry = new THREE.TorusGeometry( scale*.4, scale * .15, 8, 20 );
-		this.matPhong = CAR_WHEEL_MATERIAL[0];
-		this.matGouroud = CAR_WHEEL_MATERIAL[1];
+		if(!basic) {
+			this.matPhong = CAR_WHEEL_MATERIAL[0];
+			this.matGouroud = CAR_WHEEL_MATERIAL[1];
+		}
+		else {
+			this.matPhong = CAR_WHEEL_MATERIAL[2];
+			this.matGouroud = CAR_WHEEL_MATERIAL[2];
+		}
+		
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.hub = new wheelHub(0, 0, 0, scale);
 		this.mesh.rotation.set(Math.PI/2,0,0);
@@ -98,12 +129,19 @@ class wheel extends baseObject {
 
 
 class axleAndWheel extends baseObject {
-	constructor(PosX, PosY, PosZ, scale) {
+	constructor(PosX, PosY, PosZ, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		var geometry = new THREE.CylinderGeometry( scale*0.1, scale*0.1, scale*3, 10);
-		this.matPhong = CAR_HUB_MATERIAL[0];
-		this.matGouroud = CAR_HUB_MATERIAL[1];
+		if ( !basic ) {
+			this.matPhong = CAR_HUB_MATERIAL[0];
+			this.matGouroud = CAR_HUB_MATERIAL[1];
+		}
+		else {
+			this.matPhong = CAR_HUB_MATERIAL[2];
+			this.matGouroud = CAR_HUB_MATERIAL[2];
+		}
+		
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.leftWheel = new wheel(0, 1.5*scale, 0, scale);
 		this.rightWheel = new wheel(0, -1.5*scale, 0, scale);
@@ -126,8 +164,9 @@ class axleAndWheel extends baseObject {
 
 
 class car extends physicalObject {
-	constructor(PosX, PosY, PosZ, scale) {
+	constructor(PosX, PosY, PosZ, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ), 3*scale, 5, 20, 100);
+		this.basic = basic || false;
 		this.setBoundingOffset(new THREE.Vector3(0,-3,0));
 		//Movement Defaults (Simple version)
 		this.direction = new THREE.Vector3(-1,0,0);
@@ -145,13 +184,13 @@ class car extends physicalObject {
 
 		//Creation
 
-		this.ornament = new ornament(-scale*2.4, scale*0.12, 0, scale*0.05);
+		this.ornament = new ornament(-scale*2.4, scale*0.12, 0, scale*0.05, this.basic);
 		this.ornament.setRotation(0,0,Math.PI/16);
-		this.spoiler = new spoiler(scale*1.6, scale*0.3, 0, scale*0.7);
+		this.spoiler = new spoiler(scale*1.6, scale*0.3, 0, scale*0.7, this.basic);
 		this.spoiler.setRotation(0, Math.PI, 0);
-		this.chassis = new chassis(0, -scale*0.5, 0, scale*0.9);
-		this.rearAxis = new axleAndWheel(scale*1.5, -scale*0.3, 0, scale);
-		this.frontAxis = new axleAndWheel(-scale*1.7, -scale*0.3, 0, scale);
+		this.chassis = new chassis(0, -scale*0.5, 0, scale*0.9, this.basic);
+		this.rearAxis = new axleAndWheel(scale*1.5, -scale*0.3, 0, scale, this.basic);
+		this.frontAxis = new axleAndWheel(-scale*1.7, -scale*0.3, 0, scale, this.basic);
 		this.rearAxis.setInitialRotation(Math.PI/2, Math.PI/2, 0);
 		this.frontAxis.setInitialRotation(Math.PI/2, Math.PI/2, 0);
 
@@ -315,7 +354,7 @@ class car extends physicalObject {
 }
 
 class chassis extends baseObject {
-	constructor(PosX, PosY, PosZ, scale) {
+	constructor(PosX, PosY, PosZ, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		var geometry = new THREE.Geometry();
@@ -351,9 +390,15 @@ class chassis extends baseObject {
 		//the face normals and vertex normals can be calculated automatically if not supplied above
 		geometry.computeFaceNormals();
 		geometry.computeVertexNormals();
-
-		this.matPhong = CAR_BODY_MATERIAL[0];
-		this.matGouroud = CAR_BODY_MATERIAL[1];
+		if(!basic) {
+			this.matPhong = CAR_BODY_MATERIAL[0];
+			this.matGouroud = CAR_BODY_MATERIAL[1];
+		}
+		else {
+			this.matPhong = CAR_BODY_MATERIAL[2];
+			this.matGouroud = CAR_BODY_MATERIAL[2];
+		}
+		
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.mesh.position.set(-scale*5.5/2, 0, -scale*3.5/2);
 		this.add(this.mesh);
@@ -361,7 +406,7 @@ class chassis extends baseObject {
 }
 
 class ornament extends baseObject {
-	constructor(PosX, PosY, PosZ, scale) {
+	constructor(PosX, PosY, PosZ, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
 
 		var geometry = new THREE.Geometry();
@@ -386,9 +431,14 @@ class ornament extends baseObject {
 		//the face normals and vertex normals can be calculated automatically if not supplied above
 		geometry.computeFaceNormals();
 		geometry.computeVertexNormals();
-
-		this.matPhong = CAR_ORNAMENT_MATERIAL[0];
-		this.matGouroud = CAR_ORNAMENT_MATERIAL[1];
+		if(!basic) {
+			this.matPhong = CAR_ORNAMENT_MATERIAL[0];
+			this.matGouroud = CAR_ORNAMENT_MATERIAL[1];
+		}
+		else {
+			this.matPhong = CAR_ORNAMENT_MATERIAL[2];
+			this.matGouroud = CAR_ORNAMENT_MATERIAL[2];
+		}
 		this.mesh = new THREE.Mesh( geometry, this.matGouroud );
 		this.mesh.position.set(0, 0, -scale*5/2);
 		this.add(this.mesh);

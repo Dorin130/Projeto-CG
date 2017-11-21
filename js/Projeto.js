@@ -8,6 +8,7 @@ var pause = false;
 
 var scene, renderer, customCam;
 var customCamManager;
+var cam5;
 var collManager;
 var pathRandomizer;
 
@@ -146,13 +147,13 @@ function onKeyDown(e) {
 
 /* INIT */
 function init() {
-	renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize( getRendererWidth(), getRendererHeight() );
 	document.body.appendChild(renderer.domElement);
 
 	createScene();
 
-	var cam1 = new customCamera(createOrtographicCamera(450, 0, 200, 0, globalAspectRatio), scene.position);
+	var cam1 = new customCamera(createOrtographicCamera(100, 0, 200, 0, globalAspectRatio), scene.position);
 
 	var cam2 = new customCamera(createPerspectiveCamera(0, 400, 200, globalAspectRatio), scene.position);
 
@@ -161,6 +162,12 @@ function init() {
 	cam3.follow(playerCar, true);
 	cam3.setTransform(50, 0, 0, Math.PI/3, 0);
 	cam3.manualControl();
+
+	var temp = createOrtographicCamera(100, -10000, 50, 0, globalAspectRatio);
+	temp.up = new THREE.Vector3(1,0,0);
+	cam5 = new customCamera(temp, new THREE.Vector3(-10000,0,0));
+ 	cam5.setTransform(50, 0, 0, 0, Math.PI);
+
 
  	customCamManager = new cameraManager(cam1, "1");
  	customCamManager.addCamera(cam2, "2");
@@ -194,10 +201,18 @@ function animate() {
 	//render:
 	render(customCamManager.getCurrentCam());
 }
-
 /* Render function */
-function render(cam) {
+function render(cam, cam2) {
+	renderer.setViewport(0,0, getRendererWidth(), getRendererHeight() )
+	renderer.setScissor( 0, 0, getRendererWidth(), getRendererHeight()  );
+	renderer.setScissorTest( true );
 	renderer.render(scene, cam);
+
+	renderer.setViewport(0, 0, getRendererWidth()/8,getRendererHeight()/8);
+	renderer.setScissor(0 , 0, getRendererWidth()/8, getRendererHeight()/8 );
+	renderer.setScissorTest( true );
+	renderer.render(scene, cam5.getCamera());
+
 }
 
 function getRendererWidth() {
@@ -270,9 +285,10 @@ function createScene() {
   	orangeList = pathRandomizer.createOranges(5, 15, 10);
   	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
 
-  	expoCars();
+  	//expoCars();
 
-  	playerCar = new car(0,5,150,5);
+  	//playerCar = new car(0,5,150,5);
+  	playerCar = new car(0,5,0,5);
   	playerCar.setInitialRotation(0, Math.PI, 0);
   	scene.add(playerCar);
 	updateList.push(pathRandomizer);	
@@ -311,6 +327,11 @@ function createScene() {
 	inputList.push(candle6);
 	inputList.push(globallight);
 
+	var life = new lifeBar(new THREE.Vector3(-10000,5,0), 3, 5);
+
+	//life.rotateOnAxis(new THREE.Vector3(0,1,0), Math.PI/2);
+	//life.position.x = -5000;
+	scene.add(life)
 
 	//var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
 	//scene.add( light );
