@@ -194,7 +194,7 @@ class car extends physicalObject {
 		this.rearAxis.setInitialRotation(Math.PI/2, Math.PI/2, 0);
 		this.frontAxis.setInitialRotation(Math.PI/2, Math.PI/2, 0);
 
-		this.dome = new dome(0, -scale*.7, scale*0, scale);
+		this.dome = new dome(0, -scale*.7, scale*0, scale, basic);
 
 		this.carSpotLeft = new carSpotlight(-scale*2.65, 0, +0.8*scale, scale);
 		this.carSpotRight = new carSpotlight(-scale*2.65, 0, -0.8*scale, scale);
@@ -231,7 +231,9 @@ class car extends physicalObject {
 		this.initialRotation.copy(this.rotation);
 		this.initialDirection.copy(this.direction);
 	}
-
+	addLifes(lifes) {
+		this.lifes = lifes
+	}
 	input(action) {
 		//Up Arrow Key
 		switch(action) {
@@ -329,6 +331,11 @@ class car extends physicalObject {
 	butterCollision() {
 		this.stuck = true;
 		this.resetSpeedAndAccel();
+	}
+	orangeCollision() {
+		if(!this.lifes.removeLife()) {
+			//
+		}
 	}
 
 	speedUpdate(delta_time) {

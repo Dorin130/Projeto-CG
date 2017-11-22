@@ -7,6 +7,7 @@ var MAX_SPEED = 500
 class randomizableObject extends collidableObject {
 	constructor(position, boundingRadius) {
 		super(position, boundingRadius);
+		this.startingPosition = position;
 		this.randomizerInputs = new THREE.Vector3(0,0,0); //use this to get info
 		this.currentSpeed = Math.floor(DEFAULT_SPEED + Math.random()* DEFAULT_SPEED);
 		this.clock = new THREE.Clock(false);
@@ -27,6 +28,7 @@ class path {
 		this.object = object;
 		this.path = path;
 		this.randomizer = randomizer
+		this.startingPath = path
 	}
 
 	notifyRandomizer() {
@@ -147,14 +149,27 @@ class randomizer {
 		this.changeSpeed(DEFAULT_SPEED);
 		for(var i=0; i < this.paths.length; i++ ) {
 			this.paths[i].object.currentSpeed = Math.floor(DEFAULT_SPEED + Math.random()* DEFAULT_SPEED);
+			if(this.paths[i].object instanceof orange) {
+				var pos = this.paths[i].object.startingPosition;
+				this.paths[i].object.position.set(pos.x, pos.y, pos.z);
+				this.paths[i].object.orange.rotation.set(0,0,0);
+				this.paths[i].object.rotationAxis = this.paths[i].startingPath.clone().cross(new THREE.Vector3(0,1,0));
+				this.paths[i].path = this.paths[i].startingPath;
+				this.paths[i].object.elapsedTime = 0;
+				this.paths[i].object.outOfBounds = false;
+				this.notifications = []
+			}
+			
 		}
 	}
 
 	update(delta_t) {
-		this.speed += SPEED_FACTOR/this.speed;
-		for(var i=0; i < this.paths.length; i++ ) {
-			this.replyToNotifications();
-			this.paths[i].update(delta_t, this.speed, this.limitX, this.limitY, this.limitZ);
+		if(!pause) {
+			this.speed += SPEED_FACTOR/this.speed;
+			for(var i=0; i < this.paths.length; i++ ) {
+				this.replyToNotifications();
+				this.paths[i].update(delta_t, this.speed, this.limitX, this.limitY, this.limitZ);
+			}
 		}
 	}
 }

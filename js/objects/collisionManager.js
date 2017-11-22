@@ -10,7 +10,7 @@ class collisionManager {
 	}
 
 	checkAllCollisions() {
-		//this.checkCarOrange();
+		this.checkCarOrange();
 		this.checkCarButter();
 		this.checkCarCheerios();
 		this.checkCheerioCheerio();
@@ -29,6 +29,7 @@ class collisionManager {
 	checkCarOrange() {
 		for (var i = 0; i < this.oranges.length; i++) {
 			if (this.hasCollision(this.car, this.oranges[i])) {
+				this.car.orangeCollision();
 				this.reset();
 				break;
 			}
@@ -104,9 +105,13 @@ class collisionManager {
 		pathRandomizer.reset();
 		for(var j=0; j<updateList.length; j++) {
 			if(updateList[j].isBaseObject) {
-				//scene.add(updateList[j]);
 				updateList[j].reset();
 			}
+		}
+	}
+	input(action) {
+		if(action == "reset") {
+			this.reset();
 		}
 	}
 }

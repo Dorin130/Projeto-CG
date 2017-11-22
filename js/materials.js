@@ -1,15 +1,30 @@
 var WIREFRAME = false;
 
-var texture = new THREE.TextureLoader().load( './textures/towel.png' );
-texture.wrapS = THREE.RepeatWrapping;
-texture.wrapT = THREE.RepeatWrapping;
-texture.repeat.set( 4, 4 );
+var lifeTexture = new THREE.TextureLoader().load( './textures/life.png' );
+lifeTexture.wrapS = THREE.RepeatWrapping;
+lifeTexture.wrapT = THREE.RepeatWrapping;
+
+
+var tableTexture = new THREE.TextureLoader().load( './textures/towel.png' );
+tableTexture.wrapS = THREE.RepeatWrapping;
+tableTexture.wrapT = THREE.RepeatWrapping;
+//texture.repeat.set( 4, 4 );
+
+var deadTexture = new THREE.TextureLoader().load( './textures/dead.jpg' );
+deadTexture.wrapS = THREE.RepeatWrapping;
+deadTexture.wrapT = THREE.RepeatWrapping;
+
+var orangeTexture = new THREE.TextureLoader().load( './textures/orange.jpg' );
+orangeTexture.wrapS = THREE.RepeatWrapping;
+orangeTexture.wrapT = THREE.RepeatWrapping;
+orangeTexture.repeat.set(4,4);
+
 //var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({map: texture,shininess: 10}), new THREE.MeshLambertMaterial( {map: texture} )];
-var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({color: 0x8B5555,shininess: 10}), new THREE.MeshLambertMaterial( {color: 0x8B5555} )];
+var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({color: 0x8B5555,shininess: 10, map:tableTexture}), new THREE.MeshLambertMaterial( {color: 0x8B5555, map:tableTexture} )];
 
 var BUTTER_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xFFFF00,specular: 0x020202,shininess: 50}), new THREE.MeshLambertMaterial( {color: 0xFFFF00})];
 
-var ORANGE_BODY_MATERIAL =  [new THREE.MeshPhongMaterial({color: 0xF69D03,specular: 0x020202,shininess: 200}), new THREE.MeshLambertMaterial( {color: 0xF69D03})];
+var ORANGE_BODY_MATERIAL =  [new THREE.MeshPhongMaterial({color: 0xF69D03,specular: 0x020202,shininess: 200, map: orangeTexture}), new THREE.MeshLambertMaterial( {color: 0xF69D03, map: orangeTexture})];
 var ORANGE_LEAF_MATERIAL =  [new THREE.MeshPhongMaterial({color: 0x236e2b,specular: 0x020202,shininess: 50}), new THREE.MeshLambertMaterial( {color: 0x236e2b})];
 var ORANGE_CONE_MATERIAL =  [new THREE.MeshPhongMaterial({color: 0x144a1a,specular: 0x020202,shininess: 10}), new THREE.MeshLambertMaterial( {color: 0x144a1a})];
 

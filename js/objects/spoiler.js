@@ -1,10 +1,19 @@
 class cube extends baseObject {
-	constructor(position, width, height, depth) {
+	constructor(position, width, height, depth, basic) {
 		super(position);
-		this.matPhong = CAR_SPOILTOP_MATERIAL[0];
-		this.matPhong.side = THREE.DoubleSide;
-		this.matGouroud = CAR_SPOILTOP_MATERIAL[1];
-		this.matGouroud.side = THREE.DoubleSide;
+		if(!basic) {
+			this.matPhong = CAR_SPOILTOP_MATERIAL[0];
+			this.matPhong.side = THREE.DoubleSide;
+			this.matGouroud = CAR_SPOILTOP_MATERIAL[1];
+			this.matGouroud.side = THREE.DoubleSide;
+		}
+		else {
+			this.matPhong = CAR_SPOILTOP_MATERIAL[2];
+			this.matPhong.side = THREE.DoubleSide;
+			this.matGouroud = CAR_SPOILTOP_MATERIAL[2];
+			this.matGouroud.side = THREE.DoubleSide;
+		}
+
 		var geometry = new THREE.Geometry();
 
 		geometry.vertices.push( new THREE.Vector3(0, 0, 0 ) );//0
@@ -50,13 +59,21 @@ class cube extends baseObject {
 }
 
 class spoiler extends baseObject {
-	constructor(PosX, PosY, PosZ, scale) {
+	constructor(PosX, PosY, PosZ, scale, basic) {
 		super(new THREE.Vector3(PosX, PosY, PosZ));
+		if(!basic) {
+			this.matPhong = CAR_BODY_MATERIAL[0];
+			this.matPhong.side = THREE.DoubleSide;
+			this.matGouroud = CAR_BODY_MATERIAL[1];
+			this.matGouroud.side = THREE.DoubleSide;			
+		}
+		else {
+			this.matPhong = CAR_BODY_MATERIAL[2];
+			this.matPhong.side = THREE.DoubleSide;
+			this.matGouroud = CAR_BODY_MATERIAL[2];
+			this.matGouroud.side = THREE.DoubleSide;	
+		}
 
-		this.matPhong = CAR_BODY_MATERIAL[0];
-		this.matPhong.side = THREE.DoubleSide;
-		this.matGouroud = CAR_BODY_MATERIAL[1];
-		this.matGouroud.side = THREE.DoubleSide;
 
 		var geometry = new THREE.Geometry();
 		
@@ -121,7 +138,7 @@ class spoiler extends baseObject {
 		geometry.faces.push( new THREE.Face3( 6, 14, 7 ) );
 		geometry.faces.push( new THREE.Face3( 7, 14, 17 ) );
 		
-		var cubeUp = new cube(new THREE.Vector3(0, scale*0.05, 0), h3 + factor, scale*0.1, B);
+		var cubeUp = new cube(new THREE.Vector3(0, scale*0.05, 0), h3 + factor, scale*0.1, B, basic);
 		cubeUp.rotation.set(Math.PI/16, Math.PI/2, 0, "YXZ");
 		cubeUp.position.y += h2;
 		

@@ -11,6 +11,7 @@ var customCamManager;
 var cam5;
 var collManager;
 var pathRandomizer;
+var lifes;
 
 var updateList = []; /* contains every object to be updated in the update cycle except customCamera */
 var inputList = []; /* contains every object to be updated in the update cycle except customCamera */
@@ -24,6 +25,8 @@ var cheerioList = [];
 var CheeriosList = [];
 
 var clock = new THREE.Clock();
+
+var VIEWPORT = 8;
 
 /* Event Listeners */
 
@@ -74,6 +77,7 @@ function onKeyUp(e) {
 
 function onKeyDown(e) {
 	var action = "";
+	console.log(e.keyCode)
 	switch(e.keyCode) {
 		case 37:
 			action = "left";
@@ -135,6 +139,10 @@ function onKeyDown(e) {
 			action = "carLightsToggle";
 			e.preventDefault();
 			break;
+		case 82: //"R"
+			action = "reset";
+			e.preventDefault();
+			break;
 		default:
 
 	}
@@ -153,7 +161,7 @@ function init() {
 
 	createScene();
 
-	var cam1 = new customCamera(createOrtographicCamera(100, 0, 200, 0, globalAspectRatio), scene.position);
+	var cam1 = new customCamera(createOrtographicCamera(500, 0, 200, 0, globalAspectRatio), scene.position);
 
 	var cam2 = new customCamera(createPerspectiveCamera(0, 400, 200, globalAspectRatio), scene.position);
 
@@ -163,10 +171,10 @@ function init() {
 	cam3.setTransform(50, 0, 0, Math.PI/3, 0);
 	cam3.manualControl();
 
-	var temp = createOrtographicCamera(100, -10000, 50, 0, globalAspectRatio);
+	var temp = createOrtographicCamera(80, -10000, 50, 0, globalAspectRatio);
 	temp.up = new THREE.Vector3(1,0,0);
 	cam5 = new customCamera(temp, new THREE.Vector3(-10000,0,0));
- 	cam5.setTransform(50, 0, 0, 0, Math.PI);
+ 	cam5.setTransform(80, 0, 0, 0, Math.PI);
 
 
  	customCamManager = new cameraManager(cam1, "1");
@@ -184,7 +192,7 @@ function init() {
 
 /* Animation main function and update/render cycle */
 function animate() {
-	if (pause) {return}
+	//if (pause) {return}
 	requestAnimationFrame(animate);
 
 	//update:
@@ -202,17 +210,22 @@ function animate() {
 	render(customCamManager.getCurrentCam());
 }
 /* Render function */
-function render(cam, cam2) {
+function render(cam) {
 	renderer.setViewport(0,0, getRendererWidth(), getRendererHeight() )
 	renderer.setScissor( 0, 0, getRendererWidth(), getRendererHeight()  );
 	renderer.setScissorTest( true );
 	renderer.render(scene, cam);
 
-	renderer.setViewport(0, 0, getRendererWidth()/8,getRendererHeight()/8);
-	renderer.setScissor(0 , 0, getRendererWidth()/8, getRendererHeight()/8 );
+	renderer.setViewport(0, 0, getRendererWidth()/VIEWPORT,getRendererHeight()/VIEWPORT);
+	renderer.setScissor(0 , 0, getRendererWidth()/VIEWPORT, getRendererHeight()/VIEWPORT );
 	renderer.setScissorTest( true );
 	renderer.render(scene, cam5.getCamera());
-
+	if(pause) {
+		renderer.setViewport(0, getRendererHeight()/2-getRendererHeight()/VIEWPORT, getRendererWidth(),(getRendererHeight()/VIEWPORT)*2);
+		renderer.setScissor(0 , getRendererHeight()/2-getRendererHeight()/VIEWPORT, getRendererWidth(), (getRendererHeight()/VIEWPORT)*2);
+		renderer.setScissorTest( true );
+		renderer.render(scene, cam5.getCamera());
+	}
 }
 
 function getRendererWidth() {
@@ -251,7 +264,8 @@ function resetGame() {
 
 function toggleShading() {
 	scene.traverse(function (node) {
-		if (node.isBaseObject)
+		console.log(node)
+		if (node.isBaseObject && !(node instanceof plane))
 			node.toggleMesh();
 	});
 
@@ -286,9 +300,12 @@ function createScene() {
   	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
 
   	//expoCars();
-
+  	var lifes = new lifeBar(new THREE.Vector3(-10000,5,0), 3, 5);
+	inputList.push(lifes);
+	scene.add(lifes);
   	//playerCar = new car(0,5,150,5);
   	playerCar = new car(0,5,0,5);
+  	playerCar.addLifes(lifes);
   	playerCar.setInitialRotation(0, Math.PI, 0);
   	scene.add(playerCar);
 	updateList.push(pathRandomizer);	
@@ -297,7 +314,7 @@ function createScene() {
 	inputList.push(playerCar);
 
 	collManager = new collisionManager(playerCar, cheerioList, orangeList, butterList);
-
+	inputList.push(collManager);
 	make_cheerios_example();
 
 
@@ -327,14 +344,10 @@ function createScene() {
 	inputList.push(candle6);
 	inputList.push(globallight);
 
-	var life = new lifeBar(new THREE.Vector3(-10000,5,0), 3, 5);
+	var lifesPlane = new plane(new THREE.Vector3(-10000,5,0),140, 100, 0xffff00, lifeTexture);
+	scene.add( lifesPlane );
 
-	//life.rotateOnAxis(new THREE.Vector3(0,1,0), Math.PI/2);
-	//life.position.x = -5000;
-	scene.add(life)
 
-	//var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
-	//scene.add( light );
 
 }
 
@@ -385,18 +398,17 @@ function expoCars() {
   	scene.add(expoCar4);
 
 }
-
+var kek = false
 function gamePause() {
 	if(!pause) {
 		pause = true;
 		clock.stop();
-		var elem = document.getElementById("pauseMsg");
-		elem.style.visibility = "visible";
+		//var elem = document.getElementById("pauseMsg");
+		//elem.style.visibility = "visible";
 	} else {
 		pause = false;
 		clock.start();
-		requestAnimationFrame(animate);
-		var elem = document.getElementById("pauseMsg");
-		elem.style.visibility = "hidden";
+		//var elem = document.getElementById("pauseMsg");
+		//elem.style.visibility = "hidden";
 	}
 }
