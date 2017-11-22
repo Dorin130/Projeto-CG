@@ -1,7 +1,7 @@
 class lifeBar extends baseObject {
 	constructor(position, scale, nrOfLifes) {
 		var radiusSegments = 10;
-		var offset = scale*0.05
+		var offset = scale*0.05;
 		var width = scale;
 		var widthPerLife = scale*6;
 		super(position)

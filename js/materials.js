@@ -1,6 +1,7 @@
 var WIREFRAME = false;
 
 var lifeTexture = new THREE.TextureLoader().load( './textures/life.png' );
+lifeTexture.flipY = false;
 lifeTexture.wrapS = THREE.RepeatWrapping;
 lifeTexture.wrapT = THREE.RepeatWrapping;
 
@@ -8,7 +9,7 @@ lifeTexture.wrapT = THREE.RepeatWrapping;
 var tableTexture = new THREE.TextureLoader().load( './textures/towel.png' );
 tableTexture.wrapS = THREE.RepeatWrapping;
 tableTexture.wrapT = THREE.RepeatWrapping;
-//texture.repeat.set( 4, 4 );
+tableTexture.repeat.set( 18,10 );
 
 var deadTexture = new THREE.TextureLoader().load( './textures/dead.jpg' );
 deadTexture.wrapS = THREE.RepeatWrapping;
@@ -20,7 +21,7 @@ orangeTexture.wrapT = THREE.RepeatWrapping;
 orangeTexture.repeat.set(4,4);
 
 //var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({map: texture,shininess: 10}), new THREE.MeshLambertMaterial( {map: texture} )];
-var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({color: 0x8B5555,shininess: 10, map:tableTexture}), new THREE.MeshLambertMaterial( {color: 0x8B5555, map:tableTexture} )];
+var TABLE_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xAAAAAA,shininess: 10, map:tableTexture}), new THREE.MeshLambertMaterial( {color: 0xAAAAAA, map:tableTexture} )];
 
 var BUTTER_MATERIAL = [new THREE.MeshPhongMaterial({color: 0xFFFF00,specular: 0x020202,shininess: 50}), new THREE.MeshLambertMaterial( {color: 0xFFFF00})];
 

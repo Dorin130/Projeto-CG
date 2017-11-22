@@ -300,7 +300,7 @@ function createScene() {
   	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
 
   	//expoCars();
-  	var lifes = new lifeBar(new THREE.Vector3(-10000,5,0), 3, 5);
+  	var lifes = new lifeBar(new THREE.Vector3(-10000,5,18), 3, 5);
 	inputList.push(lifes);
 	scene.add(lifes);
   	//playerCar = new car(0,5,150,5);
@@ -344,7 +344,7 @@ function createScene() {
 	inputList.push(candle6);
 	inputList.push(globallight);
 
-	var lifesPlane = new plane(new THREE.Vector3(-10000,5,0),140, 100, 0xffff00, lifeTexture);
+	var lifesPlane = new plane(new THREE.Vector3(-10000,5,0),140, 100, 0x55AAFF, lifeTexture);
 	scene.add( lifesPlane );
 
 
