@@ -1,9 +1,5 @@
 var WIREFRAME = false;
 
-var lifeTexture = new THREE.TextureLoader().load( './textures/life.png' );
-lifeTexture.flipY = false;
-lifeTexture.wrapS = THREE.RepeatWrapping;
-lifeTexture.wrapT = THREE.RepeatWrapping;
 
 
 var tableTexture = new THREE.TextureLoader().load( './textures/towel.png' );
@@ -16,9 +12,16 @@ clothTexture.wrapS = THREE.RepeatWrapping;
 clothTexture.wrapT = THREE.RepeatWrapping;
 clothTexture.repeat.set(360 ,200 );
 
-var deadTexture = new THREE.TextureLoader().load( './textures/dead.jpg' );
+var deadTexture = new THREE.TextureLoader().load( './textures/dead.png' );
 deadTexture.wrapS = THREE.RepeatWrapping;
 deadTexture.wrapT = THREE.RepeatWrapping;
+deadTexture.flipY = false;
+
+var pauseTexture = new THREE.TextureLoader().load( './textures/pause.png' );
+pauseTexture.wrapS = THREE.RepeatWrapping;
+pauseTexture.wrapT = THREE.RepeatWrapping;
+pauseTexture.flipY = false;
+
 
 var orangeTexture = new THREE.TextureLoader().load( './textures/orange.jpg' );
 orangeTexture.wrapS = THREE.RepeatWrapping;
