@@ -30,7 +30,10 @@ class collisionManager {
 		for (var i = 0; i < this.oranges.length; i++) {
 			if (this.hasCollision(this.car, this.oranges[i])) {
 				this.car.orangeCollision();
-				this.reset();
+				if(!dead) {
+					this.car.reset();
+				}
+
 				break;
 			}
 		}
@@ -46,7 +49,11 @@ class collisionManager {
 
 	checkCarInside() {
 		if (!this.isInside(this.car)) {
-			this.reset();
+			this.car.tableCollision();
+			if(!dead) {
+				this.car.reset();
+			}
+
 		}
 	}
 
@@ -112,6 +119,10 @@ class collisionManager {
 	input(action) {
 		if(action == "reset") {
 			this.reset();
+			dead = false;
+			if(pause) {
+				gamePause();
+			}
 		}
 	}
 }

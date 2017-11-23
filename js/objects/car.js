@@ -181,7 +181,7 @@ class car extends physicalObject {
 
 		this.forwardMaxSpeed = 250;
 		this.backwardsMaxSpeed = 100;
-
+		this.globalToggle = true;
 		//Creation
 
 		this.ornament = new ornament(-scale*2.4, scale*0.12, 0, scale*0.05, this.basic);
@@ -231,8 +231,8 @@ class car extends physicalObject {
 		this.initialRotation.copy(this.rotation);
 		this.initialDirection.copy(this.direction);
 	}
-	addLifes(lifes) {
-		this.lifes = lifes
+	addLives(lives) {
+		this.lives = lives
 	}
 	input(action) {
 		//Up Arrow Key
@@ -264,6 +264,15 @@ class car extends physicalObject {
 			case "carLightsToggle":
 				this.keyInputs["lightsOn"] = !this.keyInputs["lightsOn"];
 				break;
+			case "toggleLight":
+				if(this.globalToggle) {
+					this.keyInputs["lightsOn"] = false;
+					this.globalToggle = false;
+				}
+				else {
+					this.globalToggle = true;
+				}
+			
 			default:
 				break;
 		}
@@ -271,6 +280,14 @@ class car extends physicalObject {
 
 
 	simpleInputInterpret() {
+		if(this.keyInputs["lightsOn"]) {
+			this.carSpotLeft.on();
+			this.carSpotRight.on();
+		} else {
+			this.carSpotLeft.off();
+			this.carSpotRight.off();
+		}
+		if(pause) {return;}
 		if(this.keyInputs["up"] && !this.keyInputs["down"] && !this.stuck) {
 			if(this.speed.dot(this.direction) < 0)
 				this.acceleration = this.direction.clone().multiplyScalar(+200); //moving backwards --> using breaks
@@ -295,13 +312,7 @@ class car extends physicalObject {
 		}
 		this.turnDirection = turn;
 
-		if(this.keyInputs["lightsOn"]) {
-			this.carSpotLeft.on();
-			this.carSpotRight.on();
-		} else {
-			this.carSpotLeft.off();
-			this.carSpotRight.off();
-		}
+
 	}
 
 	getTurnSpeed() {
@@ -333,8 +344,15 @@ class car extends physicalObject {
 		this.resetSpeedAndAccel();
 	}
 	orangeCollision() {
-		if(!this.lifes.removeLife()) {
-			//
+		if(!this.lives.removeLife()) {
+			//gamePause();
+			dead = true;
+		}
+	}
+	tableCollision() {
+		if(!this.lives.removeLife()) {
+			//gamePause();
+			dead = true;
 		}
 	}
 

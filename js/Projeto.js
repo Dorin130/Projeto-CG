@@ -5,13 +5,14 @@ var gl1;
 var globalAspectRatio = 16/9;
 
 var pause = false;
+var dead = false;
 
 var scene, renderer, customCam;
 var customCamManager;
-var cam5;
+var cam5, cam6, cam7;
 var collManager;
 var pathRandomizer;
-var lifes;
+var lives;
 
 var updateList = []; /* contains every object to be updated in the update cycle except customCamera */
 var inputList = []; /* contains every object to be updated in the update cycle except customCamera */
@@ -77,7 +78,6 @@ function onKeyUp(e) {
 
 function onKeyDown(e) {
 	var action = "";
-	console.log(e.keyCode)
 	switch(e.keyCode) {
 		case 37:
 			action = "left";
@@ -156,12 +156,16 @@ function onKeyDown(e) {
 /* INIT */
 function init() {
 	renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+	renderer.setClearColor(0x000000, 0);
+	renderer.autoClear = false;
 	renderer.setSize( getRendererWidth(), getRendererHeight() );
 	document.body.appendChild(renderer.domElement);
 
+	
+
 	createScene();
 
-	var cam1 = new customCamera(createOrtographicCamera(500, 0, 200, 0, globalAspectRatio), scene.position);
+	var cam1 = new customCamera(createOrtographicCamera(450, 0, 200, 0, globalAspectRatio), scene.position);
 
 	var cam2 = new customCamera(createPerspectiveCamera(0, 400, 200, globalAspectRatio), scene.position);
 
@@ -171,11 +175,20 @@ function init() {
 	cam3.setTransform(50, 0, 0, Math.PI/3, 0);
 	cam3.manualControl();
 
-	var temp = createOrtographicCamera(80, -10000, 50, 0, globalAspectRatio);
+	var temp = createOrtographicCamera(450, -10000, 50, 0, globalAspectRatio);
 	temp.up = new THREE.Vector3(1,0,0);
 	cam5 = new customCamera(temp, new THREE.Vector3(-10000,0,0));
- 	cam5.setTransform(80, 0, 0, 0, Math.PI);
+ 	cam5.setTransform(80, 0, 0, 0, Math.PI/2);
 
+	var temp2 = createOrtographicCamera(500, -20000, 50, 0, globalAspectRatio);
+	//temp.up = new THREE.Vector3(1,0,0);
+	cam6 = new customCamera(temp2, new THREE.Vector3(-20000,0,0));
+ 	cam6.setTransform(80, 0, 0, 0, Math.PI/2);
+
+ 	var temp3 = createOrtographicCamera(500, -30000, 50, 0, globalAspectRatio);
+	//temp.up = new THREE.Vector3(1,0,0);
+	cam7 = new customCamera(temp3, new THREE.Vector3(-30000,0,0));
+ 	cam7.setTransform(80, 0, 0, 0, Math.PI/2);
 
  	customCamManager = new cameraManager(cam1, "1");
  	customCamManager.addCamera(cam2, "2");
@@ -211,21 +224,37 @@ function animate() {
 }
 /* Render function */
 function render(cam) {
-	renderer.setViewport(0,0, getRendererWidth(), getRendererHeight() )
-	renderer.setScissor( 0, 0, getRendererWidth(), getRendererHeight()  );
-	renderer.setScissorTest( true );
-	renderer.render(scene, cam);
+	//renderer.setClearColor( 0xffffff, 0);
 
-	renderer.setViewport(0, 0, getRendererWidth()/VIEWPORT,getRendererHeight()/VIEWPORT);
-	renderer.setScissor(0 , 0, getRendererWidth()/VIEWPORT, getRendererHeight()/VIEWPORT );
-	renderer.setScissorTest( true );
+	renderer.clear();
+	//renderer.setScissor(0 , 0, getRendererWidth(), getRendererHeight());
+	//renderer.setScissorTest( true );
+	renderer.render(scene, cam);
+	//renderer.setScissor(0 , 0, getRendererWidth(), (getRendererHeight()/VIEWPORT)*2);
+	//renderer.setScissorTest( true );
+	renderer.clearDepth();
 	renderer.render(scene, cam5.getCamera());
-	if(pause) {
+	
+
+	if(dead) {
+		//renderer.setScissor(0 , 0, getRendererWidth(), (getRendererHeight()/VIEWPORT)*2);
+		//renderer.setScissorTest( true );
+		//renderer.clearDepth();
+		renderer.clearDepth();
+		renderer.render(scene, cam6.getCamera());
+	}
+
+	if(pause && !dead) {
+		renderer.clearDepth();
+		renderer.render(scene, cam7.getCamera());
+	}
+	
+	/*if(pause) {
 		renderer.setViewport(0, getRendererHeight()/2-getRendererHeight()/VIEWPORT, getRendererWidth(),(getRendererHeight()/VIEWPORT)*2);
 		renderer.setScissor(0 , getRendererHeight()/2-getRendererHeight()/VIEWPORT, getRendererWidth(), (getRendererHeight()/VIEWPORT)*2);
 		renderer.setScissorTest( true );
 		renderer.render(scene, cam5.getCamera());
-	}
+	}*/
 }
 
 function getRendererWidth() {
@@ -292,7 +321,7 @@ function createScene() {
 
   	gameTable = new table(0,0, 0, 800, 450, 35, 20);
 
-
+  
   	//var butter1 = new butter(-50,20,20);
 
   	pathRandomizer = new randomizer(400,10,225);
@@ -300,12 +329,17 @@ function createScene() {
   	butterList = pathRandomizer.createButters(5, 10, 20, 15,20);
 
   	//expoCars();
-  	var lifes = new lifeBar(new THREE.Vector3(-10000,5,18), 3, 5);
-	inputList.push(lifes);
-	scene.add(lifes);
-  	//playerCar = new car(0,5,150,5);
-  	playerCar = new car(0,5,0,5);
-  	playerCar.addLifes(lifes);
+  	var lives = new lifeBar(new THREE.Vector3(-10000 + 450/2, 5, -800/2), 5, 5);
+	inputList.push(lives);
+	scene.add(lives);
+
+  	var deadPlane = new  plane(new THREE.Vector3(-20000,5,0),401, 100, 0x55AAFF, deadTexture);
+	scene.add(deadPlane);
+
+  	var pausePlane = new  plane(new THREE.Vector3(-30000,5,0),401, 100, 0x55AAFF, pauseTexture);
+	scene.add(pausePlane);
+  	playerCar = new car(0,5,150,5);
+  	playerCar.addLives(lives);
   	playerCar.setInitialRotation(0, Math.PI, 0);
   	scene.add(playerCar);
 	updateList.push(pathRandomizer);	
@@ -344,8 +378,8 @@ function createScene() {
 	inputList.push(candle6);
 	inputList.push(globallight);
 
-	var lifesPlane = new plane(new THREE.Vector3(-10000,5,0),140, 100, 0x55AAFF, lifeTexture);
-	scene.add( lifesPlane );
+	//var livesPlane = new plane(new THREE.Vector3(-10000,5,0),140, 100, 0x55AAFF, lifeTexture);
+	//scene.add( livesPlane );
 
 
 
@@ -398,17 +432,12 @@ function expoCars() {
   	scene.add(expoCar4);
 
 }
-var kek = false
 function gamePause() {
 	if(!pause) {
 		pause = true;
 		clock.stop();
-		//var elem = document.getElementById("pauseMsg");
-		//elem.style.visibility = "visible";
 	} else {
 		pause = false;
 		clock.start();
-		//var elem = document.getElementById("pauseMsg");
-		//elem.style.visibility = "hidden";
 	}
 }

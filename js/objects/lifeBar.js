@@ -1,46 +1,50 @@
 class lifeBar extends baseObject {
-	constructor(position, scale, nrOfLifes) {
+	constructor(position, scale, nrOfLives) {
 		var radiusSegments = 10;
 		var offset = scale*0.05;
 		var width = scale;
-		var widthPerLife = scale*6;
+		var widthPerLife = scale*4;
 		super(position)
 
 		this.matPhong = new THREE.MeshBasicMaterial();
 		this.matGouroud = new THREE.MeshBasicMaterial();
-		this.nrOfLifes = nrOfLifes;
-		this.nrOfLifesOriginal = nrOfLifes
-		this.lifes = [];
+		this.nrOfLives = nrOfLives;
+		this.nrOfLivesOriginal = nrOfLives
+		this.lives = [];
 
 
-		for(var i=0; i<nrOfLifes; i++) {
-    		var life = new car(0, 0, i*(widthPerLife + offset), 5, true);
+		for(var i=0; i<nrOfLives; i++) {
+    		var life = new car(-scale*4, 0, (i+2/3)*(widthPerLife + offset), scale, true);
     		var object = new THREE.Object3D();
     		object.add(life)
-    		this.lifes[i] = object;
+    		this.lives[i] = object;
     		this.add(object);
 		}
-		//this.position.set(position.x, position.y, position.z)
-		this.position.z -=  (nrOfLifes-1)*(widthPerLife + offset)/2
 	}
 
 	removeLife() {
-		if(this.nrOfLifes > 0) {
-			this.lifes[this.nrOfLifes - 1].visible = false;
-			this.nrOfLifes -= 1
+		if(this.nrOfLives -1 > 0) {
+			console.log(this.nrOfLives)
+			this.lives[this.nrOfLives - 1].visible = false;
+			this.nrOfLives -= 1;
 			return true;
 		}
 		else {
+			this.lives[this.nrOfLives - 1].visible = false;
+			this.nrOfLives = this.nrOfLivesOriginal;
+			clock.stop();
+			pause = true;
 			return false;
 		}
 	}
-	getLifes() {
-		return this.nrOfLifes;
+	getLives() {
+		return this.nrOfLives;
 	}
 	input(action){
 		if(action == "reset") {
-			for(var i = 0; i<this.nrOfLifesOriginal; i++) {
-				this.lifes[i].visible = true;
+			for(var i = 0; i<this.nrOfLivesOriginal; i++) {
+				this.lives[i].visible = true;
+				this.nrOfLives = this.nrOfLivesOriginal;
 			}
 		}
 	}
