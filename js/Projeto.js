@@ -157,6 +157,7 @@ function onKeyDown(e) {
 function init() {
 	renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setClearColor(0x000000, 0);
+	renderer.setScissorTest( true );
 	renderer.autoClear = false;
 	renderer.setSize( getRendererWidth(), getRendererHeight() );
 	document.body.appendChild(renderer.domElement);
@@ -228,24 +229,20 @@ function render(cam) {
 
 	renderer.clear();
 	renderer.setScissor(0 , 0, getRendererWidth(), getRendererHeight());
-	renderer.setScissorTest( true );
 	renderer.render(scene, cam);
 	renderer.setScissor(0 , 0, getRendererWidth(), (getRendererHeight()/VIEWPORT)*2);
-	renderer.setScissorTest( true );
 	renderer.clearDepth();
 	renderer.render(scene, cam5.getCamera());
 	
 
 	if(dead) {
 		renderer.setScissor(0 , 0, getRendererWidth(), getRendererHeight());
-		renderer.setScissorTest( true );
 		renderer.clearDepth();
 		renderer.render(scene, cam6.getCamera());
 	}
 
 	if(pause && !dead) {
 		renderer.setScissor(0 , 0, getRendererWidth(), getRendererHeight());
-		renderer.setScissorTest( true );
 		renderer.clearDepth();
 		renderer.render(scene, cam7.getCamera());
 	}
