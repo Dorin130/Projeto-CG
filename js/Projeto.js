@@ -224,37 +224,31 @@ function animate() {
 }
 /* Render function */
 function render(cam) {
-	//renderer.setClearColor( 0xffffff, 0);
+	renderer.setClearColor( 0xffffff, 0);
 
 	renderer.clear();
-	//renderer.setScissor(0 , 0, getRendererWidth(), getRendererHeight());
-	//renderer.setScissorTest( true );
+	renderer.setScissor(0 , 0, getRendererWidth(), getRendererHeight());
+	renderer.setScissorTest( true );
 	renderer.render(scene, cam);
-	//renderer.setScissor(0 , 0, getRendererWidth(), (getRendererHeight()/VIEWPORT)*2);
-	//renderer.setScissorTest( true );
+	renderer.setScissor(0 , 0, getRendererWidth(), (getRendererHeight()/VIEWPORT)*2);
+	renderer.setScissorTest( true );
 	renderer.clearDepth();
 	renderer.render(scene, cam5.getCamera());
 	
 
 	if(dead) {
-		//renderer.setScissor(0 , 0, getRendererWidth(), (getRendererHeight()/VIEWPORT)*2);
-		//renderer.setScissorTest( true );
-		//renderer.clearDepth();
+		renderer.setScissor(0 , 0, getRendererWidth(), getRendererHeight());
+		renderer.setScissorTest( true );
 		renderer.clearDepth();
 		renderer.render(scene, cam6.getCamera());
 	}
 
 	if(pause && !dead) {
+		renderer.setScissor(0 , 0, getRendererWidth(), getRendererHeight());
+		renderer.setScissorTest( true );
 		renderer.clearDepth();
 		renderer.render(scene, cam7.getCamera());
 	}
-	
-	/*if(pause) {
-		renderer.setViewport(0, getRendererHeight()/2-getRendererHeight()/VIEWPORT, getRendererWidth(),(getRendererHeight()/VIEWPORT)*2);
-		renderer.setScissor(0 , getRendererHeight()/2-getRendererHeight()/VIEWPORT, getRendererWidth(), (getRendererHeight()/VIEWPORT)*2);
-		renderer.setScissorTest( true );
-		renderer.render(scene, cam5.getCamera());
-	}*/
 }
 
 function getRendererWidth() {
